@@ -1,0 +1,596 @@
+ABANG: LAYER 1 EXTRACTION DEBUG
+================================
+
+Scope
+-----
+
+This report diagnoses the Layer 1 extraction of "abang" from PDF page 21.
+The relevant implementation is:
+
+  - full_agent1/layer1_pdf_extractor.py
+  - extract_agent1.py (the frozen parsing grammar used by Layer 1)
+  - full_agent1/layer2_yomitan_dictionary_writer.py
+
+The short conclusion is:
+
+  1. The PDF text and font spans are being extracted quite faithfully.
+  2. The semantic interpretation of those spans is not faithful.
+  3. In particular, the parser assumes that nearly every italic span starts or
+     continues an "example", and that subsequent roman text is its
+     "translation".
+  4. The dictionary does not use italics exclusively for examples. It also
+     uses italics for collocations, cited words inside definitions, scientific
+     names, source/language abbreviations, and other lexical material.
+  5. Therefore a fully reliable Definition / Example / Translation split is
+     not possible from font style alone. More heuristics can fix "abang", but
+     they can silently damage other entries.
+  6. The proposed workaround is sound: preserve typographic runs honestly,
+     backfill the dictionary's standalone en dash and tilde placeholders, and
+     start each numbered sense on a new line.
+
+
+What Layer 1 actually receives from the PDF
+-------------------------------------------
+
+PyMuPDF returns character data grouped into lines and font spans. Layer 1:
+
+  - normalizes a few known legacy-font glyphs;
+  - records the raw and cleaned text, font, style, bounding box, page, column,
+    and line;
+  - orders lines by column and vertical position;
+  - identifies root/subentry starts mainly from bold text and x-coordinate;
+  - then converts font/style events into semantic markers.
+
+For "abang I", the extracted line/span evidence is good. Examples:
+
+  p0021-l0099
+    bold:   "abang I 1"
+    roman:  " older brother. –"
+    italic: " mantu "
+    roman:  "older brother-in-law. – "
+    italic: "saudara "
+
+  p0021-l0100 / l0101
+    roman:  "older male cousin."
+    bold:   " 2 "
+    roman:  "form of address for older man. “–"
+    italic: " mau " + "ikut?”"
+    roman:  " “Do you want to join us?”"
+
+  p0021-l0105 / l0106 / l0107
+    roman:      "worker. – "
+    italic:     "bécak"
+    roman:      " pedicab driver. – "
+    italic:     "Jakarta/Jakarté"
+    roman:      " Mr. Jakarta, the male counterpart of "
+    italic:     "noné Jakarta/Jakarté"
+    roman:      ". – "
+    italic:     "sabit rumput"
+    roman:      "grass mower; "
+    symbol:     "→"
+    small caps: "PENYABIT"
+    roman:      " "
+    italic:     "rumput"
+    roman:      ". – "
+    italic:     "sopir"
+    roman:      " driver."
+
+  p0021-l0110
+    italic:     "bang"
+    roman:      " is usually preferred; "
+    symbol:     "→"
+    small caps: "BANG III"
+    roman:      "."
+
+  berabang, p0021-l0112
+    roman:  "using the term "
+    italic: "abang"
+    roman:  ". "
+
+  abang III, p0021-l0115
+    bold:   "abang III –"
+    italic: " pipi "
+    roman:  "Salvadori’s pheasant, "
+    italic: "Lophura inornata"
+    roman:  "."
+
+This is enough evidence to reproduce the book's typography. The corruption is
+introduced mainly when these accurate spans are assigned semantic roles.
+
+
+Every extracted style and what it really means
+----------------------------------------------
+
+Important: no font style has exactly one semantic meaning.
+
+1. Roman / normal
+
+PDF fonts:
+
+  - normally Indrev-Roman;
+  - any unrecognized font also falls back to the parser's "roman" category.
+
+What it can represent:
+
+  - an English definition;
+  - an English gloss after an italic collocation;
+  - an English translation after an italic sentence;
+  - continuation text around a cited italic word;
+  - punctuation and parentheses;
+  - connectors such as "and" or "or" in a headword zone;
+  - part of a pronunciation when the PDF splits it at a font boundary.
+
+Current semantic translation:
+
+  - roman is initially accumulated as Definition;
+  - after the parser has entered "example mode", roman is accumulated as
+    Translation.
+
+Why that is unsafe:
+
+  Roman text does not announce its own role. Its role depends entirely on
+  whether an earlier italic span caused the state machine to enter example
+  mode. If that italic span was merely a cited word, all following roman text
+  is mislabeled as a translation.
+
+2. Italic
+
+PDF fonts:
+
+  - Indrev-Italic
+  - Indrev-Italic-SC700
+
+What it can represent:
+
+  - an Indonesian example sentence;
+  - an Indonesian phrase or collocation;
+  - the variable part of a headword template introduced by "–" or "~";
+  - an Indonesian word cited inside an English definition, e.g. "the term
+    abang" or "the abbreviated form bang";
+  - a scientific name, e.g. Lophura inornata;
+  - a source, language, regional, grammatical, or usage abbreviation such as
+    J or Jv when that exact text is recognized by the tag map;
+  - other emphasized foreign or lexical text.
+
+Current semantic translation:
+
+  - an exact tag-map match is emitted as Label;
+  - two narrow exceptions try to retain scientific names and acronyms inline;
+  - almost every other italic span starts or continues Example.
+
+Why that is unsafe:
+
+  "Italic" is typography, not a promise that the text is an example. Even an
+  actual Indonesian phrase is not necessarily an example sentence; it can be
+  a collocation, a cited lemma, a taxonomic name, or a fragment embedded in a
+  definition.
+
+3. Bold
+
+PDF fonts:
+
+  - Indrev-Bold
+  - Indrev-BoldItalic is also present in BOLD_FONTS, although the style mapper
+    reports that font separately as bold_italic.
+
+What it can represent:
+
+  - a root headword;
+  - a subentry/derived-form headword;
+  - a homograph Roman numeral;
+  - a numbered sense;
+  - occasionally a fragment produced by font segmentation, including part of
+    a pronunciation.
+
+Current semantic translation:
+
+  - bold at one of the expected x-coordinates starts a root or subentry;
+  - a bold span containing only digits becomes a sense number;
+  - leading bold spans are parsed as expression, variants, homograph, and
+    sometimes an inline subentry.
+
+Assessment:
+
+  This is much safer than "italic = example", especially when bold is combined
+  with geometry and a digits-only rule. It is still not infallible because
+  font spans can be fragmented and inline forms do not always begin a new PDF
+  line.
+
+4. Bold italic
+
+PDF font:
+
+  - Indrev-BoldItalic
+
+What it commonly represents:
+
+  - an inline derived form or subentry embedded in an entry paragraph, such as
+    ketidak-abadian;
+  - potentially other text carrying both emphasis conventions.
+
+Current semantic translation:
+
+  - it can participate in a bold expression zone;
+  - if it is not consumed structurally, it is treated like italic and can
+    therefore start an Example.
+
+Assessment:
+
+  This category is especially dangerous to reduce to a single semantic role.
+  It is often evidence of an inline headword, not an example.
+
+5. Small caps
+
+PDF fonts:
+
+  - Inresc-Roman
+  - Indrev-Roman-SC700
+  - Indrev-Bold-SC700
+
+What it commonly represents:
+
+  - a dictionary cross-reference target such as PENYABIT or BANG III.
+
+Current semantic translation:
+
+  - every small-caps span becomes an xref event and then a [See] marker.
+
+Assessment:
+
+  This is a strong convention in the sampled pages, particularly after the
+  arrow symbol, but "small caps" is still the honest primary fact. If the goal
+  is strict fidelity with only two improvements, preserve it as SmallCaps
+  rather than claiming a semantic relation. A clickable cross-reference can
+  remain an optional presentation enhancement if desired.
+
+6. Symbol
+
+PDF font:
+
+  - SymbolMT
+
+What it represents in the sampled dictionary entries:
+
+  - the arrow "→", normally introducing a cross-reference.
+
+Current semantic translation:
+
+  - "→" sets a waiting-for-cross-reference state; the following small-caps
+    text becomes [See].
+
+Assessment:
+
+  This is a high-confidence pairing, but preserving the arrow itself is the
+  most faithful representation.
+
+7. Layout and non-font evidence
+
+These are not font styles, but the parser also depends on:
+
+  - x-coordinate: distinguishes root and subentry starts;
+  - y-coordinate: excludes running headers and footers;
+  - column: establishes reading order;
+  - bold digits: establish numbered senses;
+  - soft hyphen at a visual line ending: joins a split word without a space;
+  - ordinary visual line endings: join with a space.
+
+These rules are generally useful and can remain in a faithful typography
+pipeline. They are separate from the unreliable semantic claim that italic
+means Example.
+
+
+Exactly how "abang" is being broken
+-----------------------------------
+
+The central state machine has three buffers:
+
+  - definition
+  - example
+  - translation
+
+It starts in definition mode. Encountering most italic text calls
+start_example(), which flushes the accumulated roman text as a Definition.
+Once in example mode, following roman text is placed in Translation. A later
+italic span may flush that pair and start another pair.
+
+This creates the following errors.
+
+1. Collocations are overclaimed as examples
+
+The sequence:
+
+  roman  "older brother. –"
+  italic "mantu"
+  roman  "older brother-in-law."
+
+becomes:
+
+  [Definition 1] older brother.
+  [Example] – mantu
+  [Translation] older brother-in-law.
+
+That display is readable, but "Example" is a stronger semantic claim than the
+source makes. This is a headword substitution pattern/collocation, not an
+example sentence.
+
+2. Sense 4 loses correct phrase boundaries
+
+The source has:
+
+  italic "Jakarta/Jakarté"
+  roman  "Mr. Jakarta, the male counterpart of"
+  italic "noné Jakarta/Jakarté"
+  roman  ". –"
+  italic "sabit rumput"
+
+The second italic phrase is interpreted as a new Example merely because the
+state already contains roman "translation" text. The trailing roman en dash is
+then pulled into the transition to the next italic span. The human-readable
+output becomes:
+
+  [Example] – Jakarta/Jakarté
+  [Translation] Mr. Jakarta, the male counterpart of
+  [Example] noné Jakarta/Jakarté –sabit rumput
+  [Translation] grass mower;
+
+This falsely merges "noné Jakarta/Jakarté" with the next phrase "– sabit
+rumput".
+
+The same mechanism later produces:
+
+  [Example] rumput –sopir
+  [Translation] driver.
+
+instead of preserving "PENYABIT rumput." and then beginning the separate
+"– sopir" collocation.
+
+3. Placeholder backfilling then fails
+
+Layer 2 replaces a standalone en dash using:
+
+  (?<!\w)–(?!\w)
+
+That correctly avoids replacing lexical hyphens, but the earlier semantic
+merge has created strings such as "–sabit" and "–sopir". Since the en dash is
+now immediately followed by a word character, it no longer matches the
+standalone-placeholder rule. The failure seen in Yomitan is therefore
+downstream damage from the incorrect italic/roman segmentation, not primarily
+a bad replacement rule.
+
+4. An italic word inside a definition becomes a fake example
+
+Sense 5 is one continuous English definition:
+
+  more popular and respectful epithet for some prominent persons of mainly
+  Jakarta background; in this case, the abbreviated form bang is usually
+  preferred;
+
+Only the cited Indonesian word "bang" is italic. The parser emits:
+
+  [Definition 5] ... the abbreviated form
+  [Example] bang
+  [Translation] is usually preferred;
+
+This is definitively wrong. "bang" is not an example here; it is a cited word
+inside the definition.
+
+5. The same false split occurs in "berabang"
+
+The source definition is:
+
+  to address (s.o.) using the term abang.
+
+Because "abang" is italic, the parser emits:
+
+  [Definition 2] to address (s.o.) using the term
+  [Example] abang.
+
+Again, the italic text is a cited term, not an example.
+
+6. The scientific-name exception fails in "abang III"
+
+The intended text is:
+
+  – pipi Salvadori’s pheasant, Lophura inornata.
+
+"Lophura inornata" is italic because scientific binomials conventionally are
+italic. The code has a scientific-name exception, but it only retains a
+binomial inline when the definition buffer currently ends in a comma.
+
+Here, "– pipi" has already put the parser into example mode, so "Salvadori’s
+pheasant," is in the translation buffer rather than the definition buffer.
+The exception checks the wrong active buffer and fails. The output becomes:
+
+  [Example] – pipi
+  [Translation] Salvadori’s pheasant,
+  [Example] Lophura inornata.
+
+The exception is locally plausible, but the state machine's earlier semantic
+assumption makes it brittle.
+
+
+Can the semantic parser be fixed without breaking something else?
+-----------------------------------------------------------------
+
+It can be improved, but it cannot be made consistently reliable using only
+the PDF's fonts and punctuation.
+
+Rules could be added for the observed cases:
+
+  - italic after "term" or "form" is a cited word inside a definition;
+  - an italic binomial after a comma remains in the current gloss;
+  - an en dash begins a new collocation;
+  - a quoted italic clause is likely an example sentence;
+  - short italic material followed by a short English gloss is likely a
+    collocation/gloss pair.
+
+Those rules would make "abang" look better. They are not a safe general
+solution:
+
+  - real examples can contain the words "term" or "form";
+  - examples, collocations, cited forms, and definitions can all be short;
+  - punctuation is inconsistent across a large, line-wrapped dictionary;
+  - a scientific name can occur after a gloss has already entered the current
+    parser's translation state;
+  - typography distinguishes languages and emphasis more reliably than it
+    distinguishes lexicographic roles;
+  - "example" versus "collocation" is sometimes an editorial interpretation,
+    not an encoded fact.
+
+Fixing individual cases by adding semantic heuristics is therefore likely to
+move errors around rather than eliminate them. It would require a large,
+manually reviewed gold-standard corpus and regression tests before one could
+claim that it does not break other entries.
+
+
+Recommended workaround: a faithful, honest schema
+-------------------------------------------------
+
+The human-readable intermediate should state what is actually observed rather
+than what is guessed.
+
+Keep high-confidence structure:
+
+  [Entry]
+  [Subentry]
+  [Homograph]
+  [Sense]
+
+Replace guessed semantic roles:
+
+  [Definition]
+  [Example]
+  [Translation]
+
+with physical style runs:
+
+  [Roman]
+  [Italic]
+  [Bold]
+  [BoldItalic]
+  [SmallCaps]
+  [Symbol]
+
+Multiple
+runs belong to the same sense and must be concatenated inline by Layer 2; a
+run marker is not itself a requested display line break.
+
+Conceptual example:
+
+  [Entry] abang
+  [Homograph] I
+  [Sense] 1
+  [Roman] older brother. –
+  [Italic] mantu
+  [Roman] older brother-in-law. –
+  [Italic] saudara
+  [Roman] older male cousin.
+
+  [Sense] 2
+  [Roman] form of address for older man. “–
+  [Italic] mau ikut?”
+  [Roman] “Do you want to join us?”
+
+Layer 2 should render those runs inline with their original styles and put a
+line break only before each numbered sense (plus ordinary entry/subentry
+layout). It should not display the words "Roman" or "Italic" to the user.
+
+This schema is "honest" because:
+
+  - [Italic] means the PDF was italic;
+  - [Roman] means the PDF was roman;
+  - neither marker claims to know whether the content is an example,
+    collocation, cited word, definition, gloss, or translation;
+  - the original visual distinction remains available to the reader, who can
+    interpret it exactly as in the printed dictionary;
+  - future semantic classification can be added as optional annotations with
+    confidence, without corrupting the faithful source layer.
+
+
+Placeholder replacement under the faithful approach
+----------------------------------------------------
+
+The dictionary's two template operators can still be resolved:
+
+  - standalone en dash "–" => the root entry expression;
+  - tilde "~"              => the current subentry/form expression.
+
+Important safeguards:
+
+  1. Replace the dictionary's en dash U+2013, not every ASCII hyphen. Replacing
+     all "-" characters would corrupt hyphenated words.
+  2. Detect the placeholder before style-run joining can accidentally turn
+     "– " + italic "sabit" into "–sabit".
+  3. Preserve a lexical boundary when inserting the word.
+  4. Render the inserted word as part of the associated italic lexical phrase
+     when the dash is the template operator immediately preceding that phrase,
+     even if the PDF put the dash itself in an adjacent roman span.
+  5. Resolve "~" against the current form, not always the root.
+
+This gives, for example:
+
+  – mantu       => abang mantu
+  si –          => si abang
+  – sabit rumput => abang sabit rumput
+  ~ kerja       => <current subentry> kerja
+
+
+What should remain semantic
+---------------------------
+
+Headword extraction cannot be entirely style-free because Yomitan needs a
+lookup expression. The following interpretations are sufficiently constrained
+to retain, with regression tests:
+
+  - root/subentry boundary from bold plus indentation/geometry;
+  - headword expression from the leading bold zone;
+  - homograph Roman numeral from the headword zone;
+  - sense number from a bold digits-only span;
+  - source page and raw font/style evidence.
+
+Everything after the headword zone should default to faithful typographic runs
+unless the source supplies an unambiguous structural convention.
+
+If the instruction "our only improvement" is literal, language/source badges
+and rewritten "See" labels should also be avoided in the primary rendering.
+Italic abbreviations, arrows, and small-cap targets should be displayed as the
+book displays them. Clickable cross-references can be an optional enhancement,
+but the visible text and style should remain faithful.
+
+
+Risks of the workaround
+-----------------------
+
+The faithful approach greatly reduces semantic corruption, but it still needs
+tests for:
+
+  - two-column reading order;
+  - root versus indented subentry starts;
+  - inline bold-italic derived forms;
+  - soft-hyphen word joining across PDF lines;
+  - font-span fragmentation;
+  - numbered senses split across visual lines;
+  - placeholder operators separated from their italic phrase by a span
+    boundary;
+  - preservation of punctuation and quotation marks;
+  - entries continuing across pages.
+
+These are mostly observable layout/typography problems, so they are testable.
+They are substantially safer than guessing Definition / Example /
+Translation roles that the PDF does not uniquely encode.
+
+
+Final recommendation
+--------------------
+
+Do not patch "abang" by adding another special case to the current
+italic-means-example state machine.
+
+Change the canonical human-readable schema to preserve styled runs and retain
+only high-confidence structure. Render the dictionary faithfully in Yomitan,
+resolve standalone "–" and "~" placeholders before run boundaries are lost,
+and put each numbered sense on its own line.
+
+This will deliberately give up semantic labels that cannot be supported by
+the source, while preserving more of the dictionary and making the output
+less misleading. It is the safer system-wide design.
