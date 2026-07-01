@@ -1,0 +1,11 @@
+{
+  "title": "A Comprehensive Indonesian-English Dictionary (Agent 1 pilot)",
+  "revision": "agent1-1.0.0",
+  "format": 3,
+  "sequenced": true,
+  "author": "Source by Alan M. Stevens and A. Ed. Schmidgall-Tellings",
+  "description": "Pilot generated from the human-readable marker intermediate. Lexical QA remains in progress.",
+  "attribution": "For private extraction testing. Confirm redistribution rights.",
+  "sourceLanguage": "id",
+  "targetLanguage": "en"
+}
