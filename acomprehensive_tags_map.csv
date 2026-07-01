@@ -1,0 +1,110 @@
+tag,tag_rename,type,color
+adj,Adjective,partOfSpeech,#179472
+abbr,Abbreviation,default,#7BAA2E
+acr,Acronym,default,#0E7C13
+init,Initialism,default,#7BAA2E
+coq,Colloquial,default,#F25AA6
+BG,Bahasa Gaul (teen slang),default,#F25AA6
+joc,Jocular,default,#C276A6
+sl,Slang,default,#F25AA6
+derog,Derogatory,default,#D92626
+vulg,Vulgar,default,#D92626
+ob,Obsolete,default,#D92626
+euph,Euphemism,default,#6F4BC3
+infr,Infrequent,default,#D9A14A
+rev,Reverential,default,#8C9D9D
+cla,Classical literature,default,#626273
+col,Dutch colonial period,default,#626273
+poet,Poetic,default,#626273
+reg,Regional,default,#626273
+rel,Religious,default,#626273
+gram,Grammatical,default,#6F4BC3
+mod,Modifier (used to modify a noun),default,#6F4BC3
+obj,Object,default,#6F4BC3
+subj,Subject,default,#6F4BC3
+pl,Plural,default,#6F4BC3
+pl obj,Plural object,default,#6F4BC3
+pl subj,Plural subject,default,#6F4BC3
+sg,Singular,default,#6F4BC3
+voc,Vocative,default,#6F4BC3
+pron,Pronunciation,default,#6ABAE8
+onom,Onomatopoeia,default,#6ABAE8
+exclam,Exclamation,default,#6ABAE8
+anat,Anatomical,default,#626273
+bio,Biology,default,#626273
+bot,Botany,default,#626273
+chem,Chemistry,default,#626273
+elec,Electricity,default,#626273
+fin,Financial,default,#626273
+geol,Geology,default,#626273
+insur,Insurance,default,#626273
+leg,Legal,default,#626273
+ling,Linguistics,default,#626273
+math,Mathematics,default,#626273
+med,Medical,default,#626273
+mil,Military,default,#626273
+mus,Music,default,#626273
+naut,Nautical,default,#626273
+petro,Petroleum,default,#626273
+phys,Physics,default,#626273
+stat,Statistics,default,#626273
+zod,(Sign of the) zodiac,default,#626273
+A,Arabic,default,#626273
+Ac,Acehnese,default,#626273
+AE,American English,default,#626273
+Bal,Balinese,default,#626273
+Ban,Banjarmasin,default,#626273
+Bat,Batak,default,#626273
+BD,Brunei Darussalam,default,#626273
+BE,British English,default,#626273
+C,Chinese,default,#626273
+D,Dutch,default,#626273
+D/E,Dutch or English,default,#626273
+E,English,default,#626273
+Fr,French,default,#626273
+G,German,default,#626273
+Gr,Greek,default,#626273
+Hind,Hindi,default,#626273
+Irja,Irian Jaya (now Papua),default,#626273
+Isl,Islam(ic),default,#626273
+J,Jakarta,default,#626273
+J/Jv,Jakarta or Javanese,default,#626273
+Jp,Japanese,default,#626273
+Jv,Javanese,default,#626273
+K,Kawi,default,#626273
+L,Latin,default,#626273
+M,Minangkabau,default,#626273
+Mad,Madurese,default,#626273
+Mal,Malay,default,#626273
+Med,Medan,default,#626273
+Min,Minahasa,default,#626273
+O Jv,Old Javanese,default,#626273
+Pal,Palembang,default,#626273
+Pap,Papua (the former Irian Jaya),default,#626273
+Pers,Persian,default,#626273
+Port,Portuguese,default,#626273
+Pr,Prokem (young people's disguised language),default,#626273
+RC,Roman Catholic,default,#626273
+S,Sundanese,default,#626273
+Sg,Singapore,default,#626273
+Skr,Sanskrit,default,#626273
+Skr neo,Sanskrit-based neologism,default,#626273
+Sum,Sumatra,default,#626273
+Tag,Tagalog,default,#626273
+Tam,Tamil,default,#626273
+IBT,Indonesia Bagian Timur (eastern Indonesia),default,#626273
+NTB,Nusa Tenggara Barat,default,#626273
+NTT,Nusa Tenggara Timur,default,#626273
+app,Approximately,default,#626273
+cp,Compare,default,#626273
+e.o.,Each other,default,#626273
+esp,Especially,default,#626273
+k.o.,Kind(s) of,default,#626273
+lit,Literally,default,#626273
+opp,Opposite,default,#626273
+o.s.,Oneself,default,#626273
+q.v.,"Which see; refer to that word",default,#626273
+s.o.,Someone,default,#626273
+s.o.'s,Someone's,default,#626273
+s.t.,Something,default,#626273
+usu,Usually,default,#626273

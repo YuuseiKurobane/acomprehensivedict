@@ -1,0 +1,387 @@
+AGENT 0 TEMPORARY HANDOFF: FORM GRAMMAR AND LOOKUP BUGS
+========================================================
+
+Date: 2026-07-01
+Status: Read-only investigation findings. No implementation changes were made.
+
+
+1. PRIMARY FINDING
+==================
+
+The current parser assumes that the first leading bold span is one complete
+lookup expression.
+
+That assumption is false for this dictionary.
+
+One bold span may contain several different grammatical components:
+
+* the lexical form;
+* a Roman homograph number;
+* the first Arabic sense number;
+* a root/previous-form substitution operator (en dash or tilde);
+* an additional derivative or compound form;
+* parenthesized optional spelling material.
+
+Therefore first_bold_text() must eventually be replaced by a small
+dictionary-specific form grammar.
+
+
+2. SCALE OF THE PROBLEM
+=======================
+
+A read-only scan of leading bold spans across the dictionary found:
+
+    spans containing a Roman numeral:            10,622
+    spans ending in an Arabic number:              3,815
+    spans containing optional parentheses:         2,054
+    Roman numeral followed by an Arabic number:      357
+    Roman numeral followed by more bold words:       558
+    bold spans containing an en dash:                271
+    bold spans containing a tilde:                   172
+    affix-acronym-affix hyphen patterns:               20
+
+These categories overlap, but they demonstrate that this is not a small set of
+manual exceptions.
+
+
+3. REPORTED EXAMPLES
+====================
+
+
+3.1 mengabolisi(kan)
+--------------------
+
+Current incorrect lookup expression:
+
+    mengabolisi(kan)
+
+The book states that parentheses mean optional material. Required concrete
+lookup aliases:
+
+    mengabolisi
+    mengabolisikan
+
+The PDF display form may remain:
+
+    mengabolisi(kan)
+
+
+3.2 mengafkir(kan)
+------------------
+
+Required concrete aliases:
+
+    mengafkir
+    mengafkirkan
+
+The current literal-parenthesis Yomitan term will not match normal text.
+
+
+3.3 absté(i)n
+-------------
+
+PDF form:
+
+    absté(i)n
+
+Optional-form expansion followed by accent folding should produce:
+
+    PDF variants:
+        abstén
+        abstéin
+
+    natural lookup variants:
+        absten
+        abstein
+
+The source spelling and accent-bearing variants should remain available as
+readings/aliases.
+
+
+3.4 mengaduh(-aduh)
+--------------------
+
+Required concrete aliases:
+
+    mengaduh
+    mengaduh-aduh
+
+
+3.5 berkendali 1
+----------------
+
+The bold span is:
+
+    berkendali 1
+
+Correct structure:
+
+    form:  berkendali
+    sense: 1 controlled, guided
+    sense: 2 to have a bridle/reins
+
+"berkendali 1" must not be a Yomitan expression.
+
+
+3.6 aci IV 1
+------------
+
+Correct structure:
+
+    expression: aci
+    homograph:  IV
+    sense 1:    axle, shaft
+    sense 2:    reefing-gear for rolling up sails
+
+Current incorrect expression:
+
+    aci IV 1
+
+
+3.7 abang III – pipi
+--------------------
+
+Correct structure:
+
+    expression: abang
+    homograph:  III
+    phrase/template: – pipi
+
+The en dash refers to the headword/root. It is not part of the expression.
+
+Current incorrect expression:
+
+    abang III –
+
+
+3.8 anyang II menganyang ~ hati
+--------------------------------
+
+One bold span contains both a homograph-marked root and another form.
+
+Correct provisional structure:
+
+    root expression: anyang
+    homograph:       II
+    derivative/form: menganyang
+    phrase/template: menganyang ~ hati
+
+The tilde refers to the nearest preceding bold form. The current expression
+"anyang II menganyang ~" is incorrect.
+
+This pattern is common. A scan found 558 leading bold spans where a Roman
+homograph number is followed by additional bold words.
+
+
+3.9 meng-ABRI-kan
+-----------------
+
+The source spelling is intentional affix/acronym notation and should be
+preserved. However, punctuation and capitalization may prevent normal Yomitan
+word scanning.
+
+Candidate aliases to test:
+
+    meng-ABRI-kan
+    mengABRIkan
+    mengabrikan
+
+Do not remove hyphens globally. Most hyphens are real lexical punctuation.
+Apply this only to the narrow affix-uppercase-acronym-affix pattern and verify
+the aliases using a scan test page.
+
+The full PDF contains approximately 20 such patterns, including:
+
+    meng-ABRI-kan
+    ke-ABRI-an
+    meng-ABS-i
+    mem-BBG-kan
+    meng-IUD-kan
+    meng-KB-kan
+
+
+4. REQUIRED FORM-EXPANSION STAGE
+================================
+
+Add a stage between semantic parsing and Yomitan term generation:
+
+    PDF display form
+        |
+        v
+    parse structural notation
+        |
+        v
+    produce concrete lookup variants
+        |
+        v
+    accent-fold lookup variants
+        |
+        v
+    emit Yomitan rows/aliases
+
+Suggested semantic fields:
+
+    expression.pdf
+    expression.components[]
+    expression.lookup_variants[]
+    expression.reading_variants[]
+    homograph
+    senses[]
+
+For X(Y)Z, generate:
+
+    XZ
+    XYZ
+
+For X(-Y)Z, generate:
+
+    XZ
+    X-YZ
+
+Support multiple optional groups through a bounded Cartesian expansion.
+Preserve the unexpanded PDF form for display and auditing.
+
+Do not apply optional expansion to every parenthesis in an entry. Apply it only
+inside a parsed bold lexical form. Parentheses in definitions and labels have
+other meanings.
+
+
+5. HOMOGRAPH AND SENSE PARSING
+==============================
+
+At a leading bold form:
+
+1. Parse the lexical expression.
+2. A whitespace-separated Roman numeral is a homograph marker.
+3. A following whitespace-separated Arabic numeral is a sense marker.
+4. Subsequent Arabic numerals introduce later senses.
+5. En dash and tilde are substitution operators, not expression characters.
+6. Additional bold lexical material after the Roman numeral may begin a form
+   nested under that homograph.
+
+Do not globally remove all Roman or Arabic numerals. Genuine expressions can
+contain digits or apostrophe-year notation, for example A ’45. Parsing must use
+position, whitespace, and dictionary context.
+
+The renderer should emit the natural lexical expression while retaining
+homograph and sense numbering in the glossary.
+
+
+6. AFKIR AND NESTED YOMITAN LOOKUP
+==================================
+
+The afkir entry includes:
+
+    détonator ~
+
+The tilde expands to the nearest preceding bold form, afkiran. The phrase means
+approximately:
+
+    détonator afkiran
+
+The visible word détonator should open the detonator entry in a nested Yomitan
+popup.
+
+Important finding:
+
+The full PDF has a real bold headword on PDF page 261:
+
+    détonator (D/E) detonator.
+
+Therefore the full consecutive extraction should produce:
+
+    primary expression: detonator
+    reading:            détonator
+    accented alias:     détonator
+
+This specific nested lookup should work in the full dictionary once page 261
+is included. It cannot work in the current pilot because the pilot does not
+include page 261.
+
+General rule:
+
+* Preserve accents in definitions/examples.
+* Accent-fold searchable forms.
+* Emit accented aliases for accent-bearing PDF forms.
+* After building the full form index, optionally audit accent-bearing tokens in
+  definitions. If the accentless token resolves to a known form, verify that an
+  accented alias exists or emit an internal query link.
+
+
+7. PILOT PAGE-GAP BUG (LOW PRIORITY FOR FULL RUN)
+=================================================
+
+penganyaman is present in semantic JSON/index/scan HTML but absent from the
+pilot term bank because page 70 was selected without page 69. It was attached
+to an orphan fragment, and build_yomitan() skips non-root records.
+
+This should not affect a full consecutive scan of pages 21-1123 because parser
+state carries across consecutive pages.
+
+However:
+
+* pilot_scan.html is not proof that a term exists in the pilot ZIP;
+* isolated-page tests should include the preceding page or export orphan forms
+  for test purposes.
+
+
+8. OTHER HANDOFF WARNINGS
+=========================
+
+8.1 Full-corpus memory
+----------------------
+
+The current pilot script stores detailed line/span/character structures for all
+selected pages in memory before completing the build. Running pages 21-1123
+may consume excessive memory.
+
+Before a production full run, stream pages or reduce each page to a lightweight
+semantic line representation. Preserve parser state across page boundaries.
+
+
+8.2 Overrides are not applied yet
+---------------------------------
+
+intermediate/overrides.csv is created and preserved, but the generator does not
+currently read or apply it.
+
+
+8.3 Cross-references can split across lines
+-------------------------------------------
+
+Example:
+
+    MEMPERABU
+    KAN
+
+is currently recorded as two targets instead of MEMPERABUKAN. Cross-reference
+resolution should join adjacent small-cap fragments across continuation lines
+before lookup.
+
+
+8.4 Dead review-dashboard code
+------------------------------
+
+pilot_extract_agent0.py still contains unused review HTML helper code from an
+abandoned dashboard. It is not called and can be removed during cleanup.
+
+
+8.5 Repository status
+---------------------
+
+The repository was initialized but all project files were untracked at the
+last check. Decide what to track or ignore before making the first baseline
+commit, especially generated pilot outputs and the source PDF.
+
+
+9. RECOMMENDED NEXT-AGENT PRIORITY
+==================================
+
+1. Replace first_bold_text() with a form/homograph/sense parser.
+2. Materialize optional-form lookup variants.
+3. Add tests for every example in this note.
+4. Separate expression, homograph, and sense numbers in semantic JSON.
+5. Verify concrete forms in Yomitan using a generated scan HTML.
+6. Resolve multi-line cross-references.
+7. Make the full extraction streaming or memory-bounded.
+8. Only then run the entire PDF.

@@ -1,0 +1,125 @@
+{
+  "schema_version": "agent0-semantic-pilot-2",
+  "script_version": "0.2.0",
+  "extractor": "PyMuPDF",
+  "extractor_version": "1.28.0",
+  "pdf_path": "C:\\Users\\admin\\Documents\\Codex\\AComprehensiveIndonesianEnglishDictionary\\acomprehensive.pdf",
+  "pdf_sha256": "9cd7fb175db3454d08a7fb378b8b60cd0e715f5c0b2a3130dc3df8612175ed87",
+  "pdf_size_bytes": 11301498,
+  "pdf_page_count": 1124,
+  "selected_pdf_pages": [
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    70,
+    500
+  ],
+  "semantic_layer": "intermediate/entries/*.json",
+  "form_index": "intermediate/index.csv",
+  "manual_overrides": "intermediate/overrides.csv",
+  "tag_map": "C:\\Users\\admin\\Documents\\Codex\\AComprehensiveIndonesianEnglishDictionary\\acomprehensive_tags_map.csv",
+  "tag_map_sha256": "3ddbdd9ede3d033326af8d10d862ec7cd050b531f823d48eabbff42293d625f0",
+  "normalization_rules": [
+    {
+      "raw": "¤",
+      "codepoint": "U+00A4",
+      "replacement": "fi",
+      "reason": "legacy Indrev font ligature mapping; rendered glyph is fi"
+    },
+    {
+      "raw": "¶",
+      "codepoint": "U+00B6",
+      "replacement": "fl",
+      "reason": "legacy Indrev font ligature mapping; rendered glyph is fl"
+    },
+    {
+      "raw": "Ø",
+      "codepoint": "U+00D8",
+      "replacement": "1/5",
+      "reason": "legacy fraction glyph mapping; rendered glyph is 1/5"
+    },
+    {
+      "raw": "‰",
+      "codepoint": "U+2030",
+      "replacement": "1/6",
+      "reason": "legacy fraction glyph mapping; rendered glyph is 1/6"
+    },
+    {
+      "raw": "³",
+      "codepoint": "U+00B3",
+      "replacement": "1/3",
+      "reason": "legacy fraction glyph mapping; rendered glyph is 1/3"
+    },
+    {
+      "raw": "¿",
+      "codepoint": "U+00BF",
+      "replacement": "1/12",
+      "reason": "legacy fraction glyph mapping; rendered glyph is 1/12"
+    },
+    {
+      "raw": "­",
+      "codepoint": "U+00AD",
+      "replacement": "",
+      "reason": "discretionary soft hyphen; not part of the lexical text"
+    }
+  ],
+  "lookup_normalization": {
+    "method": "Unicode NFKD accent folding plus explicit Latin transliterations",
+    "scope": "headwords, forms, aliases, scan text, and internal-link targets only",
+    "preserved_fields": "PDF spelling and definition/example content retain accents"
+  },
+  "losslessness_contract": [
+    "Semantic content preserves PDF spelling, source order, and bold/italic/label/cross-reference roles.",
+    "Extraction repairs retain original extracted text and repair events on affected semantic text nodes.",
+    "Lookup normalization is stored beside, never in place of, PDF spelling.",
+    "Unclassified italics remain italic and are listed in italic_annotations.",
+    "The canonical PDF and recorded SHA-256 remain the final visual authority."
+  ],
+  "obsolete_outputs_removed": [
+    "raw_pages.jsonl",
+    "entries.jsonl"
+  ],
+  "pilot_metrics": {
+    "cross_references": 158,
+    "derivative_forms": 325,
+    "italic:example_or_phrase_candidate": 702,
+    "italic:italic_unclassified": 421,
+    "italic:label": 439,
+    "italic:scientific_name_candidate": 40,
+    "labels": 439,
+    "line:continuation": 850,
+    "line:derivative_start": 327,
+    "line:root_entry_start": 535,
+    "line:running_header": 23,
+    "orphan_fragments": 2,
+    "root_entries": 535,
+    "sense_candidates": 439
+  },
+  "pilot_entry_records": 537,
+  "pilot_yomitan_terms": 957,
+  "semantic_output": {
+    "directory": "intermediate",
+    "entry_chunks": [
+      "intermediate/entries/__001.json",
+      "intermediate/entries/a_001.json",
+      "intermediate/entries/a_002.json",
+      "intermediate/entries/k_001.json"
+    ],
+    "index": "intermediate/index.csv",
+    "overrides": "intermediate/overrides.csv"
+  },
+  "representative_renders": [
+    "page_0021.png",
+    "page_0070.png",
+    "page_0500.png"
+  ],
+  "pilot_zip": "AComprehensive_agent0_pilot.zip",
+  "pilot_scan_html": "pilot_scan.html"
+}

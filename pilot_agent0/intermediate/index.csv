@@ -1,0 +1,861 @@
+﻿form_id,entry_id,parent_form_id,form_type,expression_pdf,expression_search,reading,homograph,labels,pdf_pages,chunk_file,review_status
+entry-000001-f001,entry-000001,,root,a,a,,,,21,entries/a_001.json,unreviewed
+entry-000002-f001,entry-000002,,root,a,a,,II,abbr,21,entries/a_001.json,unreviewed
+entry-000003-f001,entry-000003,,root,a,a,,III,abbr,21,entries/a_001.json,unreviewed
+entry-000004-f001,entry-000004,,root,a,a,,,,21,entries/a_001.json,unreviewed
+entry-000005-f001,entry-000005,,root,A,A,,V,,21,entries/a_001.json,unreviewed
+entry-000006-f001,entry-000006,,root,A,A,,VI,,21,entries/a_001.json,unreviewed
+entry-000007-f001,entry-000007,,root,à,a,à,,,21,entries/a_001.json,unreviewed
+entry-000008-f001,entry-000008,,root,A ’45,A ’45,,,,21,entries/a_001.json,unreviewed
+entry-000009-f001,entry-000009,,root,AA,AA,,,,21,entries/a_001.json,unreviewed
+entry-000010-f001,entry-000010,,root,aah,aah,,,,21,entries/a_001.json,unreviewed
+entry-000011-f001,entry-000011,,root,aala,aala,,,,21,entries/a_001.json,unreviewed
+entry-000012-f001,entry-000012,,root,aam,aam,,,A,21,entries/a_001.json,unreviewed
+entry-000013-f001,entry-000013,,root,aau,aau,,,,21,entries/a_001.json,unreviewed
+entry-000014-f001,entry-000014,,root,ab,ab,,I,A | ob,21,entries/a_001.json,unreviewed
+entry-000015-f001,entry-000015,,root,ab,ab,,II,ob,21,entries/a_001.json,unreviewed
+entry-000016-f001,entry-000016,,root,AB,AB,,III,,21,entries/a_001.json,unreviewed
+entry-000017-f001,entry-000017,,root,aba,aba,,I,A,21,entries/a_001.json,unreviewed
+entry-000018-f001,entry-000018,,root,aba,aba,,II,Jv,21,entries/a_001.json,unreviewed
+entry-000018-f002,entry-000018,entry-000018-f001,derivative,aba-aba,aba-aba,,,mil,21,entries/a_001.json,unreviewed
+entry-000018-f003,entry-000018,entry-000018-f001,derivative,mengabakan,mengabakan,,,,21,entries/a_001.json,unreviewed
+entry-000018-f004,entry-000018,entry-000018-f001,derivative,pengaba,pengaba,,,mil,21,entries/a_001.json,unreviewed
+entry-000019-f001,entry-000019,,root,aba,aba,,III,,21,entries/a_001.json,unreviewed
+entry-000020-f001,entry-000020,,root,abab,abab,,,Jv,21,entries/a_001.json,unreviewed
+entry-000020-f002,entry-000020,entry-000020-f001,derivative,mengababi,mengababi,,,,21,entries/a_001.json,unreviewed
+entry-000021-f001,entry-000021,,root,abad,abad,,,A | opp,21,entries/a_001.json,unreviewed
+entry-000021-f002,entry-000021,entry-000021-f001,derivative,seabad,seabad,,,,21,entries/a_001.json,unreviewed
+entry-000021-f003,entry-000021,entry-000021-f001,derivative,berabad-abad,berabad-abad,,,,21,entries/a_001.json,unreviewed
+entry-000021-f004,entry-000021,entry-000021-f001,derivative,mengabad,mengabad,,,,21,entries/a_001.json,unreviewed
+entry-000022-f001,entry-000022,,root,ab’ad,ab’ad,,,A,21,entries/a_001.json,unreviewed
+entry-000023-f001,entry-000023,,root,abadi,abadi,,,A,21,entries/a_001.json,unreviewed
+entry-000023-f002,entry-000023,entry-000023-f001,derivative,seabadi,seabadi,,,,21,entries/a_001.json,unreviewed
+entry-000023-f003,entry-000023,entry-000023-f001,derivative,mengabadikan,mengabadikan,,,,21,entries/a_001.json,unreviewed
+entry-000023-f004,entry-000023,entry-000023-f001,derivative,terabadi(kan),terabadi(kan),,,,21,entries/a_001.json,unreviewed
+entry-000023-f005,entry-000023,entry-000023-f001,derivative,keabadian 1,keabadian 1,,,,21,entries/a_001.json,unreviewed
+entry-000023-f006,entry-000023,entry-000023-f001,derivative,pengabadian,pengabadian,,,,21,entries/a_001.json,unreviewed
+entry-000024-f001,entry-000024,,root,abadiah,abadiah,,,A,21,entries/a_001.json,unreviewed
+entry-000025-f001,entry-000025,,root,abah,abah,,I,,21,entries/a_001.json,unreviewed
+entry-000025-f002,entry-000025,entry-000025-f001,derivative,mengabah,mengabah,,,,21,entries/a_001.json,unreviewed
+entry-000025-f003,entry-000025,entry-000025-f001,derivative,mengabahkan,mengabahkan,,,,21,entries/a_001.json,unreviewed
+entry-000026-f001,entry-000026,,root,abah,abah,,II,,21,entries/a_001.json,unreviewed
+entry-000027-f001,entry-000027,,root,abah,abah,,III,Jv,21,entries/a_001.json,unreviewed
+entry-000027-f002,entry-000027,entry-000027-f001,derivative,abah-abah,abah-abah,,,,21,entries/a_001.json,unreviewed
+entry-000028-f001,entry-000028,,root,abai 1,abai 1,,,,21,entries/a_001.json,unreviewed
+entry-000028-f002,entry-000028,entry-000028-f001,derivative,mengabaikan,mengabaikan,,,,21,entries/a_001.json,unreviewed
+entry-000028-f003,entry-000028,entry-000028-f001,derivative,terabai,terabai,,,,21,entries/a_001.json,unreviewed
+entry-000028-f004,entry-000028,entry-000028-f001,derivative,terabaikan,terabaikan,,,,21,entries/a_001.json,unreviewed
+entry-000028-f005,entry-000028,entry-000028-f001,derivative,abaian,abaian,,,,21,entries/a_001.json,unreviewed
+entry-000028-f006,entry-000028,entry-000028-f001,derivative,pengabai,pengabai,,,,21,entries/a_001.json,unreviewed
+entry-000028-f007,entry-000028,entry-000028-f001,derivative,pengabaian,pengabaian,,,,21,entries/a_001.json,unreviewed
+entry-000029-f001,entry-000029,,root,abaimana,abaimana,,,Hind | cla,21,entries/a_001.json,unreviewed
+entry-000030-f001,entry-000030,,root,abaka,abaka,,,D,21,entries/a_001.json,unreviewed
+entry-000031-f001,entry-000031,,root,abakus,abakus,,,E,21,entries/a_001.json,unreviewed
+entry-000032-f001,entry-000032,,root,abal-abal,abal-abal,,I,,21,entries/a_001.json,unreviewed
+entry-000033-f001,entry-000033,,root,abal-abal,abal-abal,,II,,21,entries/a_001.json,unreviewed
+entry-000034-f001,entry-000034,,root,abandonemén,abandonemen,abandonemén,,D/E | leg,21,entries/a_001.json,unreviewed
+entry-000035-f001,entry-000035,,root,abandonir,abandonir,,,D,21,entries/a_001.json,unreviewed
+entry-000036-f001,entry-000036,,root,abang I 1,abang I 1,,,J,21,entries/a_001.json,unreviewed
+entry-000036-f002,entry-000036,entry-000036-f001,derivative,berabang,berabang,,,,21,entries/a_001.json,unreviewed
+entry-000036-f003,entry-000036,entry-000036-f001,derivative,berabangkan,berabangkan,,,,21,entries/a_001.json,unreviewed
+entry-000037-f001,entry-000037,,root,abang,abang,,II,J/Jv,21,entries/a_001.json,unreviewed
+entry-000038-f001,entry-000038,,root,abang III –,abang III –,,,,21,entries/a_001.json,unreviewed
+entry-000039-f001,entry-000039,,root,abang-abang,abang-abang,,,Jv,21,entries/a_001.json,unreviewed
+entry-000040-f001,entry-000040,,root,abangan,abangan,,,Jv,21,entries/a_001.json,unreviewed
+entry-000041-f001,entry-000041,,root,abangan,abangan,,II,J,21,entries/a_001.json,unreviewed
+entry-000042-f001,entry-000042,,root,abar,abar,,,,21,entries/a_001.json,unreviewed
+entry-000042-f002,entry-000042,entry-000042-f001,derivative,berabarkan,berabarkan,,,,21,entries/a_001.json,unreviewed
+entry-000043-f001,entry-000043,,root,abar,abar,,II,,21 | 22,entries/a_001.json,unreviewed
+entry-000043-f002,entry-000043,entry-000043-f001,derivative,mengabar,mengabar,,,,21 | 22,entries/a_001.json,unreviewed
+entry-000043-f003,entry-000043,entry-000043-f001,derivative,mengabarkan,mengabarkan,,,,21 | 22,entries/a_001.json,unreviewed
+entry-000043-f004,entry-000043,entry-000043-f001,derivative,terabar,terabar,,,,21 | 22,entries/a_001.json,unreviewed
+entry-000043-f005,entry-000043,entry-000043-f001,derivative,abaran,abaran,,,,21 | 22,entries/a_001.json,unreviewed
+entry-000043-f006,entry-000043,entry-000043-f001,derivative,pengabaran,pengabaran,,,,21 | 22,entries/a_001.json,unreviewed
+entry-000044-f001,entry-000044,,root,Abasa,Abasa,,,A,22,entries/a_001.json,unreviewed
+entry-000045-f001,entry-000045,,root,Abassiyah,Abassiyah,,,A,22,entries/a_001.json,unreviewed
+entry-000046-f001,entry-000046,,root,abasti,abasti,,,,22,entries/a_001.json,unreviewed
+entry-000047-f001,entry-000047,,root,abat,abat,,,,22,entries/a_001.json,unreviewed
+entry-000048-f001,entry-000048,,root,abat,abat,,II,,22,entries/a_001.json,unreviewed
+entry-000049-f001,entry-000049,,root,abaté,abate,abaté,,,22,entries/a_001.json,unreviewed
+entry-000049-f002,entry-000049,entry-000049-f001,derivative,pengabatéan,pengabatean,pengabatéan,,,22,entries/a_001.json,unreviewed
+entry-000050-f001,entry-000050,,root,abatisasi,abatisasi,,,,22,entries/a_001.json,unreviewed
+entry-000051-f001,entry-000051,,root,abatoar,abatoar,,,E,22,entries/a_001.json,unreviewed
+entry-000052-f001,entry-000052,,root,abau,abau,,,,22,entries/a_001.json,unreviewed
+entry-000053-f001,entry-000053,,root,abawi,abawi,,,A,22,entries/a_001.json,unreviewed
+entry-000054-f001,entry-000054,,root,abaya,abaya,,,,22,entries/a_001.json,unreviewed
+entry-000054-f002,entry-000054,entry-000054-f001,derivative,berabaya,berabaya,,,,22,entries/a_001.json,unreviewed
+entry-000055-f001,entry-000055,,root,abc,abc,,,,22,entries/a_001.json,unreviewed
+entry-000056-f001,entry-000056,,root,abd,abd,,,,22,entries/a_001.json,unreviewed
+entry-000057-f001,entry-000057,,root,abdas,abdas,,,Pers,22,entries/a_001.json,unreviewed
+entry-000057-f002,entry-000057,entry-000057-f001,derivative,berabdas,berabdas,,,,22,entries/a_001.json,unreviewed
+entry-000058-f001,entry-000058,,root,abdi,abdi,,,A | Jv,22,entries/a_001.json,unreviewed
+entry-000058-f002,entry-000058,entry-000058-f001,derivative,berabdi,berabdi,,,,22,entries/a_001.json,unreviewed
+entry-000058-f003,entry-000058,entry-000058-f001,derivative,mengabdi,mengabdi,,,,22,entries/a_001.json,unreviewed
+entry-000058-f004,entry-000058,entry-000058-f001,derivative,abdi-mengabdi,abdi-mengabdi,,,,22,entries/a_001.json,unreviewed
+entry-000058-f005,entry-000058,entry-000058-f001,derivative,mengabdikan,mengabdikan,,,,22,entries/a_001.json,unreviewed
+entry-000058-f006,entry-000058,entry-000058-f001,derivative,memperabdi,memperabdi,,,,22,entries/a_001.json,unreviewed
+entry-000058-f007,entry-000058,entry-000058-f001,derivative,pengabdi,pengabdi,,,,22,entries/a_001.json,unreviewed
+entry-000058-f008,entry-000058,entry-000058-f001,derivative,pengabdian 1,pengabdian 1,,,,22,entries/a_001.json,unreviewed
+entry-000059-f001,entry-000059,,root,abdidalemisme,abdidalemisme,,,,22,entries/a_001.json,unreviewed
+entry-000060-f001,entry-000060,,root,abdikasi,abdikasi,,,D,22,entries/a_001.json,unreviewed
+entry-000061-f001,entry-000061,,root,abdis,abdis,,,D,22,entries/a_001.json,unreviewed
+entry-000062-f001,entry-000062,,root,abdomén,abdomen,abdomén,,D/E,22,entries/a_001.json,unreviewed
+entry-000063-f001,entry-000063,,root,abdominal,abdominal,,,D/E,22,entries/a_001.json,unreviewed
+entry-000064-f001,entry-000064,,root,abdu,abdu,,,A,22,entries/a_001.json,unreviewed
+entry-000065-f001,entry-000065,,root,abécé,abece,abécé,,,22,entries/a_001.json,unreviewed
+entry-000066-f001,entry-000066,,root,abégé,abege,abégé,,,22,entries/a_001.json,unreviewed
+entry-000067-f001,entry-000067,,root,abelur,abelur,,,,22,entries/a_001.json,unreviewed
+entry-000068-f001,entry-000068,,root,abén,aben,abén,,Bal,22,entries/a_001.json,unreviewed
+entry-000068-f002,entry-000068,entry-000068-f001,derivative,mengabén,mengaben,mengabén,,coq,22,entries/a_001.json,unreviewed
+entry-000068-f003,entry-000068,entry-000068-f001,derivative,pengabénan,pengabenan,pengabénan,,,22,entries/a_001.json,unreviewed
+entry-000069-f001,entry-000069,,root,aberasi,aberasi,,,D,22,entries/a_001.json,unreviewed
+entry-000070-f001,entry-000070,,root,abésé,abese,abésé,,,22,entries/a_001.json,unreviewed
+entry-000071-f001,entry-000071,,root,abet,abet,,,J,22,entries/a_001.json,unreviewed
+entry-000071-f002,entry-000071,entry-000071-f001,derivative,mengabet,mengabet,,,,22,entries/a_001.json,unreviewed
+entry-000072-f001,entry-000072,,root,ABG,ABG,,,init,22,entries/a_001.json,unreviewed
+entry-000073-f001,entry-000073,,root,abiad,abiad,,,A | cla,22,entries/a_001.json,unreviewed
+entry-000074-f001,entry-000074,,root,abian,abian,,,Bal,22,entries/a_001.json,unreviewed
+entry-000075-f001,entry-000075,,root,abid,abid,,I,A,22,entries/a_001.json,unreviewed
+entry-000076-f001,entry-000076,,root,abid,abid,,II,A,22,entries/a_001.json,unreviewed
+entry-000077-f001,entry-000077,,root,abidin,abidin,,,A,22,entries/a_001.json,unreviewed
+entry-000078-f001,entry-000078,,root,abidin,abidin,,II,joc | acr,22,entries/a_001.json,unreviewed
+entry-000079-f001,entry-000079,,root,abidun,abidun,,,A,22,entries/a_001.json,unreviewed
+entry-000080-f001,entry-000080,,root,Abil,Abil,,,A,22,entries/a_001.json,unreviewed
+entry-000081-f001,entry-000081,,root,abilah,abilah,,,Pers,22,entries/a_001.json,unreviewed
+entry-000082-f001,entry-000082,,root,abimana,abimana,,,,22,entries/a_001.json,unreviewed
+entry-000083-f001,entry-000083,,root,abintara,abintara,,,cla,22,entries/a_001.json,unreviewed
+entry-000084-f001,entry-000084,,root,abis,abis,,,J | coq,22,entries/a_001.json,unreviewed
+entry-000084-f002,entry-000084,entry-000084-f001,derivative,ngabisin,ngabisin,,,,22,entries/a_001.json,unreviewed
+entry-000084-f003,entry-000084,entry-000084-f001,derivative,ngabis-ngabisin,ngabis-ngabisin,,,,22,entries/a_001.json,unreviewed
+entry-000085-f001,entry-000085,,root,abis,abis,,II,E,22,entries/a_001.json,unreviewed
+entry-000086-f001,entry-000086,,root,abisal,abisal,,,E,22,entries/a_001.json,unreviewed
+entry-000087-f001,entry-000087,,root,abisan,abisan,,,,22,entries/a_001.json,unreviewed
+entry-000088-f001,entry-000088,,root,abit,abit,,,ob | naut,22,entries/a_001.json,unreviewed
+entry-000089-f001,entry-000089,,root,abiturién,abiturien,abiturién,,D,22,entries/a_001.json,unreviewed
+entry-000090-f001,entry-000090,,root,abiz,abiz,,,BG,22,entries/a_001.json,unreviewed
+entry-000091-f001,entry-000091,,root,abjad,abjad,,,A | ob,22,entries/a_001.json,unreviewed
+entry-000091-f002,entry-000091,entry-000091-f001,derivative,berabjad,berabjad,,,,22,entries/a_001.json,unreviewed
+entry-000091-f003,entry-000091,entry-000091-f001,derivative,mengabjadkan,mengabjadkan,,,,22,entries/a_001.json,unreviewed
+entry-000091-f004,entry-000091,entry-000091-f001,derivative,pengabjadan,pengabjadan,,,,22,entries/a_001.json,unreviewed
+entry-000092-f001,entry-000092,,root,abjadiah,abjadiah,,,A,22,entries/a_001.json,unreviewed
+entry-000093-f001,entry-000093,,root,ablag,ablag,,,J/Jv,22,entries/a_001.json,unreviewed
+entry-000093-f002,entry-000093,entry-000093-f001,derivative,seablak-ablak,seablak-ablak,,,,22,entries/a_001.json,unreviewed
+entry-000093-f003,entry-000093,entry-000093-f001,derivative,mengablak,mengablak,,,coq,22,entries/a_001.json,unreviewed
+entry-000093-f004,entry-000093,entry-000093-f001,derivative,mengablakkan,mengablakkan,,,J | coq,22,entries/a_001.json,unreviewed
+entry-000094-f001,entry-000094,,root,ablasi,ablasi,,,D,22,entries/a_001.json,unreviewed
+entry-000094-f002,entry-000094,entry-000094-f001,derivative,mengablasi,mengablasi,,,,22,entries/a_001.json,unreviewed
+entry-000095-f001,entry-000095,,root,ablatif,ablatif,,,D/E,22,entries/a_001.json,unreviewed
+entry-000096-f001,entry-000096,,root,ablaut,ablaut,,,D,22,entries/a_001.json,unreviewed
+entry-000097-f001,entry-000097,,root,ablur,ablur,,,,22,entries/a_001.json,unreviewed
+entry-000098-f001,entry-000098,,root,abnormal,abnormal,,,D/E,22,entries/a_001.json,unreviewed
+entry-000098-f002,entry-000098,entry-000098-f001,derivative,keabnormalan,keabnormalan,,,,22,entries/a_001.json,unreviewed
+entry-000099-f001,entry-000099,,root,abnormalitas,abnormalitas,,,D,22,entries/a_001.json,unreviewed
+entry-000100-f001,entry-000100,,root,abnus,abnus,,,A | cla,22,entries/a_001.json,unreviewed
+entry-000101-f001,entry-000101,,root,abodemén,abodemen,abodemén,,,22,entries/a_001.json,unreviewed
+entry-000102-f001,entry-000102,,root,aboi,aboi,,,C,22,entries/a_001.json,unreviewed
+entry-000103-f001,entry-000103,,root,abolisi,abolisi,,,D/E,22,entries/a_001.json,unreviewed
+entry-000103-f002,entry-000103,entry-000103-f001,derivative,mengabolisi(kan),mengabolisi(kan),,,,22,entries/a_001.json,unreviewed
+entry-000104-f001,entry-000104,,root,abon,abon,,,Jv,22,entries/a_001.json,unreviewed
+entry-000104-f002,entry-000104,entry-000104-f001,derivative,mengabon,mengabon,,,,22,entries/a_001.json,unreviewed
+entry-000105-f001,entry-000105,,root,aboné,abone,aboné,,D,22,entries/a_001.json,unreviewed
+entry-000106-f001,entry-000106,,root,abonemén,abonemen,abonemén,,D,22,entries/a_001.json,unreviewed
+entry-000106-f002,entry-000106,entry-000106-f001,derivative,berabonemén,berabonemen,berabonemén,,,22,entries/a_001.json,unreviewed
+entry-000106-f003,entry-000106,entry-000106-f001,derivative,mengaboneménkan,mengabonemenkan,mengaboneménkan,,,22,entries/a_001.json,unreviewed
+entry-000107-f001,entry-000107,,root,abong-abong,abong-abong,,,J/Jv,22,entries/a_001.json,unreviewed
+entry-000108-f001,entry-000108,,root,aborijin,aborijin,,,E,23,entries/a_001.json,unreviewed
+entry-000109-f001,entry-000109,,root,aborsi,aborsi,,,D,23,entries/a_001.json,unreviewed
+entry-000109-f002,entry-000109,entry-000109-f001,derivative,mengaborsi,mengaborsi,,,,23,entries/a_001.json,unreviewed
+entry-000109-f003,entry-000109,entry-000109-f001,derivative,teraborsi,teraborsi,,,,23,entries/a_001.json,unreviewed
+entry-000109-f004,entry-000109,entry-000109-f001,derivative,pengaborsian,pengaborsian,,,,23,entries/a_001.json,unreviewed
+entry-000110-f001,entry-000110,,root,abortus,abortus,,,D,23,entries/a_001.json,unreviewed
+entry-000110-f002,entry-000110,entry-000110-f001,derivative,mengabortus,mengabortus,,,,23,entries/a_001.json,unreviewed
+entry-000110-f003,entry-000110,entry-000110-f001,derivative,pengabortusan,pengabortusan,,,,23,entries/a_001.json,unreviewed
+entry-000111-f001,entry-000111,,root,abrak,abrak,,,Skr | cla,23,entries/a_001.json,unreviewed
+entry-000112-f001,entry-000112,,root,abrak-abrakan,abrak-abrakan,,,,23,entries/a_001.json,unreviewed
+entry-000113-f001,entry-000113,,root,abrakadabra,abrakadabra,,,D/E,23,entries/a_001.json,unreviewed
+entry-000114-f001,entry-000114,,root,abrar,abrar,,,A,23,entries/a_001.json,unreviewed
+entry-000115-f001,entry-000115,,root,abras,abras,,,A,23,entries/a_001.json,unreviewed
+entry-000116-f001,entry-000116,,root,abrasi,abrasi,,,D,23,entries/a_001.json,unreviewed
+entry-000116-f002,entry-000116,entry-000116-f001,derivative,mengabrasikan,mengabrasikan,,,,23,entries/a_001.json,unreviewed
+entry-000116-f003,entry-000116,entry-000116-f001,derivative,terabrasi,terabrasi,,,,23,entries/a_001.json,unreviewed
+entry-000117-f001,entry-000117,,root,abréaksi,abreaksi,abréaksi,,,23,entries/a_001.json,unreviewed
+entry-000118-f001,entry-000118,,root,abreg,abreg,,,Jv,23,entries/a_001.json,unreviewed
+entry-000119-f001,entry-000119,,root,abréviasi,abreviasi,abréviasi,,E,23,entries/a_001.json,unreviewed
+entry-000120-f001,entry-000120,,root,ABRI,ABRI,,,,23,entries/a_001.json,unreviewed
+entry-000120-f002,entry-000120,entry-000120-f001,derivative,meng-ABRI-kan,meng-ABRI-kan,,,,23,entries/a_001.json,unreviewed
+entry-000120-f003,entry-000120,entry-000120-f001,derivative,ke-ABRI-an,ke-ABRI-an,,,mod,23,entries/a_001.json,unreviewed
+entry-000121-f001,entry-000121,,root,abrik,abrik,,,,23,entries/a_001.json,unreviewed
+entry-000122-f001,entry-000122,,root,abrikos,abrikos,,,D,23,entries/a_001.json,unreviewed
+entry-000123-f001,entry-000123,,root,abrit-abritan,abrit-abritan,,,J,23,entries/a_001.json,unreviewed
+entry-000124-f001,entry-000124,,root,abruk,abruk,,,J,23,entries/a_001.json,unreviewed
+entry-000125-f001,entry-000125,,root,ABS,ABS,,,init,23,entries/a_001.json,unreviewed
+entry-000125-f002,entry-000125,entry-000125-f001,derivative,meng-ABS-i,meng-ABS-i,,,,23,entries/a_001.json,unreviewed
+entry-000126-f001,entry-000126,,root,absah,absah,,,A,23,entries/a_001.json,unreviewed
+entry-000126-f002,entry-000126,entry-000126-f001,derivative,mengabsahkan,mengabsahkan,,,,23,entries/a_001.json,unreviewed
+entry-000126-f003,entry-000126,entry-000126-f001,derivative,keabsahan,keabsahan,,,,23,entries/a_001.json,unreviewed
+entry-000126-f004,entry-000126,entry-000126-f001,derivative,pengabsah,pengabsah,,,,23,entries/a_001.json,unreviewed
+entry-000126-f005,entry-000126,entry-000126-f001,derivative,pengabsahan,pengabsahan,,,,23,entries/a_001.json,unreviewed
+entry-000127-f001,entry-000127,,root,absén,absen,absén,,D/E,23,entries/a_001.json,unreviewed
+entry-000127-f002,entry-000127,entry-000127-f001,derivative,mengabsén,mengabsen,mengabsén,,,23,entries/a_001.json,unreviewed
+entry-000127-f003,entry-000127,entry-000127-f001,derivative,absénan,absenan,absénan,,,23,entries/a_001.json,unreviewed
+entry-000127-f004,entry-000127,entry-000127-f001,derivative,pengabsénan,pengabsenan,pengabsénan,,,23,entries/a_001.json,unreviewed
+entry-000128-f001,entry-000128,,root,absénsi,absensi,absénsi,,D,23,entries/a_001.json,unreviewed
+entry-000129-f001,entry-000129,,root,abséntéisme,absenteisme,abséntéisme,,D/E,23,entries/a_001.json,unreviewed
+entry-000130-f001,entry-000130,,root,abséntia,absentia,abséntia,,L,23,entries/a_001.json,unreviewed
+entry-000131-f001,entry-000131,,root,absés,abses,absés,,D/E,23,entries/a_001.json,unreviewed
+entry-000132-f001,entry-000132,,root,absis,absis,,,D,23,entries/a_001.json,unreviewed
+entry-000133-f001,entry-000133,,root,absolusi,absolusi,,,D,23,entries/a_001.json,unreviewed
+entry-000134-f001,entry-000134,,root,absolut,absolut,,,D/E,23,entries/a_001.json,unreviewed
+entry-000134-f002,entry-000134,entry-000134-f001,derivative,mengabsolutkan,mengabsolutkan,,,,23,entries/a_001.json,unreviewed
+entry-000134-f003,entry-000134,entry-000134-f001,derivative,pengabsolutan,pengabsolutan,,,,23,entries/a_001.json,unreviewed
+entry-000135-f001,entry-000135,,root,absolutisasi,absolutisasi,,,E,23,entries/a_001.json,unreviewed
+entry-000135-f002,entry-000135,entry-000135-f001,derivative,mengabsolutisasikan,mengabsolutisasikan,,,,23,entries/a_001.json,unreviewed
+entry-000136-f001,entry-000136,,root,absolutisme,absolutisme,,,D/E,23,entries/a_001.json,unreviewed
+entry-000137-f001,entry-000137,,root,absorbén,absorben,absorbén,,D/E,23,entries/a_001.json,unreviewed
+entry-000138-f001,entry-000138,,root,absorbir,absorbir,,,D,23,entries/a_001.json,unreviewed
+entry-000139-f001,entry-000139,,root,absorbsi,absorbsi,,,D/E,23,entries/a_001.json,unreviewed
+entry-000139-f002,entry-000139,entry-000139-f001,derivative,mengabsorpsi,mengabsorpsi,,,,23,entries/a_001.json,unreviewed
+entry-000139-f003,entry-000139,entry-000139-f001,derivative,terabsorpsi,terabsorpsi,,,,23,entries/a_001.json,unreviewed
+entry-000139-f004,entry-000139,entry-000139-f001,derivative,pengabsorpsi,pengabsorpsi,,,,23,entries/a_001.json,unreviewed
+entry-000140-f001,entry-000140,,root,absorptif,absorptif,,,E,23,entries/a_001.json,unreviewed
+entry-000141-f001,entry-000141,,root,abstain,abstain,,,E,23,entries/a_001.json,unreviewed
+entry-000141-f002,entry-000141,entry-000141-f001,derivative,keabstainan,keabstainan,,,,23,entries/a_001.json,unreviewed
+entry-000142-f001,entry-000142,,root,absté(i)n,abste(i)n,absté(i)n,,,23,entries/a_001.json,unreviewed
+entry-000143-f001,entry-000143,,root,absténsi,abstensi,absténsi,,E,23,entries/a_001.json,unreviewed
+entry-000144-f001,entry-000144,,root,abstrak,abstrak,,,D/E,23,entries/a_001.json,unreviewed
+entry-000144-f002,entry-000144,entry-000144-f001,derivative,mengabstrakkan,mengabstrakkan,,,,23,entries/a_001.json,unreviewed
+entry-000144-f003,entry-000144,entry-000144-f001,derivative,abstrak-abstrakan,abstrak-abstrakan,,,,23,entries/a_001.json,unreviewed
+entry-000144-f004,entry-000144,entry-000144-f001,derivative,pengabstakan,pengabstakan,,,,23,entries/a_001.json,unreviewed
+entry-000145-f001,entry-000145,,root,abstraksi,abstraksi,,,D,23,entries/a_001.json,unreviewed
+entry-000145-f002,entry-000145,entry-000145-f001,derivative,berabstraksi,berabstraksi,,,,23,entries/a_001.json,unreviewed
+entry-000145-f003,entry-000145,entry-000145-f001,derivative,mengabstraksikan,mengabstraksikan,,,,23,entries/a_001.json,unreviewed
+entry-000146-f001,entry-000146,,root,abstraksionis,abstraksionis,,,E,23,entries/a_001.json,unreviewed
+entry-000147-f001,entry-000147,,root,abstraksionisme,abstraksionisme,,,D/E,23,entries/a_001.json,unreviewed
+entry-000148-f001,entry-000148,,root,absurd,absurd,,,D/E,23,entries/a_001.json,unreviewed
+entry-000148-f002,entry-000148,entry-000148-f001,derivative,keabsurdan,keabsurdan,,,,23,entries/a_001.json,unreviewed
+entry-000149-f001,entry-000149,,root,absurditas,absurditas,,,D,23,entries/a_001.json,unreviewed
+entry-000150-f001,entry-000150,,root,ABT,ABT,,,init,23,entries/a_001.json,unreviewed
+entry-000151-f001,entry-000151,,root,abtar,abtar,,,A,23,entries/a_001.json,unreviewed
+entry-000152-f001,entry-000152,,root,abu,abu,,I,M | Jv,23,entries/a_001.json,unreviewed
+entry-000152-f002,entry-000152,entry-000152-f001,derivative,abu-abu,abu-abu,,,,23,entries/a_001.json,unreviewed
+entry-000152-f003,entry-000152,entry-000152-f001,derivative,berabu,berabu,,,,23,entries/a_001.json,unreviewed
+entry-000152-f004,entry-000152,entry-000152-f001,derivative,mengabu,mengabu,,,,23,entries/a_001.json,unreviewed
+entry-000152-f005,entry-000152,entry-000152-f001,derivative,mengabui,mengabui,,,,23,entries/a_001.json,unreviewed
+entry-000152-f006,entry-000152,entry-000152-f001,derivative,mengabukan,mengabukan,,,,23,entries/a_001.json,unreviewed
+entry-000152-f007,entry-000152,entry-000152-f001,derivative,keabu-abuan,keabu-abuan,,,,23,entries/a_001.json,unreviewed
+entry-000152-f008,entry-000152,entry-000152-f001,derivative,pengabuan,pengabuan,,,,23,entries/a_001.json,unreviewed
+entry-000152-f009,entry-000152,entry-000152-f001,derivative,perabuan,perabuan,,,,23,entries/a_001.json,unreviewed
+entry-000153-f001,entry-000153,,root,abu,abu,,II,A,23,entries/a_001.json,unreviewed
+entry-000154-f001,entry-000154,,root,abu,abu,,III,,23,entries/a_001.json,unreviewed
+entry-000155-f001,entry-000155,,root,abu-abu,abu-abu,,,,23,entries/a_001.json,unreviewed
+entry-000156-f001,entry-000156,,root,abuan,abuan,,,,23,entries/a_001.json,unreviewed
+entry-000157-f001,entry-000157,,root,Abubakar,Abubakar,,I,A,23,entries/a_001.json,unreviewed
+entry-000158-f001,entry-000158,,root,abubakar,abubakar,,II,joc | acr,23,entries/a_001.json,unreviewed
+entry-000159-f001,entry-000159,,root,abudemén,abudemen,abudemén,,J,23,entries/a_001.json,unreviewed
+entry-000160-f001,entry-000160,,root,abuh,abuh,,I,Jv,23,entries/a_001.json,unreviewed
+entry-000160-f002,entry-000160,entry-000160-f001,derivative,abuhan,abuhan,,,,23,entries/a_001.json,unreviewed
+entry-000160-f003,entry-000160,entry-000160-f001,derivative,abuh-abuhan,abuh-abuhan,,,,23,entries/a_001.json,unreviewed
+entry-000161-f001,entry-000161,,root,abuh,abuh,,II,,23,entries/a_001.json,unreviewed
+entry-000162-f001,entry-000162,,root,abui,abui,,,,23,entries/a_001.json,unreviewed
+entry-000163-f001,entry-000163,,root,abuk,abuk,,I,,23,entries/a_001.json,unreviewed
+entry-000164-f001,entry-000164,,root,abuk,abuk,,II,M,23,entries/a_001.json,unreviewed
+entry-000165-f001,entry-000165,,root,abuk,abuk,,III,Jv,23,entries/a_001.json,unreviewed
+entry-000166-f001,entry-000166,,root,abuk-abuk,abuk-abuk,,,,23,entries/a_001.json,unreviewed
+entry-000167-f001,entry-000167,,root,abulhayat,abulhayat,,,A,23,entries/a_001.json,unreviewed
+entry-000168-f001,entry-000168,,root,abun-abun,abun-abun,,,ob,23,entries/a_001.json,unreviewed
+entry-000169-f001,entry-000169,,root,abunemén,abunemen,abunemén,,,23,entries/a_001.json,unreviewed
+entry-000170-f001,entry-000170,,root,abung 1,abung 1,,,Mal,23,entries/a_001.json,unreviewed
+entry-000171-f001,entry-000171,,root,abur,abur,,,cla,24,entries/a_001.json,unreviewed
+entry-000171-f002,entry-000171,entry-000171-f001,derivative,mengabur(kan),mengabur(kan),,,,24,entries/a_001.json,unreviewed
+entry-000171-f003,entry-000171,entry-000171-f001,derivative,pengabur,pengabur,,,,24,entries/a_001.json,unreviewed
+entry-000172-f001,entry-000172,,root,abus,abus,,I,col | geol,24,entries/a_001.json,unreviewed
+entry-000173-f001,entry-000173,,root,abus,abus,,II,vulg,24,entries/a_001.json,unreviewed
+entry-000174-f001,entry-000174,,root,abuter,abuter,,,,24,entries/a_001.json,unreviewed
+entry-000175-f001,entry-000175,,root,abuya,abuya,,,,24,entries/a_001.json,unreviewed
+entry-000176-f001,entry-000176,,root,abyad,abyad,,,A,24,entries/a_001.json,unreviewed
+entry-000177-f001,entry-000177,,root,ac,ac,,,E,24,entries/a_001.json,unreviewed
+entry-000177-f002,entry-000177,entry-000177-f001,derivative,ber-ac,ber-ac,,,,24,entries/a_001.json,unreviewed
+entry-000178-f001,entry-000178,,root,acah I beracah-acah,acah I beracah-acah,,,,24,entries/a_001.json,unreviewed
+entry-000178-f002,entry-000178,entry-000178-f001,derivative,mengacah,mengacah,,,,24,entries/a_001.json,unreviewed
+entry-000178-f003,entry-000178,entry-000178-f001,derivative,acahan,acahan,,,,24,entries/a_001.json,unreviewed
+entry-000179-f001,entry-000179,,root,acah II mengacah,acah II mengacah,,,,24,entries/a_001.json,unreviewed
+entry-000180-f001,entry-000180,,root,acak,acak,,I,J,24,entries/a_001.json,unreviewed
+entry-000180-f002,entry-000180,entry-000180-f001,derivative,mengacak 1,mengacak 1,,,,24,entries/a_001.json,unreviewed
+entry-000180-f003,entry-000180,entry-000180-f001,derivative,mengacak-acak,mengacak-acak,,,coq,24,entries/a_001.json,unreviewed
+entry-000180-f004,entry-000180,entry-000180-f001,derivative,mengacakkan,mengacakkan,,,,24,entries/a_001.json,unreviewed
+entry-000180-f005,entry-000180,entry-000180-f001,derivative,teracak 1,teracak 1,,,,24,entries/a_001.json,unreviewed
+entry-000180-f006,entry-000180,entry-000180-f001,derivative,acak-acakan,acak-acakan,,,,24,entries/a_001.json,unreviewed
+entry-000180-f007,entry-000180,entry-000180-f001,derivative,keacak-acakan,keacak-acakan,,,,24,entries/a_001.json,unreviewed
+entry-000180-f008,entry-000180,entry-000180-f001,derivative,pengacak,pengacak,,,,24,entries/a_001.json,unreviewed
+entry-000180-f009,entry-000180,entry-000180-f001,derivative,pengacakan 1,pengacakan 1,,,,24,entries/a_001.json,unreviewed
+entry-000180-f010,entry-000180,entry-000180-f001,derivative,pengacak-acakan,pengacak-acakan,,,,24,entries/a_001.json,unreviewed
+entry-000181-f001,entry-000181,,root,acak,acak,,II,coq | M,24,entries/a_001.json,unreviewed
+entry-000182-f001,entry-000182,,root,acan,acan,,I,ob,24,entries/a_001.json,unreviewed
+entry-000183-f001,entry-000183,,root,acan,acan,,II,cla,24,entries/a_001.json,unreviewed
+entry-000184-f001,entry-000184,,root,acan,acan,,III,J,24,entries/a_001.json,unreviewed
+entry-000185-f001,entry-000185,,root,acan,acan,,IV,cp,24,entries/a_001.json,unreviewed
+entry-000186-f001,entry-000186,,root,acancut,acancut,,,Jv,24,entries/a_001.json,unreviewed
+entry-000187-f001,entry-000187,,root,acang,acang,,I,naut,24,entries/a_001.json,unreviewed
+entry-000188-f001,entry-000188,,root,acang,acang,,II,Jv | coq,24,entries/a_001.json,unreviewed
+entry-000189-f001,entry-000189,,root,acang,acang,,III,,24,entries/a_001.json,unreviewed
+entry-000190-f001,entry-000190,,root,acang-acang,acang-acang,,,M,24,entries/a_001.json,unreviewed
+entry-000191-f001,entry-000191,,root,acang-acang,acang-acang,,II,,24,entries/a_001.json,unreviewed
+entry-000192-f001,entry-000192,,root,acap,acap,,I,,24,entries/a_001.json,unreviewed
+entry-000192-f002,entry-000192,entry-000192-f001,derivative,acap-acap,acap-acap,,,,24,entries/a_001.json,unreviewed
+entry-000192-f003,entry-000192,entry-000192-f001,derivative,mengacapkan,mengacapkan,,,,24,entries/a_001.json,unreviewed
+entry-000193-f001,entry-000193,,root,acap,acap,,II,,24,entries/a_001.json,unreviewed
+entry-000193-f002,entry-000193,entry-000193-f001,derivative,mengacapi,mengacapi,,,,24,entries/a_001.json,unreviewed
+entry-000194-f001,entry-000194,,root,acar,acar,,,Pers,24,entries/a_001.json,unreviewed
+entry-000194-f002,entry-000194,entry-000194-f001,derivative,mengacar,mengacar,,,,24,entries/a_001.json,unreviewed
+entry-000194-f003,entry-000194,entry-000194-f001,derivative,acar-acaran,acar-acaran,,,,24,entries/a_001.json,unreviewed
+entry-000194-f004,entry-000194,entry-000194-f001,derivative,pengacaran,pengacaran,,,,24,entries/a_001.json,unreviewed
+entry-000195-f001,entry-000195,,root,acara,acara,,I,Skr | ob,24,entries/a_001.json,unreviewed
+entry-000195-f002,entry-000195,entry-000195-f001,derivative,beracara,beracara,,,,24,entries/a_001.json,unreviewed
+entry-000195-f003,entry-000195,entry-000195-f001,derivative,beracarakan,beracarakan,,,,24,entries/a_001.json,unreviewed
+entry-000195-f004,entry-000195,entry-000195-f001,derivative,mengacara,mengacara,,,,24,entries/a_001.json,unreviewed
+entry-000195-f005,entry-000195,entry-000195-f001,derivative,mengacarakan,mengacarakan,,,,24,entries/a_001.json,unreviewed
+entry-000195-f006,entry-000195,entry-000195-f001,derivative,pengacara 1,pengacara 1,,,Mal | mod,24,entries/a_001.json,unreviewed
+entry-000195-f007,entry-000195,entry-000195-f001,derivative,pengacaraan,pengacaraan,,,,24,entries/a_001.json,unreviewed
+entry-000196-f001,entry-000196,,root,acara,acara,,II,Jv | ob,24,entries/a_001.json,unreviewed
+entry-000197-f001,entry-000197,,root,acaram,acaram,,,Tam | ob,24,entries/a_001.json,unreviewed
+entry-000198-f001,entry-000198,,root,acarawan,acarawan,,,Skr neo,24,entries/a_001.json,unreviewed
+entry-000199-f001,entry-000199,,root,acarya,acarya,,,Bal,24,entries/a_001.json,unreviewed
+entry-000200-f001,entry-000200,,root,acat,acat,,,J,24,entries/a_001.json,unreviewed
+entry-000201-f001,entry-000201,,root,acau mengacau,acau mengacau,,,,24,entries/a_001.json,unreviewed
+entry-000202-f001,entry-000202,,root,acawi,acawi,,,ob,24,entries/a_001.json,unreviewed
+entry-000203-f001,entry-000203,,root,acc,acc,,,D,24,entries/a_001.json,unreviewed
+entry-000203-f002,entry-000203,entry-000203-f001,derivative,meng-acc(kan),meng-acc(kan),,,,24,entries/a_001.json,unreviewed
+entry-000204-f001,entry-000204,,root,accu,accu,,,D,24,entries/a_001.json,unreviewed
+entry-000205-f001,entry-000205,,root,ACD,ACD,,,,24,entries/a_001.json,unreviewed
+entry-000206-f001,entry-000206,,root,AC-DC /,AC-DC /,,,E,24,entries/a_001.json,unreviewed
+entry-000207-f001,entry-000207,,root,Acéh,Aceh,Acéh,,,24,entries/a_001.json,unreviewed
+entry-000208-f001,entry-000208,,root,aceng,aceng,,,Jv | coq | vulg,24,entries/a_001.json,unreviewed
+entry-000208-f002,entry-000208,entry-000208-f001,derivative,acengan,acengan,,,,24,entries/a_001.json,unreviewed
+entry-000209-f001,entry-000209,,root,acerang 1,acerang 1,,,Jv | S,24,entries/a_001.json,unreviewed
+entry-000210-f001,entry-000210,,root,aceuk,aceuk,,,S,24,entries/a_001.json,unreviewed
+entry-000211-f001,entry-000211,,root,aci I 1,aci I 1,,,,24,entries/a_001.json,unreviewed
+entry-000211-f002,entry-000211,entry-000211-f001,derivative,mengacikan,mengacikan,,,,24,entries/a_001.json,unreviewed
+entry-000212-f001,entry-000212,,root,aci,aci,,,C | M | ob,24,entries/a_001.json,unreviewed
+entry-000213-f001,entry-000213,,root,aci,aci,,III,J,24,entries/a_001.json,unreviewed
+entry-000213-f002,entry-000213,entry-000213-f001,derivative,acian,acian,,,,24,entries/a_001.json,unreviewed
+entry-000214-f001,entry-000214,,root,aci IV 1,aci IV 1,,,Mal | naut,25,entries/a_001.json,unreviewed
+entry-000214-f002,entry-000214,entry-000214-f001,derivative,aci-aci,aci-aci,,,naut,25,entries/a_001.json,unreviewed
+entry-000215-f001,entry-000215,,root,aci-aci 1,aci-aci 1,,,,25,entries/a_001.json,unreviewed
+entry-000215-f002,entry-000215,entry-000215-f001,derivative,mengaci-acikan,mengaci-acikan,,,,25,entries/a_001.json,unreviewed
+entry-000215-f003,entry-000215,entry-000215-f001,derivative,aci-acian,aci-acian,,,,25,entries/a_001.json,unreviewed
+entry-000216-f001,entry-000216,,root,acik,acik,,I,M | ob,25,entries/a_001.json,unreviewed
+entry-000217-f001,entry-000217,,root,acik,acik,,II,,25,entries/a_001.json,unreviewed
+entry-000218-f001,entry-000218,,root,acir,acir,,,J | coq,25,entries/a_001.json,unreviewed
+entry-000218-f002,entry-000218,entry-000218-f001,derivative,acir-aciran,acir-aciran,,,,25,entries/a_001.json,unreviewed
+entry-000219-f001,entry-000219,,root,acitra,acitra,,,,25,entries/a_001.json,unreviewed
+entry-000220-f001,entry-000220,,root,aco,aco,,,Jv | coq,25,entries/a_001.json,unreviewed
+entry-000220-f002,entry-000220,entry-000220-f001,derivative,aco-acoan,aco-acoan,,,J,25,entries/a_001.json,unreviewed
+entry-000221-f001,entry-000221,,root,acu,acu,,I,,25,entries/a_001.json,unreviewed
+entry-000221-f002,entry-000221,entry-000221-f001,derivative,mengacu 1,mengacu 1,,,,25,entries/a_001.json,unreviewed
+entry-000221-f003,entry-000221,entry-000221-f001,derivative,mengacu-acu,mengacu-acu,,,,25,entries/a_001.json,unreviewed
+entry-000221-f004,entry-000221,entry-000221-f001,derivative,mengacukan,mengacukan,,,,25,entries/a_001.json,unreviewed
+entry-000221-f005,entry-000221,entry-000221-f001,derivative,acuan 1,acuan 1,,,,25,entries/a_001.json,unreviewed
+entry-000221-f006,entry-000221,entry-000221-f001,derivative,pengacu,pengacu,,,,25,entries/a_001.json,unreviewed
+entry-000221-f007,entry-000221,entry-000221-f001,derivative,pengacuan,pengacuan,,,,25,entries/a_001.json,unreviewed
+entry-000222-f001,entry-000222,,root,acu,acu,,II,Tam,25,entries/a_001.json,unreviewed
+entry-000222-f002,entry-000222,entry-000222-f001,derivative,seacu,seacu,,,,25,entries/a_001.json,unreviewed
+entry-000222-f003,entry-000222,entry-000222-f001,derivative,mengacu,mengacu,,,,25,entries/a_001.json,unreviewed
+entry-000222-f004,entry-000222,entry-000222-f001,derivative,teracu,teracu,,,,25,entries/a_001.json,unreviewed
+entry-000222-f005,entry-000222,entry-000222-f001,derivative,acuan,acuan,,,gram,25,entries/a_001.json,unreviewed
+entry-000223-f001,entry-000223,,root,acuh,acuh,,,M,25,entries/a_001.json,unreviewed
+entry-000223-f002,entry-000223,entry-000223-f001,derivative,mengacuhkan,mengacuhkan,,,,25,entries/a_001.json,unreviewed
+entry-000223-f003,entry-000223,entry-000223-f001,derivative,acuhan,acuhan,,,J,25,entries/a_001.json,unreviewed
+entry-000223-f004,entry-000223,entry-000223-f001,derivative,pengacuhan,pengacuhan,,,,25,entries/a_001.json,unreviewed
+entry-000224-f001,entry-000224,,root,acum,acum,,,,25,entries/a_001.json,unreviewed
+entry-000224-f002,entry-000224,entry-000224-f001,derivative,mengacum,mengacum,,,,25,entries/a_001.json,unreviewed
+entry-000224-f003,entry-000224,entry-000224-f001,derivative,acuman,acuman,,,,25,entries/a_001.json,unreviewed
+entry-000224-f004,entry-000224,entry-000224-f001,derivative,pengacum,pengacum,,,,25,entries/a_001.json,unreviewed
+entry-000224-f005,entry-000224,entry-000224-f001,derivative,pengacuman,pengacuman,,,,25,entries/a_001.json,unreviewed
+entry-000225-f001,entry-000225,,root,acung,acung,,I,,25,entries/a_001.json,unreviewed
+entry-000225-f002,entry-000225,entry-000225-f001,derivative,mengacung,mengacung,,,,25,entries/a_001.json,unreviewed
+entry-000225-f003,entry-000225,entry-000225-f001,derivative,mengacungi,mengacungi,,,,25,entries/a_001.json,unreviewed
+entry-000225-f004,entry-000225,entry-000225-f001,derivative,mengacungkan,mengacungkan,,,J | coq | esp,25,entries/a_001.json,unreviewed
+entry-000225-f005,entry-000225,entry-000225-f001,derivative,mengacung-acungkan,mengacung-acungkan,,,,25,entries/a_001.json,unreviewed
+entry-000225-f006,entry-000225,entry-000225-f001,derivative,teracung,teracung,,,,25,entries/a_001.json,unreviewed
+entry-000225-f007,entry-000225,entry-000225-f001,derivative,acungan,acungan,,,,25,entries/a_001.json,unreviewed
+entry-000225-f008,entry-000225,entry-000225-f001,derivative,pengacungan,pengacungan,,,,25,entries/a_001.json,unreviewed
+entry-000226-f001,entry-000226,,root,acung,acung,,II,M,25,entries/a_001.json,unreviewed
+entry-000227-f001,entry-000227,,root,acung,acung,,III,,25,entries/a_001.json,unreviewed
+entry-000228-f001,entry-000228,,root,ad,ad,,I,L,25,entries/a_001.json,unreviewed
+entry-000229-f001,entry-000229,,root,ad,ad,,II,,25,entries/a_001.json,unreviewed
+entry-000230-f001,entry-000230,,root,ad,ad,,III,,25,entries/a_001.json,unreviewed
+entry-000231-f001,entry-000231,,root,a,a,,,abbr,25,entries/a_001.json,unreviewed
+entry-000232-f001,entry-000232,,root,AD,AD,,V,init,25,entries/a_001.json,unreviewed
+entry-000233-f001,entry-000233,,root,AD,AD,,VI,init,25,entries/a_001.json,unreviewed
+entry-000234-f001,entry-000234,,root,AD,AD,,VII,,25,entries/a_001.json,unreviewed
+entry-000235-f001,entry-000235,,root,ada,ada,,,opp | Jv,25 | 26,entries/a_001.json,unreviewed
+entry-000235-f002,entry-000235,entry-000235-f001,derivative,adanya,adanya,,,J,25 | 26,entries/a_001.json,unreviewed
+entry-000235-f003,entry-000235,entry-000235-f001,derivative,seadanya,seadanya,,,,25 | 26,entries/a_001.json,unreviewed
+entry-000235-f004,entry-000235,entry-000235-f001,derivative,ada-ada,ada-ada,,,,25 | 26,entries/a_001.json,unreviewed
+entry-000235-f005,entry-000235,entry-000235-f001,derivative,berada,berada,,,,25 | 26,entries/a_001.json,unreviewed
+entry-000235-f006,entry-000235,entry-000235-f001,derivative,ada-berada,ada-berada,,,,25 | 26,entries/a_001.json,unreviewed
+entry-000235-f007,entry-000235,entry-000235-f001,derivative,mengadakan,mengadakan,,,J | coq,25 | 26,entries/a_001.json,unreviewed
+entry-000235-f008,entry-000235,entry-000235-f001,derivative,terada,terada,,,,25 | 26,entries/a_001.json,unreviewed
+entry-000235-f009,entry-000235,entry-000235-f001,derivative,keadaan,keadaan,,,gram | leg | M,25 | 26,entries/a_001.json,unreviewed
+entry-000235-f010,entry-000235,entry-000235-f001,derivative,pengada,pengada,,,,25 | 26,entries/a_001.json,unreviewed
+entry-000235-f011,entry-000235,entry-000235-f001,derivative,pengadaan,pengadaan,,,,25 | 26,entries/a_001.json,unreviewed
+entry-000236-f001,entry-000236,,root,adab,adab,,,A | cla,26,entries/a_001.json,unreviewed
+entry-000236-f002,entry-000236,entry-000236-f001,derivative,beradab,beradab,,,,26,entries/a_001.json,unreviewed
+entry-000236-f003,entry-000236,entry-000236-f001,derivative,mengadabi,mengadabi,,,,26,entries/a_001.json,unreviewed
+entry-000236-f004,entry-000236,entry-000236-f001,derivative,memperadabkan,memperadabkan,,,,26,entries/a_001.json,unreviewed
+entry-000236-f005,entry-000236,entry-000236-f001,derivative,keadaban,keadaban,,,,26,entries/a_001.json,unreviewed
+entry-000236-f006,entry-000236,entry-000236-f001,derivative,pengadab,pengadab,,,,26,entries/a_001.json,unreviewed
+entry-000236-f007,entry-000236,entry-000236-f001,derivative,peradaban,peradaban,,,,26,entries/a_001.json,unreviewed
+entry-000237-f001,entry-000237,,root,adabiah,adabiah,,,A,26,entries/a_001.json,unreviewed
+entry-000238-f001,entry-000238,,root,adad,adad,,,A,26,entries/a_001.json,unreviewed
+entry-000239-f001,entry-000239,,root,adadi,adadi,,,A,26,entries/a_001.json,unreviewed
+entry-000240-f001,entry-000240,,root,adagio,adagio,,,D,26,entries/a_001.json,unreviewed
+entry-000241-f001,entry-000241,,root,adagium,adagium,,,D,26,entries/a_001.json,unreviewed
+entry-000242-f001,entry-000242,,root,adai-badai,adai-badai,,,cla,26,entries/a_001.json,unreviewed
+entry-000243-f001,entry-000243,,root,adakah,adakah,,,,26,entries/a_001.json,unreviewed
+entry-000244-f001,entry-000244,,root,adakala(nya),adakala(nya),,,,26,entries/a_001.json,unreviewed
+entry-000245-f001,entry-000245,,root,adal-adal,adal-adal,,,Jv,26,entries/a_001.json,unreviewed
+entry-000246-f001,entry-000246,,root,adalah I 1,adalah I 1,,,,26 | 27,entries/a_001.json,unreviewed
+entry-000247-f001,entry-000247,,root,adalah,adalah,,II,A,27,entries/a_001.json,unreviewed
+entry-000248-f001,entry-000248,,root,adam,adam,,I,A | cla,27,entries/a_001.json,unreviewed
+entry-000249-f001,entry-000249,,root,Adam,Adam,,II,A,27,entries/a_001.json,unreviewed
+entry-000250-f001,entry-000250,,root,adan,adan,,I,,27,entries/a_001.json,unreviewed
+entry-000251-f001,entry-000251,,root,Adan,Adan,,II,A,27,entries/a_002.json,unreviewed
+entry-000252-f001,entry-000252,,root,Adan,Adan,,,A,27,entries/a_002.json,unreviewed
+entry-000253-f001,entry-000253,,root,adang,adang,,I,,27,entries/a_002.json,unreviewed
+entry-000253-f002,entry-000253,entry-000253-f001,derivative,mengadang,mengadang,,,M,27,entries/a_002.json,unreviewed
+entry-000253-f003,entry-000253,entry-000253-f001,derivative,mengadangi,mengadangi,,,,27,entries/a_002.json,unreviewed
+entry-000253-f004,entry-000253,entry-000253-f001,derivative,mengadangkan,mengadangkan,,,,27,entries/a_002.json,unreviewed
+entry-000253-f005,entry-000253,entry-000253-f001,derivative,teradang,teradang,,,,27,entries/a_002.json,unreviewed
+entry-000253-f006,entry-000253,entry-000253-f001,derivative,adangan,adangan,,,,27,entries/a_002.json,unreviewed
+entry-000253-f007,entry-000253,entry-000253-f001,derivative,adang-adangan,adang-adangan,,,,27,entries/a_002.json,unreviewed
+entry-000253-f008,entry-000253,entry-000253-f001,derivative,pengadang,pengadang,,,,27,entries/a_002.json,unreviewed
+entry-000253-f009,entry-000253,entry-000253-f001,derivative,pengadangan 1,pengadangan 1,,,,27,entries/a_002.json,unreviewed
+entry-000254-f001,entry-000254,,root,adang,adang,,II,Jv,27,entries/a_002.json,unreviewed
+entry-000255-f001,entry-000255,,root,adang,adang,,III,,27,entries/a_002.json,unreviewed
+entry-000256-f001,entry-000256,,root,adang-adang,adang-adang,,,coq,27,entries/a_002.json,unreviewed
+entry-000257-f001,entry-000257,,root,adanya,adanya,,,,27,entries/a_002.json,unreviewed
+entry-000258-f001,entry-000258,,root,adap,adap,,I,,27,entries/a_002.json,unreviewed
+entry-000259-f001,entry-000259,,root,adap,adap,,II,,27,entries/a_002.json,unreviewed
+entry-000260-f001,entry-000260,,root,adaptasi,adaptasi,,,D,27,entries/a_002.json,unreviewed
+entry-000260-f002,entry-000260,entry-000260-f001,derivative,beradaptasi,beradaptasi,,,,27,entries/a_002.json,unreviewed
+entry-000260-f003,entry-000260,entry-000260-f001,derivative,mengadaptasi(kan),mengadaptasi(kan),,,,27,entries/a_002.json,unreviewed
+entry-000260-f004,entry-000260,entry-000260-f001,derivative,teradaptasi,teradaptasi,,,,27,entries/a_002.json,unreviewed
+entry-000260-f005,entry-000260,entry-000260-f001,derivative,pengadaptasian,pengadaptasian,,,,27,entries/a_002.json,unreviewed
+entry-000261-f001,entry-000261,,root,adaptif,adaptif,,,D/E,27,entries/a_002.json,unreviewed
+entry-000262-f001,entry-000262,,root,adaptor,adaptor,,,D/E,27,entries/a_002.json,unreviewed
+entry-000263-f001,entry-000263,,root,adapun,adapun,,,ob,27,entries/a_002.json,unreviewed
+entry-000264-f001,entry-000264,,root,adar,adar,,I,ob,27,entries/a_002.json,unreviewed
+entry-000265-f001,entry-000265,,root,adar,adar,,II,,27,entries/a_002.json,unreviewed
+entry-000266-f001,entry-000266,,root,adas,adas,,,Pers | sl,27,entries/a_002.json,unreviewed
+entry-000267-f001,entry-000267,,root,adat,adat,,,A | cla | M,27,entries/a_002.json,unreviewed
+entry-000267-f002,entry-000267,entry-000267-f001,derivative,beradat,beradat,,,,27,entries/a_002.json,unreviewed
+entry-000267-f003,entry-000267,entry-000267-f001,derivative,mengadatkan,mengadatkan,,,,27,entries/a_002.json,unreviewed
+entry-000267-f004,entry-000267,entry-000267-f001,derivative,teradat,teradat,,,,27,entries/a_002.json,unreviewed
+entry-000267-f005,entry-000267,entry-000267-f001,derivative,teradatkan,teradatkan,,,,27,entries/a_002.json,unreviewed
+entry-000267-f006,entry-000267,entry-000267-f001,derivative,peradatan,peradatan,,,,27,entries/a_002.json,unreviewed
+entry-000268-f001,entry-000268,,root,adat,adat,,II,J,27,entries/a_002.json,unreviewed
+entry-000269-f001,entry-000269,,root,adati,adati,,,,27,entries/a_002.json,unreviewed
+entry-000270-f001,entry-000270,,root,adawah,adawah,,,A,27,entries/a_002.json,unreviewed
+entry-000271-f001,entry-000271,,root,à décharge,a decharge,à décharge,,Fr | D,27,entries/a_002.json,unreviewed
+entry-000272-f001,entry-000272,,root,Adéém,Adeem,Adéém,,D | col,27,entries/a_002.json,unreviewed
+entry-000273-f001,entry-000273,,root,adegan,adegan,,,Jv,27,entries/a_002.json,unreviewed
+entry-000273-f002,entry-000273,entry-000273-f001,derivative,beradegan,beradegan,,,,27,entries/a_002.json,unreviewed
+entry-000273-f003,entry-000273,entry-000273-f001,derivative,pengadeganan,pengadeganan,,,,27,entries/a_002.json,unreviewed
+entry-000274-f001,entry-000274,,root,adéh,adeh,adéh,,Jv,27,entries/a_002.json,unreviewed
+entry-000275-f001,entry-000275,,root,adék,adek,adék,,,27,entries/a_002.json,unreviewed
+entry-000276-f001,entry-000276,,root,adekan,adekan,,,,27,entries/a_002.json,unreviewed
+entry-000277-f001,entry-000277,,root,adekuat,adekuat,,,D,27,entries/a_002.json,unreviewed
+entry-000277-f002,entry-000277,entry-000277-f001,derivative,keadekuatan,keadekuatan,,,,27,entries/a_002.json,unreviewed
+entry-000278-f001,entry-000278,,root,adem,adem,,,J/Jv,27,entries/a_002.json,unreviewed
+entry-000278-f002,entry-000278,entry-000278-f001,derivative,mengadem,mengadem,,,,27,entries/a_002.json,unreviewed
+entry-000278-f003,entry-000278,entry-000278-f001,derivative,mengademkan,mengademkan,,,J | coq,27,entries/a_002.json,unreviewed
+entry-000278-f004,entry-000278,entry-000278-f001,derivative,adem-ademan,adem-ademan,,,J,27,entries/a_002.json,unreviewed
+entry-000278-f005,entry-000278,entry-000278-f001,derivative,keademan 1,keademan 1,,,Jv,27,entries/a_002.json,unreviewed
+entry-000278-f006,entry-000278,entry-000278-f001,derivative,pengadem,pengadem,,,,27,entries/a_002.json,unreviewed
+entry-000279-f001,entry-000279,,root,adémokratis,ademokratis,adémokratis,,D,27,entries/a_002.json,unreviewed
+entry-000280-f001,entry-000280,,root,adempauze,adempauze,,,D,27,entries/a_002.json,unreviewed
+entry-000281-f001,entry-000281,,root,adénda,adenda,adénda,,D,27,entries/a_002.json,unreviewed
+entry-000282-f001,entry-000282,,root,adep,adep,,,,27,entries/a_002.json,unreviewed
+entry-000283-f001,entry-000283,,root,adhan,adhan,,,,27,entries/a_002.json,unreviewed
+entry-000284-f001,entry-000284,,root,adhési,adhesi,adhési,,D,27,entries/a_002.json,unreviewed
+entry-000285-f001,entry-000285,,root,adhésif,adhesif,adhésif,,D/E,27,entries/a_002.json,unreviewed
+entry-000286-f001,entry-000286,,root,adhi-,adhi-,,,,27,entries/a_002.json,unreviewed
+entry-000287-f001,entry-000287,,root,Adhi Makayasa,Adhi Makayasa,,,,27,entries/a_002.json,unreviewed
+entry-000288-f001,entry-000288,,root,Adhibhuti Antariksha,Adhibhuti Antariksha,,,,27,entries/a_002.json,unreviewed
+entry-000289-f001,entry-000289,,root,ad hoc,ad hoc,,,L,28,entries/a_002.json,unreviewed
+entry-000290-f001,entry-000290,,root,adhyaksa,adhyaksa,,,Skr,28,entries/a_002.json,unreviewed
+entry-000291-f001,entry-000291,,root,adi,adi,,I,Skr | mil,28,entries/a_002.json,unreviewed
+entry-000291-f002,entry-000291,entry-000291-f001,derivative,ngadi,ngadi,,,,28,entries/a_002.json,unreviewed
+entry-000291-f003,entry-000291,entry-000291-f001,derivative,mengadikan,mengadikan,,,,28,entries/a_002.json,unreviewed
+entry-000292-f001,entry-000292,,root,adi,adi,,II,Jv,28,entries/a_002.json,unreviewed
+entry-000293-f001,entry-000293,,root,Adi,Adi,,III,,28,entries/a_002.json,unreviewed
+entry-000294-f001,entry-000294,,root,adiabatis,adiabatis,,,D,28,entries/a_002.json,unreviewed
+entry-000295-f001,entry-000295,,root,adiatérmik,adiatermik,adiatérmik,,D/E,28,entries/a_002.json,unreviewed
+entry-000296-f001,entry-000296,,root,adib,adib,,,A | cla,28,entries/a_002.json,unreviewed
+entry-000297-f001,entry-000297,,root,adibintang,adibintang,,,,28,entries/a_002.json,unreviewed
+entry-000298-f001,entry-000298,,root,adibunyi,adibunyi,,,,28,entries/a_002.json,unreviewed
+entry-000299-f001,entry-000299,,root,adibusana,adibusana,,,Skr neo,28,entries/a_002.json,unreviewed
+entry-000300-f001,entry-000300,,root,adicita,adicita,,,,28,entries/a_002.json,unreviewed
+entry-000301-f001,entry-000301,,root,adidaya,adidaya,,,Skr neo,28,entries/a_002.json,unreviewed
+entry-000302-f001,entry-000302,,root,adidéwa,adidewa,adidéwa,,,28,entries/a_002.json,unreviewed
+entry-000303-f001,entry-000303,,root,adigang,adigang,,,,28,entries/a_002.json,unreviewed
+entry-000304-f001,entry-000304,,root,adiguna,adiguna,,,Skr,28,entries/a_002.json,unreviewed
+entry-000305-f001,entry-000305,,root,adigung,adigung,,,Skr,28,entries/a_002.json,unreviewed
+entry-000306-f001,entry-000306,,root,adihablur,adihablur,,,phys,28,entries/a_002.json,unreviewed
+entry-000307-f001,entry-000307,,root,adihantar,adihantar,,,,28,entries/a_002.json,unreviewed
+entry-000307-f002,entry-000307,entry-000307-f001,derivative,teradihantar,teradihantar,,,,28,entries/a_002.json,unreviewed
+entry-000308-f001,entry-000308,,root,adiindividual,adiindividual,,,,28,entries/a_002.json,unreviewed
+entry-000309-f001,entry-000309,,root,adiinsani,adiinsani,,,,28,entries/a_002.json,unreviewed
+entry-000310-f001,entry-000310,,root,adik 1,adik 1,,,Mal | sl,28,entries/a_002.json,unreviewed
+entry-000310-f002,entry-000310,entry-000310-f001,derivative,beradik,beradik,,,,28,entries/a_002.json,unreviewed
+entry-000310-f003,entry-000310,entry-000310-f001,derivative,adik-beradik,adik-beradik,,,,28,entries/a_002.json,unreviewed
+entry-000310-f004,entry-000310,entry-000310-f001,derivative,memperadik,memperadik,,,Jv,28,entries/a_002.json,unreviewed
+entry-000311-f001,entry-000311,,root,adika,adika,,,Skr,28,entries/a_002.json,unreviewed
+entry-000312-f001,entry-000312,,root,adikanda,adikanda,,,,28,entries/a_002.json,unreviewed
+entry-000313-f001,entry-000313,,root,adikara,adikara,,,Skr,28,entries/a_002.json,unreviewed
+entry-000313-f002,entry-000313,entry-000313-f001,derivative,keadikaraan,keadikaraan,,,,28,entries/a_002.json,unreviewed
+entry-000314-f001,entry-000314,,root,adikarya,adikarya,,,Skr neo,28,entries/a_002.json,unreviewed
+entry-000315-f001,entry-000315,,root,adikodrati,adikodrati,,,,28,entries/a_002.json,unreviewed
+entry-000316-f001,entry-000316,,root,adikong,adikong,,,E | Mal,28,entries/a_002.json,unreviewed
+entry-000317-f001,entry-000317,,root,adiksi,adiksi,,,D,28,entries/a_002.json,unreviewed
+entry-000318-f001,entry-000318,,root,adiktif,adiktif,,,D/E,28,entries/a_002.json,unreviewed
+entry-000319-f001,entry-000319,,root,adikuasa,adikuasa,,,,28,entries/a_002.json,unreviewed
+entry-000320-f001,entry-000320,,root,adil,adil,,,A | leg,28,entries/a_002.json,unreviewed
+entry-000320-f002,entry-000320,entry-000320-f001,derivative,seadil,seadil,,,,28,entries/a_002.json,unreviewed
+entry-000320-f003,entry-000320,entry-000320-f001,derivative,seadil-adilnya,seadil-adilnya,,,,28,entries/a_002.json,unreviewed
+entry-000320-f004,entry-000320,entry-000320-f001,derivative,mengadili,mengadili,,,J | coq,28,entries/a_002.json,unreviewed
+entry-000320-f005,entry-000320,entry-000320-f001,derivative,mengadilkan 1,mengadilkan 1,,,,28,entries/a_002.json,unreviewed
+entry-000320-f006,entry-000320,entry-000320-f001,derivative,teradil,teradil,,,,28,entries/a_002.json,unreviewed
+entry-000320-f007,entry-000320,entry-000320-f001,derivative,teradili,teradili,,,,28,entries/a_002.json,unreviewed
+entry-000320-f008,entry-000320,entry-000320-f001,derivative,keadilan,keadilan,,,,28,entries/a_002.json,unreviewed
+entry-000320-f009,entry-000320,entry-000320-f001,derivative,pengadil,pengadil,,,ob,28,entries/a_002.json,unreviewed
+entry-000320-f010,entry-000320,entry-000320-f001,derivative,pengadilan,pengadilan,,,,28,entries/a_002.json,unreviewed
+entry-000320-f011,entry-000320,entry-000320-f001,derivative,peradilan,peradilan,,,,28,entries/a_002.json,unreviewed
+entry-000321-f001,entry-000321,,root,adilaksana,adilaksana,,,infr | mod,28,entries/a_002.json,unreviewed
+entry-000322-f001,entry-000322,,root,adilat,adilat,,,A,28,entries/a_002.json,unreviewed
+entry-000323-f001,entry-000323,,root,Adiloka,Adiloka,,,,28,entries/a_002.json,unreviewed
+entry-000324-f001,entry-000324,,root,adiluhung,adiluhung,,,Jv,28,entries/a_002.json,unreviewed
+entry-000324-f002,entry-000324,entry-000324-f001,derivative,keadiluhungan,keadiluhungan,,,,28,entries/a_002.json,unreviewed
+entry-000325-f001,entry-000325,,root,adimarga,adimarga,,,Skr neo,28,entries/a_002.json,unreviewed
+entry-000326-f001,entry-000326,,root,adinda,adinda,,,,28,entries/a_002.json,unreviewed
+entry-000327-f001,entry-000327,,root,ading,ading,,,coq,28,entries/a_002.json,unreviewed
+entry-000328-f001,entry-000328,,root,adiningrat,adiningrat,,,Jv,28,entries/a_002.json,unreviewed
+entry-000329-f001,entry-000329,,root,ad interim,ad interim,,,L,28,entries/a_002.json,unreviewed
+entry-000329-f002,entry-000329,entry-000329-f001,derivative,mengadinterimkan,mengadinterimkan,,,,28,entries/a_002.json,unreviewed
+entry-000329-f003,entry-000329,entry-000329-f001,derivative,keadinteriman,keadinteriman,,,,28,entries/a_002.json,unreviewed
+entry-000330-f001,entry-000330,,root,adipasar,adipasar,,,,28,entries/a_002.json,unreviewed
+entry-000331-f001,entry-000331,,root,adipati,adipati,,,Skr,28,entries/a_002.json,unreviewed
+entry-000332-f001,entry-000332,,root,adipenghantar,adipenghantar,,,,28,entries/a_002.json,unreviewed
+entry-000333-f001,entry-000333,,root,adipositas,adipositas,,,D,28,entries/a_002.json,unreviewed
+entry-000334-f001,entry-000334,,root,adipura,adipura,,,Skr neo,28,entries/a_002.json,unreviewed
+entry-000335-f001,entry-000335,,root,adiraja,adiraja,,,Skr,28,entries/a_002.json,unreviewed
+entry-000336-f001,entry-000336,,root,adirasa,adirasa,,,Skr neo,28,entries/a_002.json,unreviewed
+entry-000337-f001,entry-000337,,root,adiratna,adiratna,,,Skr | cla,28,entries/a_002.json,unreviewed
+entry-000338-f001,entry-000338,,root,adisional,adisional,,,E,28,entries/a_002.json,unreviewed
+entry-000339-f001,entry-000339,,root,adisiswa,adisiswa,,,Skr neo,28,entries/a_002.json,unreviewed
+entry-000340-f001,entry-000340,,root,adiswara,adiswara,,,Skr neo,29,entries/a_002.json,unreviewed
+entry-000341-f001,entry-000341,,root,aditif,aditif,,,D,29,entries/a_002.json,unreviewed
+entry-000342-f001,entry-000342,,root,aditokoh,aditokoh,,,,29,entries/a_002.json,unreviewed
+entry-000343-f001,entry-000343,,root,adiwangsa,adiwangsa,,,cla,29,entries/a_002.json,unreviewed
+entry-000344-f001,entry-000344,,root,adiwarna,adiwarna,,,cla,29,entries/a_002.json,unreviewed
+entry-000345-f001,entry-000345,,root,adiwidia,adiwidia,,,Skr neo,29,entries/a_002.json,unreviewed
+entry-000346-f001,entry-000346,,root,Adiyat,Adiyat,,,A,29,entries/a_002.json,unreviewed
+entry-000347-f001,entry-000347,,root,adiyuswa,adiyuswa,,,Skr neo,29,entries/a_002.json,unreviewed
+entry-000348-f001,entry-000348,,root,adizalir,adizalir,,,,29,entries/a_002.json,unreviewed
+entry-000348-f002,entry-000348,entry-000348-f001,derivative,keadizaliran,keadizaliran,,,,29,entries/a_002.json,unreviewed
+entry-000349-f001,entry-000349,,root,adjéktif,adjektif,adjéktif,,D,29,entries/a_002.json,unreviewed
+entry-000350-f001,entry-000350,,root,adjudikasi,adjudikasi,,,,29,entries/a_002.json,unreviewed
+entry-000351-f001,entry-000351,,root,administrasi,administrasi,,,D,29,entries/a_002.json,unreviewed
+entry-000351-f002,entry-000351,entry-000351-f001,derivative,mengadministrasikan,mengadministrasikan,,,,29,entries/a_002.json,unreviewed
+entry-000351-f003,entry-000351,entry-000351-f001,derivative,teradministrasi,teradministrasi,,,,29,entries/a_002.json,unreviewed
+entry-000351-f004,entry-000351,entry-000351-f001,derivative,pengadministrasian,pengadministrasian,,,,29,entries/a_002.json,unreviewed
+entry-000352-f001,entry-000352,,root,administratif,administratif,,,D/E,29,entries/a_002.json,unreviewed
+entry-000353-f001,entry-000353,,root,administrator,administrator,,,D/E,29,entries/a_002.json,unreviewed
+entry-000354-f001,entry-000354,,root,admiral,admiral,,,D/E,29,entries/a_002.json,unreviewed
+entry-000355-f001,entry-000355,,root,admisi,admisi,,,D,29,entries/a_002.json,unreviewed
+entry-000356-f001,entry-000356,,root,adn,adn,,,A,29,entries/a_002.json,unreviewed
+entry-000357-f001,entry-000357,,root,adolésén,adolesen,adolésén,,D/E,29,entries/a_002.json,unreviewed
+entry-000358-f001,entry-000358,,root,adolésénsi,adolesensi,adolésénsi,,D,29,entries/a_002.json,unreviewed
+entry-000359-f001,entry-000359,,root,adon,adon,,,,29,entries/a_002.json,unreviewed
+entry-000359-f002,entry-000359,entry-000359-f001,derivative,mengadon,mengadon,,,,29,entries/a_002.json,unreviewed
+entry-000359-f003,entry-000359,entry-000359-f001,derivative,mengadoni,mengadoni,,,,29,entries/a_002.json,unreviewed
+entry-000359-f004,entry-000359,entry-000359-f001,derivative,adonan,adonan,,,,29,entries/a_002.json,unreviewed
+entry-000359-f005,entry-000359,entry-000359-f001,derivative,keadonan,keadonan,,,,29,entries/a_002.json,unreviewed
+entry-000359-f006,entry-000359,entry-000359-f001,derivative,pengadonan,pengadonan,,,,29,entries/a_002.json,unreviewed
+entry-000360-f001,entry-000360,,root,adopsi,adopsi,,,D,29,entries/a_002.json,unreviewed
+entry-000360-f002,entry-000360,entry-000360-f001,derivative,mengadopsi,mengadopsi,,,,29,entries/a_002.json,unreviewed
+entry-000360-f003,entry-000360,entry-000360-f001,derivative,teradopsi,teradopsi,,,,29,entries/a_002.json,unreviewed
+entry-000360-f004,entry-000360,entry-000360-f001,derivative,pengadopsi,pengadopsi,,,,29,entries/a_002.json,unreviewed
+entry-000360-f005,entry-000360,entry-000360-f001,derivative,peradopsian,peradopsian,,,mod,29,entries/a_002.json,unreviewed
+entry-000361-f001,entry-000361,,root,adoptif,adoptif,,,D/E,29,entries/a_002.json,unreviewed
+entry-000362-f001,entry-000362,,root,adoptir,adoptir,,,D,29,entries/a_002.json,unreviewed
+entry-000363-f001,entry-000363,,root,Adpél,Adpel,Adpél,,,29,entries/a_002.json,unreviewed
+entry-000364-f001,entry-000364,,root,adperténsi,adpertensi,adperténsi,,,29,entries/a_002.json,unreviewed
+entry-000365-f001,entry-000365,,root,adpis,adpis,,,D,29,entries/a_002.json,unreviewed
+entry-000366-f001,entry-000366,,root,adpisir,adpisir,,,D,29,entries/a_002.json,unreviewed
+entry-000367-f001,entry-000367,,root,adpokat,adpokat,,,,29,entries/a_002.json,unreviewed
+entry-000368-f001,entry-000368,,root,ad rém,ad rem,ad rém,,L,29,entries/a_002.json,unreviewed
+entry-000369-f001,entry-000369,,root,adrénal,adrenal,adrénal,,D/E,29,entries/a_002.json,unreviewed
+entry-000370-f001,entry-000370,,root,adrénalin,adrenalin,adrénalin,,D/E,29,entries/a_002.json,unreviewed
+entry-000371-f001,entry-000371,,root,adreng,adreng,,,Jv,29,entries/a_002.json,unreviewed
+entry-000371-f002,entry-000371,entry-000371-f001,derivative,keadrengan,keadrengan,,,,29,entries/a_002.json,unreviewed
+entry-000372-f001,entry-000372,,root,adrés,adres,adrés,,D,29,entries/a_002.json,unreviewed
+entry-000372-f002,entry-000372,entry-000372-f001,derivative,beradrés,beradres,beradrés,,,29,entries/a_002.json,unreviewed
+entry-000372-f003,entry-000372,entry-000372-f001,derivative,mengadréskan,mengadreskan,mengadréskan,,,29,entries/a_002.json,unreviewed
+entry-000373-f001,entry-000373,,root,adrét,adret,adrét,,,29,entries/a_002.json,unreviewed
+entry-000374-f001,entry-000374,,root,ADRI,ADRI,,,,29,entries/a_002.json,unreviewed
+entry-000375-f001,entry-000375,,root,Adriatik,Adriatik,,,D,29,entries/a_002.json,unreviewed
+entry-000376-f001,entry-000376,,root,adsorbén,adsorben,adsorbén,,D/E,29,entries/a_002.json,unreviewed
+entry-000377-f001,entry-000377,,root,adsorpsi,adsorpsi,,,D,29,entries/a_002.json,unreviewed
+entry-000378-f001,entry-000378,,root,adu,adu,,I,Jv,29,entries/a_002.json,unreviewed
+entry-000378-f002,entry-000378,entry-000378-f001,derivative,beradu 1,beradu 1,,,joc,29,entries/a_002.json,unreviewed
+entry-000378-f003,entry-000378,entry-000378-f001,derivative,mengadu,mengadu,,,coq,29,entries/a_002.json,unreviewed
+entry-000378-f004,entry-000378,entry-000378-f001,derivative,mengadukan,mengadukan,,,J | coq,29,entries/a_002.json,unreviewed
+entry-000378-f005,entry-000378,entry-000378-f001,derivative,teradu,teradu,,,,29,entries/a_002.json,unreviewed
+entry-000378-f006,entry-000378,entry-000378-f001,derivative,aduan 1,aduan 1,,,ob,29,entries/a_002.json,unreviewed
+entry-000378-f007,entry-000378,entry-000378-f001,derivative,adu-aduan 1,adu-aduan 1,,,,29,entries/a_002.json,unreviewed
+entry-000378-f008,entry-000378,entry-000378-f001,derivative,pengadu,pengadu,,,,29,entries/a_002.json,unreviewed
+entry-000378-f009,entry-000378,entry-000378-f001,derivative,pengaduan,pengaduan,,,,29,entries/a_002.json,unreviewed
+entry-000378-f010,entry-000378,entry-000378-f001,derivative,peraduan,peraduan,,,,29,entries/a_002.json,unreviewed
+entry-000379-f001,entry-000379,,root,adu,adu,,II,,29,entries/a_002.json,unreviewed
+entry-000379-f002,entry-000379,entry-000379-f001,derivative,peraduan,peraduan,,,,29,entries/a_002.json,unreviewed
+entry-000380-f001,entry-000380,,root,aduh,aduh,,,,29 | 30,entries/a_002.json,unreviewed
+entry-000380-f002,entry-000380,entry-000380-f001,derivative,mengaduh(-aduh),mengaduh(-aduh),,,,29 | 30,entries/a_002.json,unreviewed
+entry-000380-f003,entry-000380,entry-000380-f001,derivative,teraduh,teraduh,,,,29 | 30,entries/a_002.json,unreviewed
+entry-000380-f004,entry-000380,entry-000380-f001,derivative,pengaduh,pengaduh,,,,29 | 30,entries/a_002.json,unreviewed
+entry-000381-f001,entry-000381,,root,aduhai 1,aduhai 1,,,coq,30,entries/a_002.json,unreviewed
+entry-000382-f001,entry-000382,,root,aduk,aduk,,,,30,entries/a_002.json,unreviewed
+entry-000382-f002,entry-000382,entry-000382-f001,derivative,beraduk,beraduk,,,,30,entries/a_002.json,unreviewed
+entry-000382-f003,entry-000382,entry-000382-f001,derivative,mengaduk,mengaduk,,,,30,entries/a_002.json,unreviewed
+entry-000382-f004,entry-000382,entry-000382-f001,derivative,mengaduk-aduk,mengaduk-aduk,,,coq,30,entries/a_002.json,unreviewed
+entry-000382-f005,entry-000382,entry-000382-f001,derivative,mengadukkan,mengadukkan,,,,30,entries/a_002.json,unreviewed
+entry-000382-f006,entry-000382,entry-000382-f001,derivative,teraduk,teraduk,,,,30,entries/a_002.json,unreviewed
+entry-000382-f007,entry-000382,entry-000382-f001,derivative,adukan,adukan,,,,30,entries/a_002.json,unreviewed
+entry-000382-f008,entry-000382,entry-000382-f001,derivative,aduk-adukan,aduk-adukan,,,,30,entries/a_002.json,unreviewed
+entry-000382-f009,entry-000382,entry-000382-f001,derivative,pengaduk,pengaduk,,,,30,entries/a_002.json,unreviewed
+entry-000382-f010,entry-000382,entry-000382-f001,derivative,pengadukan,pengadukan,,,,30,entries/a_002.json,unreviewed
+entry-000383-f001,entry-000383,,root,adun,adun,,I,,30,entries/a_002.json,unreviewed
+entry-000384-f001,entry-000384,,root,adun,adun,,II,cla,30,entries/a_002.json,unreviewed
+entry-000384-f002,entry-000384,entry-000384-f001,derivative,beradun,beradun,,,,30,entries/a_002.json,unreviewed
+entry-000384-f003,entry-000384,entry-000384-f001,derivative,mengadun(kan),mengadun(kan),,,,30,entries/a_002.json,unreviewed
+entry-000384-f004,entry-000384,entry-000384-f001,derivative,adunan,adunan,,,,30,entries/a_002.json,unreviewed
+entry-000384-f005,entry-000384,entry-000384-f001,derivative,pengadun,pengadun,,,,30,entries/a_002.json,unreviewed
+entry-000385-f001,entry-000385,,root,adung,adung,,,,30,entries/a_002.json,unreviewed
+entry-000386-f001,entry-000386,,root,Advént,Advent,Advént,,D/E,30,entries/a_002.json,unreviewed
+entry-000387-f001,entry-000387,,root,Advéntisme,Adventisme,Advéntisme,,D/E,30,entries/a_002.json,unreviewed
+entry-000388-f001,entry-000388,,root,advérb(i)a,adverb(i)a,advérb(i)a,,D/E,30,entries/a_002.json,unreviewed
+entry-000389-f001,entry-000389,,root,advérbial,adverbial,advérbial,,D/E,30,entries/a_002.json,unreviewed
+entry-000390-f001,entry-000390,,root,adverténsi,advertensi,adverténsi,,D,30,entries/a_002.json,unreviewed
+entry-000391-f001,entry-000391,,root,advis,advis,,,D/E,30,entries/a_002.json,unreviewed
+entry-000391-f002,entry-000391,entry-000391-f001,derivative,mengadviskan,mengadviskan,,,,30,entries/a_002.json,unreviewed
+entry-000392-f001,entry-000392,,root,advokasi,advokasi,,,D,30,entries/a_002.json,unreviewed
+entry-000393-f001,entry-000393,,root,advokat,advokat,,,D,30,entries/a_002.json,unreviewed
+entry-000393-f002,entry-000393,entry-000393-f001,derivative,keadvokatan,keadvokatan,,,mod,30,entries/a_002.json,unreviewed
+entry-000394-f001,entry-000394,,root,advokat,advokat,,II,D,30,entries/a_002.json,unreviewed
+entry-000395-f001,entry-000395,,root,adyaksa,adyaksa,,,,30,entries/a_002.json,unreviewed
+entry-000396-f001,entry-000396,,root,adzab,adzab,,,,30,entries/a_002.json,unreviewed
+entry-000397-f001,entry-000397,,root,adzan,adzan,,,,30,entries/a_002.json,unreviewed
+entry-000398-f001,entry-000398,,root,adzim,adzim,,,,30,entries/a_002.json,unreviewed
+entry-000399-f001,entry-000399,,root,adzmat,adzmat,,,,30,entries/a_002.json,unreviewed
+entry-000400-f001,entry-000400,,root,AE,AE,,,,30,entries/a_002.json,unreviewed
+entry-000401-f001,entry-000401,,root,aék,aek,aék,,,30,entries/a_002.json,unreviewed
+entry-000402-f001,entry-000402,,root,AÉKI,AEKI,AÉKI,,,30,entries/a_002.json,unreviewed
+entry-000403-f001,entry-000403,,root,aéng,aeng,aéng,,Jv,30,entries/a_002.json,unreviewed
+entry-000404-f001,entry-000404,,root,aér,aer,aér,,,30,entries/a_002.json,unreviewed
+entry-000405-f001,entry-000405,,root,aérasi,aerasi,aérasi,,D,30,entries/a_002.json,unreviewed
+entry-000406-f001,entry-000406,,root,aérob,aerob,aérob,,D/E,30,entries/a_002.json,unreviewed
+entry-000407-f001,entry-000407,,root,aérobatik,aerobatik,aérobatik,,D/E,30,entries/a_002.json,unreviewed
+entry-000407-f002,entry-000407,entry-000407-f001,derivative,beraérobatik,beraerobatik,beraérobatik,,,30,entries/a_002.json,unreviewed
+entry-000408-f001,entry-000408,,root,aérobik(a),aerobik(a),aérobik(a),,D/E,30,entries/a_002.json,unreviewed
+entry-000409-f001,entry-000409,,root,aérodinamika,aerodinamika,aérodinamika,,D/E,30,entries/a_002.json,unreviewed
+entry-000410-f001,entry-000410,,root,aérodinamis,aerodinamis,aérodinamis,,D,30,entries/a_002.json,unreviewed
+entry-000411-f001,entry-000411,,root,Aéroflot,Aeroflot,Aéroflot,,,30,entries/a_002.json,unreviewed
+entry-000412-f001,entry-000412,,root,aérogram,aerogram,aérogram,,D/E,30,entries/a_002.json,unreviewed
+entry-000413-f001,entry-000413,,root,aérologi,aerologi,aérologi,,D/E,30,entries/a_002.json,unreviewed
+entry-000414-f001,entry-000414,,root,aérométer,aerometer,aérométer,,D/E,30,entries/a_002.json,unreviewed
+entry-000415-f001,entry-000415,,root,aéromodeling,aeromodeling,aéromodeling,,D/E,30,entries/a_002.json,unreviewed
+entry-000416-f001,entry-000416,,root,aéromovél,aeromovel,aéromovél,,,30,entries/a_002.json,unreviewed
+entry-000417-f001,entry-000417,,root,aéronaut,aeronaut,aéronaut,,D/E,30,entries/a_002.json,unreviewed
+entry-000418-f001,entry-000418,,root,aéronautik,aeronautik,aéronautik,,D/E,30,entries/a_002.json,unreviewed
+entry-000419-f001,entry-000419,,root,aéronautika,aeronautika,aéronautika,,D/E,30,entries/a_002.json,unreviewed
+entry-000420-f001,entry-000420,,root,aéronom,aeronom,aéronom,,D/E,30,entries/a_002.json,unreviewed
+entry-000421-f001,entry-000421,,root,aéronomi,aeronomi,aéronomi,,D,30,entries/a_002.json,unreviewed
+entry-000422-f001,entry-000422,,root,aéronotik,aeronotik,aéronotik,,,30,entries/a_002.json,unreviewed
+entry-000423-f001,entry-000423,,root,aéroskop,aeroskop,aéroskop,,D/E,30,entries/a_002.json,unreviewed
+entry-000424-f001,entry-000424,,root,aérosol,aerosol,aérosol,,D/E,30,entries/a_002.json,unreviewed
+entry-000425-f001,entry-000425,,root,aérosport,aerosport,aérosport,,D/E,30,entries/a_002.json,unreviewed
+entry-000426-f001,entry-000426,,root,aérostatika,aerostatika,aérostatika,,D/E,30,entries/a_002.json,unreviewed
+entry-000427-f001,entry-000427,,root,aéstétika,aestetika,aéstétika,,D/E,30,entries/a_002.json,unreviewed
+entry-000428-f001,entry-000428,,root,aéstétikus,aestetikus,aéstétikus,,D,30,entries/a_002.json,unreviewed
+entry-000429-f001,entry-000429,,root,aéstétis,aestetis,aéstétis,,D/E,30,entries/a_002.json,unreviewed
+entry-000430-f001,entry-000430,,root,af,af,,I,D,30,entries/a_002.json,unreviewed
+entry-000431-f001,entry-000431,,root,af,af,,II,,30,entries/a_002.json,unreviewed
+entry-000432-f001,entry-000432,,root,afal,afal,,I,,30,entries/a_002.json,unreviewed
+entry-000433-f001,entry-000433,,root,afal,afal,,II,A,30,entries/a_002.json,unreviewed
+entry-000434-f001,entry-000434,,root,afal,afal,,III,D,30,entries/a_002.json,unreviewed
+entry-000435-f001,entry-000435,,root,afasi(a),afasi(a),,,D,30,entries/a_002.json,unreviewed
+entry-000436-f001,entry-000436,,root,afdal,afdal,,,,30,entries/a_002.json,unreviewed
+entry-000437-f001,entry-000437,,root,afdéling,afdeling,afdéling,,D | col,30,entries/a_002.json,unreviewed
+entry-000438-f001,entry-000438,,root,afdlal,afdlal,,,,30,entries/a_002.json,unreviewed
+entry-000439-f001,entry-000439,,root,afdol,afdol,,,A,30,entries/a_002.json,unreviewed
+entry-000439-f002,entry-000439,entry-000439-f001,derivative,mengafdolkan,mengafdolkan,,,,30,entries/a_002.json,unreviewed
+entry-000440-f001,entry-000440,,root,afdruk,afdruk,,,D,30,entries/a_002.json,unreviewed
+entry-000440-f002,entry-000440,entry-000440-f001,derivative,mengafdruk,mengafdruk,,,,30,entries/a_002.json,unreviewed
+entry-000440-f003,entry-000440,entry-000440-f001,derivative,mengafdrukkan,mengafdrukkan,,,,30,entries/a_002.json,unreviewed
+entry-000441-f001,entry-000441,,root,afdzal,afdzal,,,,30,entries/a_002.json,unreviewed
+entry-000442-f001,entry-000442,,root,afék,afek,afék,,D/E,30,entries/a_002.json,unreviewed
+entry-000443-f001,entry-000443,,root,aféksi,afeksi,aféksi,,D,30,entries/a_002.json,unreviewed
+entry-000444-f001,entry-000444,,root,aféktif,afektif,aféktif,,D/E,30,entries/a_002.json,unreviewed
+entry-000445-f001,entry-000445,,root,Afg(h)anistan,Afg(h)anistan,,,,30,entries/a_002.json,unreviewed
+entry-000446-f001,entry-000446,,root,afiat,afiat,,,A,30,entries/a_002.json,unreviewed
+entry-000446-f002,entry-000446,entry-000446-f001,derivative,mengafiatkan,mengafiatkan,,,,30,entries/a_002.json,unreviewed
+entry-000446-f003,entry-000446,entry-000446-f001,derivative,keafiatan,keafiatan,,,,30,entries/a_002.json,unreviewed
+entry-000447-f001,entry-000447,,root,afiks,afiks,,,D/E | ling,30,entries/a_002.json,unreviewed
+entry-000447-f002,entry-000447,entry-000447-f001,derivative,pengafiksan,pengafiksan,,,,30,entries/a_002.json,unreviewed
+entry-000448-f001,entry-000448,,root,afiksasi,afiksasi,,,D | ling,30,entries/a_002.json,unreviewed
+entry-000449-f001,entry-000449,,root,afiliasi,afiliasi,,,D,30,entries/a_002.json,unreviewed
+entry-000449-f002,entry-000449,entry-000449-f001,derivative,berafiliasi,berafiliasi,,,,30,entries/a_002.json,unreviewed
+entry-000450-f001,entry-000450,,root,afinitas,afinitas,,,D,30,entries/a_002.json,unreviewed
+entry-000451-f001,entry-000451,,root,afirmasi,afirmasi,,,D,30,entries/a_002.json,unreviewed
+entry-000451-f002,entry-000451,entry-000451-f001,derivative,mengafirmasikan,mengafirmasikan,,,,30,entries/a_002.json,unreviewed
+entry-000452-f001,entry-000452,,root,afirmatif,afirmatif,,,D/E,30,entries/a_002.json,unreviewed
+entry-000453-f001,entry-000453,,root,afiun,afiun,,,,30,entries/a_002.json,unreviewed
+entry-000454-f001,entry-000454,,root,afkir,afkir,,,D,30,entries/a_002.json,unreviewed
+entry-000454-f002,entry-000454,entry-000454-f001,derivative,mengafkir(kan),mengafkir(kan),,,,30,entries/a_002.json,unreviewed
+entry-000454-f003,entry-000454,entry-000454-f001,derivative,afkiran,afkiran,,,,30,entries/a_002.json,unreviewed
+entry-000454-f004,entry-000454,entry-000454-f001,derivative,pengafkiran,pengafkiran,,,,30,entries/a_002.json,unreviewed
+entry-000455-f001,entry-000455,,root,aflatoksin,aflatoksin,,,D/E,30,entries/a_002.json,unreviewed
+entry-000456-f001,entry-000456,,root,Afrika,Afrika,,,,30,entries/a_002.json,unreviewed
+entry-000457-f001,entry-000457,,root,afrikat,afrikat,,,D/E | ling,30,entries/a_002.json,unreviewed
+entry-000458-f001,entry-000458,,root,afrit,afrit,,,A,30,entries/a_002.json,unreviewed
+entry-000459-f001,entry-000459,,root,afrit,afrit,,II,D,30,entries/a_002.json,unreviewed
+entry-000460-f001,entry-000460,,root,afrodisiak,afrodisiak,,,D/E,30,entries/a_002.json,unreviewed
+entry-000461-f001,entry-000461,,root,afschuifsysteem,afschuifsysteem,,,D,30,entries/a_002.json,unreviewed
+entry-000462-f001,entry-000462,,root,Afsél,Afsel,Afsél,,,30,entries/a_002.json,unreviewed
+entry-000463-f001,entry-000463,,root,afsun,afsun,,,,30,entries/a_002.json,unreviewed
+entry-000464-f001,entry-000464,,root,aftab,aftab,,,Pers | ob,30,entries/a_002.json,unreviewed
+entry-000465-f001,entry-000465,,root,afuah,afuah,,,A,30,entries/a_002.json,unreviewed
+entry-000466-f001,entry-000466,,root,afyun,afyun,,,,30,entries/a_002.json,unreviewed
+entry-000467-f001,entry-000467,,root,ag,ag,,I,,30,entries/a_002.json,unreviewed
+entry-000468-f001,entry-000468,,root,AG,AG,,II,,30,entries/a_002.json,unreviewed
+entry-000469-f001,entry-000469,,root,Aga,Aga,,I,cp,30,entries/a_002.json,unreviewed
+entry-000470-f001,entry-000470,,root,aga,aga,,II,ob,30,entries/a_002.json,unreviewed
+entry-000471-f001,entry-000471,,root,aga,aga,,III,,30,entries/a_002.json,unreviewed
+entry-000472-f001,entry-000472,,root,agah beragah,agah beragah,,,,30,entries/a_002.json,unreviewed
+fragment-000473-f001,fragment-000473,,derivative,menganyam,menganyam,,,,70,entries/__001.json,unreviewed
+fragment-000473-f002,fragment-000473,,derivative,anyam-menganyam,anyam-menganyam,,,,70,entries/__001.json,unreviewed
+fragment-000473-f003,fragment-000473,,derivative,teranyam,teranyam,,,,70,entries/__001.json,unreviewed
+fragment-000473-f004,fragment-000473,,derivative,anyaman,anyaman,,,,70,entries/__001.json,unreviewed
+fragment-000473-f005,fragment-000473,,derivative,anyam-anyaman,anyam-anyaman,,,,70,entries/__001.json,unreviewed
+fragment-000473-f006,fragment-000473,,derivative,penganyam,penganyam,,,,70,entries/__001.json,unreviewed
+fragment-000473-f007,fragment-000473,,derivative,penganyaman,penganyaman,,,,70,entries/__001.json,unreviewed
+entry-000474-f001,entry-000474,,root,anyang,anyang,,I,,70,entries/a_002.json,unreviewed
+entry-000474-f002,entry-000474,entry-000474-f001,derivative,menganyang,menganyang,,,,70,entries/a_002.json,unreviewed
+entry-000475-f001,entry-000475,,root,anyang II menganyang ~,anyang II menganyang ~,,,,70,entries/a_002.json,unreviewed
+entry-000476-f001,entry-000476,,root,anyang,anyang,,III,Jv,70,entries/a_002.json,unreviewed
+entry-000477-f001,entry-000477,,root,anyang,anyang,,IV,Jv,70,entries/a_002.json,unreviewed
+entry-000478-f001,entry-000478,,root,anyang-anyang,anyang-anyang,,,,70,entries/a_002.json,unreviewed
+entry-000479-f001,entry-000479,,root,anyar,anyar,,,Jv,70,entries/a_002.json,unreviewed
+entry-000480-f001,entry-000480,,root,anyel,anyel,,,Jv,70,entries/a_002.json,unreviewed
+entry-000481-f001,entry-000481,,root,anyelir,anyelir,,,D,70,entries/a_002.json,unreviewed
+entry-000482-f001,entry-000482,,root,anyep,anyep,,,Jv,70,entries/a_002.json,unreviewed
+entry-000483-f001,entry-000483,,root,anyes,anyes,,,Jv,70,entries/a_002.json,unreviewed
+entry-000484-f001,entry-000484,,root,anyih,anyih,,,,70,entries/a_002.json,unreviewed
+entry-000485-f001,entry-000485,,root,anyik,anyik,,,,70,entries/a_002.json,unreviewed
+entry-000486-f001,entry-000486,,root,anyir,anyir,,,Jv,70,entries/a_002.json,unreviewed
+entry-000487-f001,entry-000487,,root,anyut,anyut,,,,70,entries/a_002.json,unreviewed
+entry-000488-f001,entry-000488,,root,aom,aom,,,S,70,entries/a_002.json,unreviewed
+entry-000489-f001,entry-000489,,root,aorta,aorta,,,D,70,entries/a_002.json,unreviewed
+entry-000490-f001,entry-000490,,root,aot,aot,,,,70,entries/a_002.json,unreviewed
+entry-000491-f001,entry-000491,,root,a,a,,,abbr,70,entries/a_002.json,unreviewed
+entry-000492-f001,entry-000492,,root,ap,ap,,,,70,entries/a_002.json,unreviewed
+entry-000493-f001,entry-000493,,root,apa,apa,,,coq,70,entries/a_002.json,unreviewed
+entry-000493-f002,entry-000493,entry-000493-f001,derivative,apanya,apanya,,,,70,entries/a_002.json,unreviewed
+entry-000493-f003,entry-000493,entry-000493-f001,derivative,apa-apa,apa-apa,,,J | coq,70,entries/a_002.json,unreviewed
+entry-000493-f004,entry-000493,entry-000493-f001,derivative,berapa,berapa,,,,70,entries/a_002.json,unreviewed
+entry-000493-f005,entry-000493,entry-000493-f001,derivative,mengapa,mengapa,,,,70,entries/a_002.json,unreviewed
+entry-000493-f006,entry-000493,entry-000493-f001,derivative,ngapain,ngapain,,,J,70,entries/a_002.json,unreviewed
+entry-000493-f007,entry-000493,entry-000493-f001,derivative,mengapa(-apa)i,mengapa(-apa)i,,,,70,entries/a_002.json,unreviewed
+entry-000493-f008,entry-000493,entry-000493-f001,derivative,mengapakan,mengapakan,,,,70,entries/a_002.json,unreviewed
+entry-000493-f009,entry-000493,entry-000493-f001,derivative,mempengapakan,mempengapakan,,,,70,entries/a_002.json,unreviewed
+entry-000493-f010,entry-000493,entry-000493-f001,derivative,apaan,apaan,,,coq,70,entries/a_002.json,unreviewed
+entry-000493-f011,entry-000493,entry-000493-f001,derivative,apa-apaan,apa-apaan,,,coq,70,entries/a_002.json,unreviewed
+entry-000494-f001,entry-000494,,root,apabila,apabila,,,,70,entries/a_002.json,unreviewed
+entry-000495-f001,entry-000495,,root,apai,apai,,,,70,entries/a_002.json,unreviewed
+entry-000496-f001,entry-000496,,root,apak,apak,,,,70,entries/a_002.json,unreviewed
+entry-000496-f002,entry-000496,entry-000496-f001,derivative,keapakan,keapakan,,,,70,entries/a_002.json,unreviewed
+entry-000497-f001,entry-000497,,root,apakala,apakala,,,,70,entries/a_002.json,unreviewed
+fragment-000498-f001,fragment-000498,,derivative,terkencing-kencing 1,terkencing-kencing 1,,,,500,entries/__001.json,unreviewed
+fragment-000498-f002,fragment-000498,,derivative,kencingan,kencingan,,,sl,500,entries/__001.json,unreviewed
+fragment-000498-f003,fragment-000498,,derivative,pekencingan,pekencingan,,,,500,entries/__001.json,unreviewed
+entry-000499-f001,entry-000499,,root,kencit,kencit,,,,500,entries/k_001.json,unreviewed
+entry-000500-f001,entry-000500,,root,kénco,kenco,kénco,,Jp,500,entries/k_001.json,unreviewed
+entry-000501-f001,entry-000501,,root,kéncong,kencong,kéncong,,M,500,entries/k_001.json,unreviewed
+entry-000501-f002,entry-000501,entry-000501-f001,derivative,mengéncong,mengencong,mengéncong,,,500,entries/k_001.json,unreviewed
+entry-000501-f003,entry-000501,entry-000501-f001,derivative,mengéncongkan,mengencongkan,mengéncongkan,,,500,entries/k_001.json,unreviewed
+entry-000502-f001,entry-000502,,root,kéncong,kencong,kéncong,II,,500,entries/k_001.json,unreviewed
+entry-000503-f001,entry-000503,,root,kencrang-kencring,kencrang-kencring,,,Jv | onom,500,entries/k_001.json,unreviewed
+entry-000504-f001,entry-000504,,root,kencréng,kencreng,kencréng,,onom,500,entries/k_001.json,unreviewed
+entry-000505-f001,entry-000505,,root,kencung,kencung,,,onom,500,entries/k_001.json,unreviewed
+entry-000506-f001,entry-000506,,root,kéncung,kencung,kéncung,,,500,entries/k_001.json,unreviewed
+entry-000507-f001,entry-000507,,root,kencup,kencup,,,,500,entries/k_001.json,unreviewed
+entry-000508-f001,entry-000508,,root,kencur,kencur,,,Jv,500,entries/k_001.json,unreviewed
+entry-000509-f001,entry-000509,,root,kendaga,kendaga,,,,500,entries/k_001.json,unreviewed
+entry-000510-f001,entry-000510,,root,kendak,kendak,,,J,500,entries/k_001.json,unreviewed
+entry-000510-f002,entry-000510,entry-000510-f001,derivative,berkendak,berkendak,,,,500,entries/k_001.json,unreviewed
+entry-000510-f003,entry-000510,entry-000510-f001,derivative,memperkendak,memperkendak,,,,500,entries/k_001.json,unreviewed
+entry-000510-f004,entry-000510,entry-000510-f001,derivative,kendakan,kendakan,,,,500,entries/k_001.json,unreviewed
+entry-000510-f005,entry-000510,entry-000510-f001,derivative,terkendala,terkendala,,,,500,entries/k_001.json,unreviewed
+entry-000511-f001,entry-000511,,root,kendal,kendal,,,Jv,500,entries/k_001.json,unreviewed
+entry-000512-f001,entry-000512,,root,kendala,kendala,,,,500,entries/k_001.json,unreviewed
+entry-000512-f002,entry-000512,entry-000512-f001,derivative,berkendala,berkendala,,,,500,entries/k_001.json,unreviewed
+entry-000512-f003,entry-000512,entry-000512-f001,derivative,mengendalakan,mengendalakan,,,,500,entries/k_001.json,unreviewed
+entry-000512-f004,entry-000512,entry-000512-f001,derivative,terkendala,terkendala,,,,500,entries/k_001.json,unreviewed
+entry-000513-f001,entry-000513,,root,kendali,kendali,,I,Jv | mil,500,entries/k_001.json,unreviewed
+entry-000513-f002,entry-000513,entry-000513-f001,derivative,berkendali 1,berkendali 1,,,,500,entries/k_001.json,unreviewed
+entry-000513-f003,entry-000513,entry-000513-f001,derivative,mengendalikan,mengendalikan,,,J | coq,500,entries/k_001.json,unreviewed
+entry-000513-f004,entry-000513,entry-000513-f001,derivative,terkendali(kan),terkendali(kan),,,coq,500,entries/k_001.json,unreviewed
+entry-000513-f005,entry-000513,entry-000513-f001,derivative,pengendali,pengendali,,,,500,entries/k_001.json,unreviewed
+entry-000513-f006,entry-000513,entry-000513-f001,derivative,pengendalian,pengendalian,,,,500,entries/k_001.json,unreviewed
+entry-000514-f001,entry-000514,,root,kendali,kendali,,II,,500,entries/k_001.json,unreviewed
+entry-000515-f001,entry-000515,,root,kendan,kendan,,,,500,entries/k_001.json,unreviewed
+entry-000516-f001,entry-000516,,root,kendana,kendana,,,M | ob,500,entries/k_001.json,unreviewed
+entry-000517-f001,entry-000517,,root,kendang,kendang,,I,Jv,500,entries/k_001.json,unreviewed
+entry-000517-f002,entry-000517,entry-000517-f001,derivative,berkendang,berkendang,,,,500,entries/k_001.json,unreviewed
+entry-000517-f003,entry-000517,entry-000517-f001,derivative,kendangan,kendangan,,,,500,entries/k_001.json,unreviewed
+entry-000518-f001,entry-000518,,root,kendang,kendang,,II,,500,entries/k_001.json,unreviewed
+entry-000518-f002,entry-000518,entry-000518-f001,derivative,kendangan,kendangan,,,,500,entries/k_001.json,unreviewed
+entry-000519-f001,entry-000519,,root,kendang,kendang,,III,,500,entries/k_001.json,unreviewed
+entry-000520-f001,entry-000520,,root,kéndang,kendang,kéndang,,M | esp,500,entries/k_001.json,unreviewed
+entry-000521-f001,entry-000521,,root,kendara,kendara,,,Skr,500,entries/k_001.json,unreviewed
+entry-000521-f002,entry-000521,entry-000521-f001,derivative,mengendara,mengendara,,,,500,entries/k_001.json,unreviewed
+entry-000521-f003,entry-000521,entry-000521-f001,derivative,mengendarai,mengendarai,,,,500,entries/k_001.json,unreviewed
+entry-000521-f004,entry-000521,entry-000521-f001,derivative,mengendarakan,mengendarakan,,,,500,entries/k_001.json,unreviewed
+entry-000521-f005,entry-000521,entry-000521-f001,derivative,kendaraan,kendaraan,,,,500,entries/k_001.json,unreviewed
+entry-000521-f006,entry-000521,entry-000521-f001,derivative,pengendara,pengendara,,,,500,entries/k_001.json,unreviewed
+entry-000521-f007,entry-000521,entry-000521-f001,derivative,pengendaraan,pengendaraan,,,,500,entries/k_001.json,unreviewed
+entry-000522-f001,entry-000522,,root,kendat,kendat,,,Jv,500,entries/k_001.json,unreviewed
+entry-000522-f002,entry-000522,entry-000522-f001,derivative,ngendat,ngendat,,,,500,entries/k_001.json,unreviewed
+entry-000523-f001,entry-000523,,root,kendati(pun),kendati(pun),,,,500,entries/k_001.json,unreviewed
+entry-000524-f001,entry-000524,,root,kendéka,kendeka,kendéka,,J,500,entries/k_001.json,unreviewed
+entry-000525-f001,entry-000525,,root,kendel –,kendel –,,,Jv,500,entries/k_001.json,unreviewed
+entry-000526-f001,entry-000526,,root,kenderi,kenderi,,I,,500,entries/k_001.json,unreviewed
+entry-000527-f001,entry-000527,,root,kenderi,kenderi,,II,Tam,500,entries/k_001.json,unreviewed
+entry-000528-f001,entry-000528,,root,kendi,kendi,,I,Skr,500,entries/k_001.json,unreviewed
+entry-000529-f001,entry-000529,,root,kendi,kendi,,II,,500,entries/k_001.json,unreviewed
+entry-000530-f001,entry-000530,,root,kendil,kendil,,,Jv,500,entries/k_001.json,unreviewed
+entry-000531-f001,entry-000531,,root,kendiri,kendiri,,,,500,entries/k_001.json,unreviewed
+entry-000532-f001,entry-000532,,root,kendit,kendit,,,S | coq | Jv,500,entries/k_001.json,unreviewed
+entry-000533-f001,entry-000533,,root,kendo,kendo,,,Jv,500,entries/k_001.json,unreviewed
+entry-000534-f001,entry-000534,,root,kéndo,kendo,kéndo,,Jp,500,entries/k_001.json,unreviewed
+entry-000535-f001,entry-000535,,root,kéndong,kendong,kéndong,,,500,entries/k_001.json,unreviewed
+entry-000536-f001,entry-000536,,root,kendor,kendor,,,,500,entries/k_001.json,unreviewed
+entry-000536-f002,entry-000536,entry-000536-f001,derivative,berkendor-kendor,berkendor-kendor,,,,500,entries/k_001.json,unreviewed
+entry-000536-f003,entry-000536,entry-000536-f001,derivative,memperkendor,memperkendor,,,,500,entries/k_001.json,unreviewed
+entry-000536-f004,entry-000536,entry-000536-f001,derivative,mengendor,mengendor,,,,500,entries/k_001.json,unreviewed
+entry-000536-f005,entry-000536,entry-000536-f001,derivative,mengendorkan,mengendorkan,,,,500,entries/k_001.json,unreviewed
+entry-000536-f006,entry-000536,entry-000536-f001,derivative,kekendoran,kekendoran,,,,500,entries/k_001.json,unreviewed
+entry-000536-f007,entry-000536,entry-000536-f001,derivative,pengendor,pengendor,,,,500,entries/k_001.json,unreviewed
+entry-000536-f008,entry-000536,entry-000536-f001,derivative,pengendoran,pengendoran,,,,500,entries/k_001.json,unreviewed
+entry-000537-f001,entry-000537,,root,kenduduk,kenduduk,,,,500,entries/k_001.json,unreviewed

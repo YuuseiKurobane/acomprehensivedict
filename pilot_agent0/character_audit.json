@@ -1,0 +1,1805 @@
+{
+  "schema_version": "agent0-semantic-pilot-2",
+  "page_count_scanned": 1124,
+  "characters": [
+    {
+      "codepoint": "U+2013",
+      "raw": "–",
+      "unicode_name": "EN DASH",
+      "unicode_category": "Pd",
+      "count": 56245,
+      "fonts": [
+        [
+          "Indrev-Roman",
+          39235
+        ],
+        [
+          "Indrev-Italic",
+          16324
+        ],
+        [
+          "Indrev-Bold",
+          655
+        ],
+        [
+          "Inresc-Roman",
+          15
+        ],
+        [
+          "Indrev-BoldItalic",
+          8
+        ],
+        [
+          "ArialMT",
+          7
+        ],
+        [
+          "Arial-ItalicMT",
+          1
+        ]
+      ],
+      "normalization": null,
+      "normalization_reason": null,
+      "contexts": [
+        {
+          "page": 7,
+          "font": "Indrev-Roman",
+          "context": "1–1103"
+        },
+        {
+          "page": 15,
+          "font": "Indrev-Roman",
+          "context": "as –"
+        },
+        {
+          "page": 15,
+          "font": "Indrev-Roman",
+          "context": "after the compound –"
+        },
+        {
+          "page": 15,
+          "font": "Indrev-Roman",
+          "context": "– means refer back to the headw"
+        },
+        {
+          "page": 15,
+          "font": "Indrev-Roman",
+          "context": "(– X) or (~ X) means that that b"
+        },
+        {
+          "page": 15,
+          "font": "Indrev-Roman",
+          "context": "or (~ X) means that that both – alone and – X, or ~ alone and"
+        },
+        {
+          "page": 15,
+          "font": "Indrev-Roman",
+          "context": "ns that that both – alone and – X, or ~ alone and ~ X, have t"
+        },
+        {
+          "page": 15,
+          "font": "Indrev-Roman",
+          "context": "(– "
+        }
+      ]
+    },
+    {
+      "codepoint": "U+0009",
+      "raw": "\t",
+      "unicode_name": "<unnamed>",
+      "unicode_category": "Cc",
+      "count": 31511,
+      "fonts": [
+        [
+          "Indrev-Roman",
+          30932
+        ],
+        [
+          "Indrev-Bold",
+          579
+        ]
+      ],
+      "normalization": null,
+      "normalization_reason": null,
+      "contexts": [
+        {
+          "page": 4,
+          "font": "Indrev-Roman",
+          "context": "\t"
+        },
+        {
+          "page": 4,
+          "font": "Indrev-Roman",
+          "context": "\t"
+        },
+        {
+          "page": 4,
+          "font": "Indrev-Roman",
+          "context": "\t"
+        },
+        {
+          "page": 4,
+          "font": "Indrev-Roman",
+          "context": "\t"
+        },
+        {
+          "page": 4,
+          "font": "Indrev-Roman",
+          "context": "\t"
+        },
+        {
+          "page": 7,
+          "font": "Indrev-Roman",
+          "context": "Preface to the Second Edition\t"
+        },
+        {
+          "page": 7,
+          "font": "Indrev-Roman",
+          "context": "Preface to the First Edition\t"
+        },
+        {
+          "page": 7,
+          "font": "Indrev-Roman",
+          "context": "Using This Dictionary\t"
+        }
+      ]
+    },
+    {
+      "codepoint": "U+00E9",
+      "raw": "é",
+      "unicode_name": "LATIN SMALL LETTER E WITH ACUTE",
+      "unicode_category": "Ll",
+      "count": 28989,
+      "fonts": [
+        [
+          "Indrev-Bold",
+          16157
+        ],
+        [
+          "Indrev-Italic",
+          11086
+        ],
+        [
+          "Indrev-Roman",
+          1571
+        ],
+        [
+          "Indrev-BoldItalic",
+          160
+        ],
+        [
+          "Inresc-Roman",
+          14
+        ],
+        [
+          "MinionPro-Regular",
+          1
+        ]
+      ],
+      "normalization": null,
+      "normalization_reason": null,
+      "contexts": [
+        {
+          "page": 15,
+          "font": "Indrev-Italic",
+          "context": "Angkatan Bersenjata Républik Indonésia"
+        },
+        {
+          "page": 15,
+          "font": "Indrev-Italic",
+          "context": "atan Bersenjata Républik Indonésia"
+        },
+        {
+          "page": 15,
+          "font": "Indrev-Roman",
+          "context": "nounced /té-én-i) from "
+        },
+        {
+          "page": 15,
+          "font": "Indrev-Roman",
+          "context": "nounced /té-én-i) from "
+        },
+        {
+          "page": 15,
+          "font": "Indrev-Italic",
+          "context": "Tentara Nasional Indonésia "
+        },
+        {
+          "page": 16,
+          "font": "Indrev-Roman",
+          "context": "2. \t<é> is a mid-front unrounded vow"
+        },
+        {
+          "page": 16,
+          "font": "Indrev-Roman",
+          "context": "3. \tBoth <e> and <é> are normally written <e> in "
+        },
+        {
+          "page": 16,
+          "font": "Indrev-Roman",
+          "context": "ronounced in full, e.g., B3 [bétiga]."
+        }
+      ]
+    },
+    {
+      "codepoint": "U+00AD",
+      "raw": "­",
+      "unicode_name": "SOFT HYPHEN",
+      "unicode_category": "Cf",
+      "count": 22703,
+      "fonts": [
+        [
+          "Indrev-Roman",
+          15978
+        ],
+        [
+          "Indrev-Italic",
+          6270
+        ],
+        [
+          "Inresc-Roman",
+          203
+        ],
+        [
+          "Indrev-Bold",
+          132
+        ],
+        [
+          "Indrev-BoldItalic",
+          120
+        ]
+      ],
+      "normalization": "",
+      "normalization_reason": "discretionary soft hyphen; not part of the lexical text",
+      "contexts": [
+        {
+          "page": 11,
+          "font": "Indrev-Roman",
+          "context": "ied to honor his memory by com­"
+        },
+        {
+          "page": 11,
+          "font": "Indrev-Roman",
+          "context": "mem­bers of Bahtera, an Internet m"
+        },
+        {
+          "page": 11,
+          "font": "Indrev-Roman",
+          "context": "hun­dreds of useful suggestions fo"
+        },
+        {
+          "page": 11,
+          "font": "Indrev-Roman",
+          "context": "ing support for a trip to Indo­"
+        },
+        {
+          "page": 11,
+          "font": "Indrev-Roman",
+          "context": "in for support of a trip to In­"
+        },
+        {
+          "page": 11,
+          "font": "Indrev-Roman",
+          "context": "y send suggestions for improve­"
+        },
+        {
+          "page": 13,
+          "font": "Indrev-Roman",
+          "context": "pe-, peN-, per-, se-, ter- (al­"
+        },
+        {
+          "page": 13,
+          "font": "Indrev-Roman",
+          "context": "would mean list­ing two or more forms for ever"
+        }
+      ]
+    },
+    {
+      "codepoint": "U+2192",
+      "raw": "→",
+      "unicode_name": "RIGHTWARDS ARROW",
+      "unicode_category": "Sm",
+      "count": 15399,
+      "fonts": [
+        [
+          "SymbolMT",
+          15399
+        ]
+      ],
+      "normalization": null,
+      "normalization_reason": null,
+      "contexts": [
+        {
+          "page": 15,
+          "font": "SymbolMT",
+          "context": "→ "
+        },
+        {
+          "page": 18,
+          "font": "SymbolMT",
+          "context": "→"
+        },
+        {
+          "page": 21,
+          "font": "SymbolMT",
+          "context": "→"
+        },
+        {
+          "page": 21,
+          "font": "SymbolMT",
+          "context": "→"
+        },
+        {
+          "page": 21,
+          "font": "SymbolMT",
+          "context": "→"
+        },
+        {
+          "page": 21,
+          "font": "SymbolMT",
+          "context": "→"
+        },
+        {
+          "page": 21,
+          "font": "SymbolMT",
+          "context": "→"
+        },
+        {
+          "page": 21,
+          "font": "SymbolMT",
+          "context": "→"
+        }
+      ]
+    },
+    {
+      "codepoint": "U+00A4",
+      "raw": "¤",
+      "unicode_name": "CURRENCY SIGN",
+      "unicode_category": "Sc",
+      "count": 11099,
+      "fonts": [
+        [
+          "Indrev-Roman",
+          10053
+        ],
+        [
+          "Indrev-Bold",
+          637
+        ],
+        [
+          "Indrev-Italic",
+          406
+        ],
+        [
+          "Indrev-BoldItalic",
+          3
+        ]
+      ],
+      "normalization": "fi",
+      "normalization_reason": "legacy Indrev font ligature mapping; rendered glyph is fi",
+      "contexts": [
+        {
+          "page": 11,
+          "font": "Indrev-Roman",
+          "context": "For ¤nancial aid, thanks to Columbi"
+        },
+        {
+          "page": 11,
+          "font": "Indrev-Roman",
+          "context": "rip to Indonesia in 2000. And ¤nally, I would like to state m"
+        },
+        {
+          "page": 11,
+          "font": "Indrev-Roman",
+          "context": "state my appreciation for the ¤nancial support provided "
+        },
+        {
+          "page": 11,
+          "font": "Indrev-Roman",
+          "context": "ionary free of errors or signi¤cant omissions, no work of "
+        },
+        {
+          "page": 13,
+          "font": "Indrev-Roman",
+          "context": "er, Indonesian dictionary, pre¤xes and suf¤xes must be stripp"
+        },
+        {
+          "page": 13,
+          "font": "Indrev-Roman",
+          "context": "an dictionary, pre¤xes and suf¤xes must be stripped off to di"
+        },
+        {
+          "page": 13,
+          "font": "Indrev-Roman",
+          "context": "pre¤xes and suf¤xes follows:"
+        },
+        {
+          "page": 13,
+          "font": "Indrev-Roman",
+          "context": "pre¤xes and suf¤xes follows:"
+        }
+      ]
+    },
+    {
+      "codepoint": "U+2019",
+      "raw": "’",
+      "unicode_name": "RIGHT SINGLE QUOTATION MARK",
+      "unicode_category": "Pf",
+      "count": 9469,
+      "fonts": [
+        [
+          "Indrev-Roman",
+          9167
+        ],
+        [
+          "Indrev-Bold",
+          192
+        ],
+        [
+          "Indrev-Italic",
+          84
+        ],
+        [
+          "Inresc-Roman",
+          26
+        ]
+      ],
+      "normalization": null,
+      "normalization_reason": null,
+      "contexts": [
+        {
+          "page": 4,
+          "font": "Indrev-Roman",
+          "context": "  499’.221321—dc22"
+        },
+        {
+          "page": 11,
+          "font": "Indrev-Roman",
+          "context": " thanks to Columbia University’s East Asian Institute for pro"
+        },
+        {
+          "page": 15,
+          "font": "Indrev-Roman",
+          "context": " ‘thumb’ is entered under "
+        },
+        {
+          "page": 15,
+          "font": "Indrev-Roman",
+          "context": "‘emergency’ is entered under "
+        },
+        {
+          "page": 15,
+          "font": "Indrev-Roman",
+          "context": "to favor’ is placed right "
+        },
+        {
+          "page": 15,
+          "font": "Indrev-Roman",
+          "context": ") ‘favorite child’."
+        },
+        {
+          "page": 15,
+          "font": "Indrev-Roman",
+          "context": "should be read as ‘in the book’ or ‘in the "
+        },
+        {
+          "page": 15,
+          "font": "Indrev-Roman",
+          "context": "paper’."
+        }
+      ]
+    },
+    {
+      "codepoint": "U+00B6",
+      "raw": "¶",
+      "unicode_name": "PILCROW SIGN",
+      "unicode_category": "Po",
+      "count": 4141,
+      "fonts": [
+        [
+          "Indrev-Roman",
+          3914
+        ],
+        [
+          "Indrev-Italic",
+          135
+        ],
+        [
+          "Indrev-Bold",
+          92
+        ]
+      ],
+      "normalization": "fl",
+      "normalization_reason": "legacy Indrev font ligature mapping; rendered glyph is fl",
+      "contexts": [
+        {
+          "page": 18,
+          "font": "Indrev-Roman",
+          "context": "erivatives of compounds still ¶uctuates between spelling the "
+        },
+        {
+          "page": 21,
+          "font": "Indrev-Roman",
+          "context": "Golden Age. b) ¶ourishing period. – "
+        },
+        {
+          "page": 21,
+          "font": "Indrev-Roman",
+          "context": " a) Golden Age. b) ¶ourishing period. – "
+        },
+        {
+          "page": 22,
+          "font": "Indrev-Roman",
+          "context": "Thomas Stamford Raf¶es (1811–1816), the ¤rst and o"
+        },
+        {
+          "page": 23,
+          "font": "Indrev-Roman",
+          "context": " to ¶atter."
+        },
+        {
+          "page": 23,
+          "font": "Indrev-Roman",
+          "context": "His house went up in ¶ames."
+        },
+        {
+          "page": 23,
+          "font": "Indrev-Roman",
+          "context": " ¶y "
+        },
+        {
+          "page": 23,
+          "font": "Indrev-Roman",
+          "context": " ¶y ash. – "
+        }
+      ]
+    },
+    {
+      "codepoint": "U+00C9",
+      "raw": "É",
+      "unicode_name": "LATIN CAPITAL LETTER E WITH ACUTE",
+      "unicode_category": "Lu",
+      "count": 2641,
+      "fonts": [
+        [
+          "Inresc-Roman",
+          2446
+        ],
+        [
+          "Indrev-Italic",
+          111
+        ],
+        [
+          "Indrev-Bold",
+          50
+        ],
+        [
+          "Indrev-Roman",
+          34
+        ]
+      ],
+      "normalization": null,
+      "normalization_reason": null,
+      "contexts": [
+        {
+          "page": 21,
+          "font": "Inresc-Roman",
+          "context": "RÉM"
+        },
+        {
+          "page": 22,
+          "font": "Inresc-Roman",
+          "context": "NGÉNGÉR"
+        },
+        {
+          "page": 22,
+          "font": "Inresc-Roman",
+          "context": "NGÉNGÉR"
+        },
+        {
+          "page": 23,
+          "font": "Inresc-Roman",
+          "context": "ABONEMÉN"
+        },
+        {
+          "page": 23,
+          "font": "Inresc-Roman",
+          "context": "ABONEMÉN"
+        },
+        {
+          "page": 24,
+          "font": "Inresc-Roman",
+          "context": "OBÉD"
+        },
+        {
+          "page": 25,
+          "font": "Inresc-Roman",
+          "context": "MENYÉPAK"
+        },
+        {
+          "page": 28,
+          "font": "Indrev-Italic",
+          "context": "~ Ékonomi"
+        }
+      ]
+    },
+    {
+      "codepoint": "U+201D",
+      "raw": "”",
+      "unicode_name": "RIGHT DOUBLE QUOTATION MARK",
+      "unicode_category": "Pf",
+      "count": 853,
+      "fonts": [
+        [
+          "Indrev-Roman",
+          692
+        ],
+        [
+          "Indrev-Italic",
+          161
+        ]
+      ],
+      "normalization": null,
+      "normalization_reason": null,
+      "contexts": [
+        {
+          "page": 19,
+          "font": "Indrev-Roman",
+          "context": " “Lexical Particles in Betawi.” "
+        },
+        {
+          "page": 20,
+          "font": "Indrev-Roman",
+          "context": "alay and Indonesian Languages.” "
+        },
+        {
+          "page": 20,
+          "font": "Indrev-Roman",
+          "context": "hasa Cina dalam Bahasa Melayu.” "
+        },
+        {
+          "page": 21,
+          "font": "Indrev-Italic",
+          "context": "ikut?”"
+        },
+        {
+          "page": 21,
+          "font": "Indrev-Roman",
+          "context": " “Do you want to join us?”"
+        },
+        {
+          "page": 22,
+          "font": "Indrev-Roman",
+          "context": ") “He Frowned”; title of the 80th chapter of"
+        },
+        {
+          "page": 25,
+          "font": "Indrev-Roman",
+          "context": " the person is “in” his "
+        },
+        {
+          "page": 25,
+          "font": "Indrev-Roman",
+          "context": " person is not in (or, is “out”). "
+        }
+      ]
+    },
+    {
+      "codepoint": "U+201C",
+      "raw": "“",
+      "unicode_name": "LEFT DOUBLE QUOTATION MARK",
+      "unicode_category": "Pi",
+      "count": 850,
+      "fonts": [
+        [
+          "Indrev-Roman",
+          676
+        ],
+        [
+          "Indrev-Italic",
+          174
+        ]
+      ],
+      "normalization": null,
+      "normalization_reason": null,
+      "contexts": [
+        {
+          "page": 19,
+          "font": "Indrev-Roman",
+          "context": "Ikranagara, Kay. “Lexical Particles in Betawi.” "
+        },
+        {
+          "page": 20,
+          "font": "Indrev-Roman",
+          "context": "Zhi, K. Y. “A Study of Chinese Loanwords ("
+        },
+        {
+          "page": 20,
+          "font": "Indrev-Roman",
+          "context": "Zhi, K. Y. “Kata Pinjaman Bahasa Cina dala"
+        },
+        {
+          "page": 21,
+          "font": "Indrev-Roman",
+          "context": "orm of address for older man. “–"
+        },
+        {
+          "page": 21,
+          "font": "Indrev-Roman",
+          "context": " “Do you want to join us?”"
+        },
+        {
+          "page": 22,
+          "font": "Indrev-Roman",
+          "context": ") “He Frowned”; title of the 80th"
+        },
+        {
+          "page": 25,
+          "font": "Indrev-Roman",
+          "context": " the person is “in” his "
+        },
+        {
+          "page": 25,
+          "font": "Indrev-Roman",
+          "context": " the person is not in (or, is “out”). "
+        }
+      ]
+    },
+    {
+      "codepoint": "U+2026",
+      "raw": "…",
+      "unicode_name": "HORIZONTAL ELLIPSIS",
+      "unicode_category": "Po",
+      "count": 223,
+      "fonts": [
+        [
+          "Indrev-Roman",
+          175
+        ],
+        [
+          "Indrev-Italic",
+          43
+        ],
+        [
+          "Indrev-Bold",
+          4
+        ],
+        [
+          "Inresc-Roman",
+          1
+        ]
+      ],
+      "normalization": null,
+      "normalization_reason": null,
+      "contexts": [
+        {
+          "page": 24,
+          "font": "Indrev-Roman",
+          "context": "to have … on the agenda/program. "
+        },
+        {
+          "page": 25,
+          "font": "Indrev-Roman",
+          "context": "(there are) some (that are…). – "
+        },
+        {
+          "page": 25,
+          "font": "Indrev-Roman",
+          "context": " … a) there’s always s.o. who or"
+        },
+        {
+          "page": 26,
+          "font": "Indrev-Roman",
+          "context": "…, when he was/lived in Jakarta"
+        },
+        {
+          "page": 31,
+          "font": "Indrev-Roman",
+          "context": "… I thought about ..., it occur"
+        },
+        {
+          "page": 32,
+          "font": "Indrev-Italic",
+          "context": " …ih … uh "
+        },
+        {
+          "page": 32,
+          "font": "Indrev-Italic",
+          "context": " …ih … uh "
+        },
+        {
+          "page": 37,
+          "font": "Indrev-Roman",
+          "context": "…"
+        }
+      ]
+    },
+    {
+      "codepoint": "U+2018",
+      "raw": "‘",
+      "unicode_name": "LEFT SINGLE QUOTATION MARK",
+      "unicode_category": "Pi",
+      "count": 57,
+      "fonts": [
+        [
+          "Indrev-Roman",
+          28
+        ],
+        [
+          "Indrev-Bold",
+          14
+        ],
+        [
+          "Indrev-Italic",
+          13
+        ],
+        [
+          "Inresc-Roman",
+          2
+        ]
+      ],
+      "normalization": null,
+      "normalization_reason": null,
+      "contexts": [
+        {
+          "page": 15,
+          "font": "Indrev-Roman",
+          "context": " ‘thumb’ is entered under "
+        },
+        {
+          "page": 15,
+          "font": "Indrev-Roman",
+          "context": "‘emergency’ is entered under "
+        },
+        {
+          "page": 15,
+          "font": "Indrev-Bold",
+          "context": "‘"
+        },
+        {
+          "page": 15,
+          "font": "Indrev-Roman",
+          "context": ") ‘favorite child’."
+        },
+        {
+          "page": 15,
+          "font": "Indrev-Roman",
+          "context": " book/paper should be read as ‘in the book’ or ‘in the "
+        },
+        {
+          "page": 15,
+          "font": "Indrev-Roman",
+          "context": "d be read as ‘in the book’ or ‘in the "
+        },
+        {
+          "page": 15,
+          "font": "Indrev-Roman",
+          "context": " ‘Indonesian Armed "
+        },
+        {
+          "page": 15,
+          "font": "Indrev-Roman",
+          "context": "‘Indonesian National Army’. In "
+        }
+      ]
+    },
+    {
+      "codepoint": "U+00EA",
+      "raw": "ê",
+      "unicode_name": "LATIN SMALL LETTER E WITH CIRCUMFLEX",
+      "unicode_category": "Ll",
+      "count": 13,
+      "fonts": [
+        [
+          "Indrev-Roman",
+          12
+        ],
+        [
+          "Indrev-Italic",
+          1
+        ]
+      ],
+      "normalization": null,
+      "normalization_reason": null,
+      "contexts": [
+        {
+          "page": 271,
+          "font": "Indrev-Roman",
+          "context": ")] in private, tête-à-tête."
+        },
+        {
+          "page": 271,
+          "font": "Indrev-Roman",
+          "context": ")] in private, tête-à-tête."
+        },
+        {
+          "page": 272,
+          "font": "Indrev-Roman",
+          "context": ") tête-"
+        },
+        {
+          "page": 272,
+          "font": "Indrev-Roman",
+          "context": "à-tête, private."
+        },
+        {
+          "page": 304,
+          "font": "Indrev-Roman",
+          "context": "crêpe. "
+        },
+        {
+          "page": 545,
+          "font": "Indrev-Roman",
+          "context": ") crêpe. "
+        },
+        {
+          "page": 545,
+          "font": "Indrev-Roman",
+          "context": "crêpe paper."
+        },
+        {
+          "page": 545,
+          "font": "Indrev-Roman",
+          "context": ") crêpe de Chine."
+        }
+      ]
+    },
+    {
+      "codepoint": "U+00E0",
+      "raw": "à",
+      "unicode_name": "LATIN SMALL LETTER A WITH GRAVE",
+      "unicode_category": "Ll",
+      "count": 12,
+      "fonts": [
+        [
+          "Indrev-Roman",
+          6
+        ],
+        [
+          "Indrev-Italic",
+          4
+        ],
+        [
+          "Indrev-Bold",
+          2
+        ]
+      ],
+      "normalization": null,
+      "normalization_reason": null,
+      "contexts": [
+        {
+          "page": 21,
+          "font": "Indrev-Bold",
+          "context": "à"
+        },
+        {
+          "page": 27,
+          "font": "Indrev-Bold",
+          "context": "à décharge "
+        },
+        {
+          "page": 87,
+          "font": "Indrev-Roman",
+          "context": " a chicken dish pre­pared à la Kalasan (a place "
+        },
+        {
+          "page": 271,
+          "font": "Indrev-Roman",
+          "context": ")] in private, tête-à-tête."
+        },
+        {
+          "page": 272,
+          "font": "Indrev-Roman",
+          "context": "à-tête, private."
+        },
+        {
+          "page": 507,
+          "font": "Indrev-Roman",
+          "context": "¤ligree, openwork (à jour), fretwork, lace."
+        },
+        {
+          "page": 665,
+          "font": "Indrev-Roman",
+          "context": " vis-à-vis, face-to-face, pri­"
+        },
+        {
+          "page": 874,
+          "font": "Indrev-Italic",
+          "context": "D from Fr dos-à-dos"
+        }
+      ]
+    },
+    {
+      "codepoint": "U+2014",
+      "raw": "—",
+      "unicode_name": "EM DASH",
+      "unicode_category": "Pd",
+      "count": 10,
+      "fonts": [
+        [
+          "Indrev-Roman",
+          8
+        ],
+        [
+          "Indrev-Italic",
+          2
+        ]
+      ],
+      "normalization": null,
+      "normalization_reason": null,
+      "contexts": [
+        {
+          "page": 4,
+          "font": "Indrev-Roman",
+          "context": "  1. Indonesian language—Dictionaries—English. I. Schmi"
+        },
+        {
+          "page": 4,
+          "font": "Indrev-Roman",
+          "context": "donesian language—Dictionaries—English. I. Schmidgall-Telling"
+        },
+        {
+          "page": 4,
+          "font": "Indrev-Roman",
+          "context": "  499’.221321—dc22"
+        },
+        {
+          "page": 11,
+          "font": "Indrev-Roman",
+          "context": "t the help of scores of people—both Indonesians and "
+        },
+        {
+          "page": 11,
+          "font": "Indrev-Roman",
+          "context": "non-Indonesians—in Indonesia, the United State"
+        },
+        {
+          "page": 18,
+          "font": "Indrev-Roman",
+          "context": "In general—and in many cases this is an a"
+        },
+        {
+          "page": 18,
+          "font": "Indrev-Roman",
+          "context": " this is an arbitrary decision—these have been attributed to "
+        },
+        {
+          "page": 19,
+          "font": "Indrev-Italic",
+          "context": "Kamus Dialek Melayu Jakarta—Bahasa Indonesia."
+        }
+      ]
+    },
+    {
+      "codepoint": "U+00E7",
+      "raw": "ç",
+      "unicode_name": "LATIN SMALL LETTER C WITH CEDILLA",
+      "unicode_category": "Ll",
+      "count": 8,
+      "fonts": [
+        [
+          "Indrev-Roman",
+          6
+        ],
+        [
+          "Indrev-Italic",
+          2
+        ]
+      ],
+      "normalization": null,
+      "normalization_reason": null,
+      "contexts": [
+        {
+          "page": 19,
+          "font": "Indrev-Italic",
+          "context": "Indonésien-Français Dictionnaire Général."
+        },
+        {
+          "page": 19,
+          "font": "Indrev-Italic",
+          "context": "re Minangkabau-Indonésien-Français."
+        },
+        {
+          "page": 72,
+          "font": "Indrev-Roman",
+          "context": " [Associaçao Popular Démocratica Timorén"
+        },
+        {
+          "page": 296,
+          "font": "Indrev-Roman",
+          "context": " (Forças Armadas do Libertacaº Nacio"
+        },
+        {
+          "page": 306,
+          "font": "Indrev-Roman",
+          "context": "e has not changed a bit, plus ça change. "
+        },
+        {
+          "page": 361,
+          "font": "Indrev-Roman",
+          "context": "face, façade, frontage."
+        },
+        {
+          "page": 559,
+          "font": "Indrev-Roman",
+          "context": " Curaçao."
+        },
+        {
+          "page": 1080,
+          "font": "Indrev-Roman",
+          "context": "same thing; plus ça change, plus c’est la même c"
+        }
+      ]
+    },
+    {
+      "codepoint": "U+00EB",
+      "raw": "ë",
+      "unicode_name": "LATIN SMALL LETTER E WITH DIAERESIS",
+      "unicode_category": "Ll",
+      "count": 8,
+      "fonts": [
+        [
+          "Indrev-Italic",
+          7
+        ],
+        [
+          "Indrev-Roman",
+          1
+        ]
+      ],
+      "normalization": null,
+      "normalization_reason": null,
+      "contexts": [
+        {
+          "page": 19,
+          "font": "Indrev-Italic",
+          "context": "e Nuttige Planten van Indonesië."
+        },
+        {
+          "page": 282,
+          "font": "Indrev-Italic",
+          "context": "Spizaëtus cirrhatus"
+        },
+        {
+          "page": 282,
+          "font": "Indrev-Italic",
+          "context": "naëtus malayensis"
+        },
+        {
+          "page": 282,
+          "font": "Indrev-Italic",
+          "context": "Spiza­ëtus bartelsi"
+        },
+        {
+          "page": 282,
+          "font": "Indrev-Italic",
+          "context": "Ichtyopaga ich­tyaëtus"
+        },
+        {
+          "page": 282,
+          "font": "Indrev-Italic",
+          "context": "Pandion haliaëtus"
+        },
+        {
+          "page": 282,
+          "font": "Indrev-Italic",
+          "context": "Haliaeëtus leucogaster"
+        },
+        {
+          "page": 395,
+          "font": "Indrev-Roman",
+          "context": "k.o. dance peculiar to the Diëng Plateau area in Central Jav"
+        }
+      ]
+    },
+    {
+      "codepoint": "U+00BD",
+      "raw": "½",
+      "unicode_name": "VULGAR FRACTION ONE HALF",
+      "unicode_category": "No",
+      "count": 7,
+      "fonts": [
+        [
+          "Indrev-Roman",
+          7
+        ]
+      ],
+      "normalization": null,
+      "normalization_reason": null,
+      "contexts": [
+        {
+          "page": 456,
+          "font": "Indrev-Roman",
+          "context": "oth measuring approximately 2 ½ yards x l Ø "
+        },
+        {
+          "page": 556,
+          "font": "Indrev-Roman",
+          "context": "d as a goldsmith’s weight of 1½ to 2 grams."
+        },
+        {
+          "page": 594,
+          "font": "Indrev-Roman",
+          "context": "a measure for grain, = ½ "
+        },
+        {
+          "page": 606,
+          "font": "Indrev-Roman",
+          "context": "a measure of ½ "
+        },
+        {
+          "page": 853,
+          "font": "Indrev-Roman",
+          "context": ") 2½ rupi­"
+        },
+        {
+          "page": 874,
+          "font": "Indrev-Roman",
+          "context": "1½ to 2 grams), either from a tr"
+        },
+        {
+          "page": 1090,
+          "font": "Indrev-Roman",
+          "context": "iod of 3 to 4 months. b) the 3½-year Japanese "
+        }
+      ]
+    },
+    {
+      "codepoint": "U+00BC",
+      "raw": "¼",
+      "unicode_name": "VULGAR FRACTION ONE QUARTER",
+      "unicode_category": "No",
+      "count": 6,
+      "fonts": [
+        [
+          "Indrev-Roman",
+          6
+        ]
+      ],
+      "normalization": null,
+      "normalization_reason": null,
+      "contexts": [
+        {
+          "page": 122,
+          "font": "Indrev-Roman",
+          "context": " cutter in the harvest, i.e., ¼, Ø, or ‰ of the crop reaped."
+        },
+        {
+          "page": 236,
+          "font": "Indrev-Roman",
+          "context": " = ¼"
+        },
+        {
+          "page": 236,
+          "font": "Indrev-Roman",
+          "context": "¼ of a "
+        },
+        {
+          "page": 740,
+          "font": "Indrev-Roman",
+          "context": " a rice measurement equal to ¼ "
+        },
+        {
+          "page": 763,
+          "font": "Indrev-Roman",
+          "context": "length, about 3¼ miles. "
+        },
+        {
+          "page": 984,
+          "font": "Indrev-Roman",
+          "context": ") ¼ of a "
+        }
+      ]
+    },
+    {
+      "codepoint": "U+2003",
+      "raw": " ",
+      "unicode_name": "EM SPACE",
+      "unicode_category": "Zs",
+      "count": 6,
+      "fonts": [
+        [
+          "Indrev-Roman",
+          6
+        ]
+      ],
+      "normalization": null,
+      "normalization_reason": null,
+      "contexts": [
+        {
+          "page": 4,
+          "font": "Indrev-Roman",
+          "context": " "
+        },
+        {
+          "page": 4,
+          "font": "Indrev-Roman",
+          "context": " "
+        },
+        {
+          "page": 4,
+          "font": "Indrev-Roman",
+          "context": " "
+        },
+        {
+          "page": 4,
+          "font": "Indrev-Roman",
+          "context": "p. "
+        },
+        {
+          "page": 4,
+          "font": "Indrev-Roman",
+          "context": " "
+        },
+        {
+          "page": 4,
+          "font": "Indrev-Roman",
+          "context": " "
+        }
+      ]
+    },
+    {
+      "codepoint": "U+00A0",
+      "raw": " ",
+      "unicode_name": "NO-BREAK SPACE",
+      "unicode_category": "Zs",
+      "count": 5,
+      "fonts": [
+        [
+          "Indrev-Italic",
+          3
+        ],
+        [
+          "Indrev-Roman",
+          2
+        ]
+      ],
+      "normalization": null,
+      "normalization_reason": null,
+      "contexts": [
+        {
+          "page": 102,
+          "font": "Indrev-Roman",
+          "context": "d with hot pepper on the side. "
+        },
+        {
+          "page": 696,
+          "font": "Indrev-Italic",
+          "context": "ya duduk-duduk mengawasi kita, ujar supir juru­san "
+        },
+        {
+          "page": 768,
+          "font": "Indrev-Italic",
+          "context": "~ rezeki"
+        },
+        {
+          "page": 979,
+          "font": "Indrev-Italic",
+          "context": "~ rambut"
+        },
+        {
+          "page": 1112,
+          "font": "Indrev-Roman",
+          "context": "trol, built-in controls. "
+        }
+      ]
+    },
+    {
+      "codepoint": "U+00F6",
+      "raw": "ö",
+      "unicode_name": "LATIN SMALL LETTER O WITH DIAERESIS",
+      "unicode_category": "Ll",
+      "count": 5,
+      "fonts": [
+        [
+          "Indrev-Italic",
+          3
+        ],
+        [
+          "Indrev-Roman",
+          2
+        ]
+      ],
+      "normalization": null,
+      "normalization_reason": null,
+      "contexts": [
+        {
+          "page": 19,
+          "font": "Indrev-Italic",
+          "context": "Wörterbuch."
+        },
+        {
+          "page": 33,
+          "font": "Indrev-Italic",
+          "context": "rönt­gén"
+        },
+        {
+          "page": 44,
+          "font": "Indrev-Italic",
+          "context": "Röntgén"
+        },
+        {
+          "page": 855,
+          "font": "Indrev-Roman",
+          "context": ") [Röntgen] X-ray. "
+        },
+        {
+          "page": 1110,
+          "font": "Indrev-Roman",
+          "context": "in Irian Jaya) hot dry wind, Föhn."
+        }
+      ]
+    },
+    {
+      "codepoint": "U+2002",
+      "raw": " ",
+      "unicode_name": "EN SPACE",
+      "unicode_category": "Zs",
+      "count": 5,
+      "fonts": [
+        [
+          "Indrev-Roman",
+          5
+        ]
+      ],
+      "normalization": null,
+      "normalization_reason": null,
+      "contexts": [
+        {
+          "page": 4,
+          "font": "Indrev-Roman",
+          "context": "  1. Indonesian language—Dictio"
+        },
+        {
+          "page": 4,
+          "font": "Indrev-Roman",
+          "context": "  PL5076.S7 2004"
+        },
+        {
+          "page": 4,
+          "font": "Indrev-Roman",
+          "context": "  499’.221321—dc22"
+        },
+        {
+          "page": 257,
+          "font": "Indrev-Roman",
+          "context": "  [Dépdikbud] De­partment of Ed"
+        },
+        {
+          "page": 257,
+          "font": "Indrev-Roman",
+          "context": "– "
+        }
+      ]
+    },
+    {
+      "codepoint": "U+00E8",
+      "raw": "è",
+      "unicode_name": "LATIN SMALL LETTER E WITH GRAVE",
+      "unicode_category": "Ll",
+      "count": 3,
+      "fonts": [
+        [
+          "Indrev-Italic",
+          2
+        ],
+        [
+          "Indrev-Roman",
+          1
+        ]
+      ],
+      "normalization": null,
+      "normalization_reason": null,
+      "contexts": [
+        {
+          "page": 19,
+          "font": "Indrev-Italic",
+          "context": "Atjèhsch Handwoordenboek (Atjèsch-"
+        },
+        {
+          "page": 19,
+          "font": "Indrev-Italic",
+          "context": "Atjèhsch Handwoordenboek (Atjèsch-Nederland­sch)."
+        },
+        {
+          "page": 968,
+          "font": "Indrev-Roman",
+          "context": ") scène (of theater)."
+        }
+      ]
+    },
+    {
+      "codepoint": "U+00B3",
+      "raw": "³",
+      "unicode_name": "SUPERSCRIPT THREE",
+      "unicode_category": "No",
+      "count": 2,
+      "fonts": [
+        [
+          "Indrev-Roman",
+          2
+        ]
+      ],
+      "normalization": "1/3",
+      "normalization_reason": "legacy fraction glyph mapping; rendered glyph is 1/3",
+      "contexts": [
+        {
+          "page": 475,
+          "font": "Indrev-Roman",
+          "context": "about 1 ³ lb)."
+        },
+        {
+          "page": 840,
+          "font": "Indrev-Roman",
+          "context": " 1³ acres."
+        }
+      ]
+    },
+    {
+      "codepoint": "U+00D8",
+      "raw": "Ø",
+      "unicode_name": "LATIN CAPITAL LETTER O WITH STROKE",
+      "unicode_category": "Lu",
+      "count": 2,
+      "fonts": [
+        [
+          "Indrev-Roman",
+          2
+        ]
+      ],
+      "normalization": "1/5",
+      "normalization_reason": "legacy fraction glyph mapping; rendered glyph is 1/5",
+      "contexts": [
+        {
+          "page": 122,
+          "font": "Indrev-Roman",
+          "context": "tter in the harvest, i.e., ¼, Ø, or ‰ of the crop reaped."
+        },
+        {
+          "page": 456,
+          "font": "Indrev-Roman",
+          "context": "g approximately 2 ½ yards x l Ø "
+        }
+      ]
+    },
+    {
+      "codepoint": "U+00E1",
+      "raw": "á",
+      "unicode_name": "LATIN SMALL LETTER A WITH ACUTE",
+      "unicode_category": "Ll",
+      "count": 2,
+      "fonts": [
+        [
+          "Indrev-Roman",
+          2
+        ]
+      ],
+      "normalization": null,
+      "normalization_reason": null,
+      "contexts": [
+        {
+          "page": 58,
+          "font": "Indrev-Roman",
+          "context": ") /anggár/ "
+        },
+        {
+          "page": 302,
+          "font": "Indrev-Roman",
+          "context": " [Frénte Révolucionária do Timor-Ésté Indépéndénté"
+        }
+      ]
+    },
+    {
+      "codepoint": "U+00F1",
+      "raw": "ñ",
+      "unicode_name": "LATIN SMALL LETTER N WITH TILDE",
+      "unicode_category": "Ll",
+      "count": 2,
+      "fonts": [
+        [
+          "Indrev-Roman",
+          2
+        ]
+      ],
+      "normalization": null,
+      "normalization_reason": null,
+      "contexts": [
+        {
+          "page": 180,
+          "font": "Indrev-Roman",
+          "context": " mañana, at some inde¤nite time in"
+        },
+        {
+          "page": 672,
+          "font": "Indrev-Roman",
+          "context": " enye [ñ]."
+        }
+      ]
+    },
+    {
+      "codepoint": "U+2009",
+      "raw": " ",
+      "unicode_name": "THIN SPACE",
+      "unicode_category": "Zs",
+      "count": 2,
+      "fonts": [
+        [
+          "Inresc-Roman",
+          1
+        ],
+        [
+          "Indrev-Roman",
+          1
+        ]
+      ],
+      "normalization": null,
+      "normalization_reason": null,
+      "contexts": [
+        {
+          "page": 346,
+          "font": "Inresc-Roman",
+          "context": "I "
+        },
+        {
+          "page": 475,
+          "font": "Indrev-Roman",
+          "context": "about 1 ³ lb)."
+        }
+      ]
+    },
+    {
+      "codepoint": "U+00A9",
+      "raw": "©",
+      "unicode_name": "COPYRIGHT SIGN",
+      "unicode_category": "So",
+      "count": 1,
+      "fonts": [
+        [
+          "Indrev-Roman",
+          1
+        ]
+      ],
+      "normalization": null,
+      "normalization_reason": null,
+      "contexts": [
+        {
+          "page": 4,
+          "font": "Indrev-Roman",
+          "context": "© 2010 by Ohio University Press"
+        }
+      ]
+    },
+    {
+      "codepoint": "U+00BA",
+      "raw": "º",
+      "unicode_name": "MASCULINE ORDINAL INDICATOR",
+      "unicode_category": "Lo",
+      "count": 1,
+      "fonts": [
+        [
+          "Indrev-Roman",
+          1
+        ]
+      ],
+      "normalization": null,
+      "normalization_reason": null,
+      "contexts": [
+        {
+          "page": 296,
+          "font": "Indrev-Roman",
+          "context": " (Forças Armadas do Libertacaº Nacional do Timor-Ésté) "
+        }
+      ]
+    },
+    {
+      "codepoint": "U+00BF",
+      "raw": "¿",
+      "unicode_name": "INVERTED QUESTION MARK",
+      "unicode_category": "Po",
+      "count": 1,
+      "fonts": [
+        [
+          "Indrev-Roman",
+          1
+        ]
+      ],
+      "normalization": "1/12",
+      "normalization_reason": "legacy fraction glyph mapping; rendered glyph is 1/12",
+      "contexts": [
+        {
+          "page": 334,
+          "font": "Indrev-Roman",
+          "context": "¿ of the entire estate in the f"
+        }
+      ]
+    },
+    {
+      "codepoint": "U+00EF",
+      "raw": "ï",
+      "unicode_name": "LATIN SMALL LETTER I WITH DIAERESIS",
+      "unicode_category": "Ll",
+      "count": 1,
+      "fonts": [
+        [
+          "Indrev-Roman",
+          1
+        ]
+      ],
+      "normalization": null,
+      "normalization_reason": null,
+      "contexts": [
+        {
+          "page": 235,
+          "font": "Indrev-Roman",
+          "context": " naïve and inexperienced. "
+        }
+      ]
+    },
+    {
+      "codepoint": "U+00F0",
+      "raw": "ð",
+      "unicode_name": "LATIN SMALL LETTER ETH",
+      "unicode_category": "Ll",
+      "count": 1,
+      "fonts": [
+        [
+          "Indrev-Roman",
+          1
+        ]
+      ],
+      "normalization": null,
+      "normalization_reason": null,
+      "contexts": [
+        {
+          "page": 672,
+          "font": "Indrev-Roman",
+          "context": " eng [ð]. – "
+        }
+      ]
+    },
+    {
+      "codepoint": "U+00FC",
+      "raw": "ü",
+      "unicode_name": "LATIN SMALL LETTER U WITH DIAERESIS",
+      "unicode_category": "Ll",
+      "count": 1,
+      "fonts": [
+        [
+          "Indrev-Roman",
+          1
+        ]
+      ],
+      "normalization": null,
+      "normalization_reason": null,
+      "contexts": [
+        {
+          "page": 20,
+          "font": "Indrev-Roman",
+          "context": " Hürth: Bundessprachenamt, "
+        }
+      ]
+    },
+    {
+      "codepoint": "U+2030",
+      "raw": "‰",
+      "unicode_name": "PER MILLE SIGN",
+      "unicode_category": "Po",
+      "count": 1,
+      "fonts": [
+        [
+          "Indrev-Roman",
+          1
+        ]
+      ],
+      "normalization": "1/6",
+      "normalization_reason": "legacy fraction glyph mapping; rendered glyph is 1/6",
+      "contexts": [
+        {
+          "page": 122,
+          "font": "Indrev-Roman",
+          "context": "n the harvest, i.e., ¼, Ø, or ‰ of the crop reaped."
+        }
+      ]
+    }
+  ]
+}

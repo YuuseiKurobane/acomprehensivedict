@@ -1,0 +1,11 @@
+{
+  "title": "A Comprehensive Indonesian-English Dictionary (agent0 semantic pilot)",
+  "revision": "agent0-pilot-0.2.0",
+  "format": 3,
+  "sequenced": true,
+  "author": "Pilot extraction; source by Alan M. Stevens and A. Ed. Schmidgall-Tellings",
+  "description": "Non-final layout-preserving extraction pilot. Semantic classification is intentionally conservative.",
+  "attribution": "For private extraction testing. Confirm redistribution rights before publication.",
+  "sourceLanguage": "id",
+  "targetLanguage": "en"
+}
