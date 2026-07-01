@@ -32,7 +32,7 @@ except ImportError:  # Human intermediate -> Yomitan does not require PyMuPDF.
 
 DEBUG_SCHEMA_VERSION = "acomprehensive-debug-1"
 HUMAN_SCHEMA_VERSION = "acomprehensive-markers-1"
-SCRIPT_VERSION = "1.0.0"
+SCRIPT_VERSION = "1.2.0"
 DEFAULT_PAGES = "21-30,70,236,500"
 
 # Verified visually by Agent 0. U+00AD is handled specially at line boundaries.
@@ -628,17 +628,38 @@ def _extract_prefix_metadata(
             for used_index in used:
                 events[used_index]["value"] = ""
             events[used[-1]]["value"] = remainder
+            events.insert(
+                used[0],
+                {
+                    "kind": "pronunciation",
+                    "value": pronunciation,
+                    "boundary": "",
+                },
+            )
             break
 
     first_text = next(
-        (event for event in events if event["kind"] == "text" and event["value"].strip()),
+        (
+            (index, event)
+            for index, event in enumerate(events)
+            if event["kind"] == "text" and event["value"].strip()
+        ),
         None,
     )
     if first_text is not None:
-        match = re.match(r"^\s*\[([^\]]+)\]\s*(.*)$", first_text["value"], flags=re.S)
+        index, event = first_text
+        match = re.match(r"^\s*\[([^\]]+)\]\s*(.*)$", event["value"], flags=re.S)
         if match:
             expansion = clean_text(match.group(1))
-            first_text["value"] = match.group(2)
+            event["value"] = match.group(2)
+            events.insert(
+                index,
+                {
+                    "kind": "expansion",
+                    "value": expansion,
+                    "boundary": "",
+                },
+            )
     return pronunciation, expansion
 
 
@@ -650,7 +671,12 @@ def _move_example_punctuation(example: str, translation: str) -> tuple[str, str]
     return example, translation
 
 
-def expand_example(text: str, root_expression: str, current_expression: str) -> str:
+def resolve_example_placeholders(
+    text: str,
+    root_expression: str,
+    current_expression: str,
+) -> str:
+    """Resolve source notation while rendering Layer 2 output."""
     text = re.sub(r"(?<!\w)–(?!\w)", root_expression, text)
     text = text.replace("~", current_expression)
     return clean_text(text)
@@ -694,11 +720,7 @@ def parse_form_content(
             output.append(
                 {
                     "type": "example",
-                    "value": expand_example(
-                        example_value,
-                        root_expression,
-                        current_expression,
-                    ),
+                    "value": example_value,
                 }
             )
         if translation_value:
@@ -707,14 +729,40 @@ def parse_form_content(
         translation = ""
         in_example = False
 
+    def flush_example_value() -> None:
+        """Emit an example while keeping its translation context open."""
+        nonlocal example
+        example_value = clean_text(example)
+        if example_value:
+            output.append(
+                {
+                    "type": "example",
+                    "value": example_value,
+                }
+            )
+        example = ""
+
+    def flush_translation_value() -> None:
+        """Emit translation text encountered before an inline source annotation."""
+        nonlocal translation
+        translation_value = clean_text(translation)
+        if translation_value:
+            output.append({"type": "translation", "value": translation_value})
+        translation = ""
+
     def start_example(operator: str = "") -> None:
         nonlocal definition, example, in_example
+        example_prefix = ""
         definition_match = re.match(r"^(.*?)(?:\s*([–~]))\s*$", definition, flags=re.S)
         if definition_match:
             definition = definition_match.group(1)
             operator = operator or definition_match.group(2)
+        wrapper_match = re.match(r"^(.*?)([\[(])\s*$", definition, flags=re.S)
+        if wrapper_match:
+            definition = wrapper_match.group(1)
+            example_prefix = wrapper_match.group(2)
         flush_definition()
-        example = f"{operator} " if operator else ""
+        example = example_prefix + (f"{operator} " if operator else "")
         in_example = True
 
     for event in events:
@@ -722,6 +770,19 @@ def parse_form_content(
         if kind == "label":
             if event["value"] not in labels:
                 labels.append(event["value"])
+            if in_example:
+                flush_example_value()
+                flush_translation_value()
+            else:
+                flush_definition()
+            output.append({"type": "label", "value": event["value"]})
+            continue
+        if kind in {"pronunciation", "expansion"}:
+            if in_example:
+                flush_example()
+            else:
+                flush_definition()
+            output.append({"type": kind, "value": event["value"]})
             continue
         if kind == "sense":
             if in_example:
@@ -794,7 +855,18 @@ def parse_form_content(
 
         if style in {"italic", "bold_italic"} and not (scientific_inline or acronym_inline):
             if in_example and translation.strip():
+                trailing_operator = re.match(
+                    r"^(.*?)(?:\s*([–~]))\s*$",
+                    translation,
+                    flags=re.S,
+                )
+                next_operator = ""
+                if trailing_operator:
+                    translation = trailing_operator.group(1)
+                    next_operator = trailing_operator.group(2)
                 flush_example()
+                if next_operator:
+                    start_example(next_operator)
             if not in_example:
                 start_example()
             example = join_piece(example, value, boundary)
@@ -872,11 +944,6 @@ def human_intermediate_text(
         if root["inline_subentry"]:
             lines.append("")
             lines.append(marker_line("Subentry", root["inline_subentry"]))
-        lines.extend(marker_line("Label", value) for value in active["labels"])
-        if active["pronunciation"]:
-            lines.append(marker_line("Pronunciation", active["pronunciation"]))
-        if active["expansion"]:
-            lines.append(marker_line("Expansion", active["expansion"]))
         for item in active["content"]:
             marker = item["type"].title()
             if item["type"] == "definition" and item["number"] is not None:
@@ -899,11 +966,6 @@ def human_intermediate_text(
                 lines.append(marker_line("Homograph", parsed["homograph"]))
             if parsed["inline_subentry"]:
                 lines.append(marker_line("Note", f"Inline form: {parsed['inline_subentry']}"))
-            lines.extend(marker_line("Label", value) for value in parsed["labels"])
-            if parsed["pronunciation"]:
-                lines.append(marker_line("Pronunciation", parsed["pronunciation"]))
-            if parsed["expansion"]:
-                lines.append(marker_line("Expansion", parsed["expansion"]))
             for item in parsed["content"]:
                 marker = item["type"].title()
                 if item["type"] == "definition" and item["number"] is not None:
@@ -990,10 +1052,13 @@ def parse_human_intermediate(path: Path) -> list[dict[str, Any]]:
             current_form["homograph"] = value
         elif marker == "Label":
             current_form["labels"].append(value)
+            current_form["content"].append({"type": "label", "value": value})
         elif marker == "Pronunciation":
             current_form["pronunciation"] = value
+            current_form["content"].append({"type": "pronunciation", "value": value})
         elif marker == "Expansion":
             current_form["expansion"] = value
+            current_form["content"].append({"type": "expansion", "value": value})
         elif marker == "Definition":
             current_form["content"].append(
                 {"type": "definition", "number": None, "value": value}
@@ -1077,30 +1142,43 @@ def form_glossary(
                 "content": f"Homograph {form['homograph']}",
             }
         )
-    if form["labels"]:
-        nodes.append(
-            {
-                "tag": "div",
-                "content": [label_badge(code, tag_map) for code in form["labels"]],
-            }
-        )
-    if form["pronunciation"]:
-        nodes.append({"tag": "div", "content": f"Pronunciation: {form['pronunciation']}"})
-    if form["expansion"]:
-        nodes.append({"tag": "div", "content": f"Expansion: {form['expansion']}"})
-
     for item in form["content"]:
         kind = item["type"]
         if kind == "definition":
             number = item.get("number")
             prefix = f"{number}. " if number is not None else ""
             nodes.append({"tag": "div", "content": [prefix, item["value"]]})
+        elif kind == "label":
+            nodes.append(
+                {
+                    "tag": "div",
+                    "content": label_badge(item["value"], tag_map),
+                }
+            )
+        elif kind == "pronunciation":
+            nodes.append(
+                {
+                    "tag": "div",
+                    "content": f"Pronunciation: {item['value']}",
+                }
+            )
+        elif kind == "expansion":
+            nodes.append(
+                {
+                    "tag": "div",
+                    "content": f"Expansion: {item['value']}",
+                }
+            )
         elif kind == "example":
             nodes.append(
                 {
                     "tag": "div",
                     "style": {"fontStyle": "italic", "marginTop": "0.25em"},
-                    "content": item["value"],
+                    "content": resolve_example_placeholders(
+                        item["value"],
+                        root_expression,
+                        form["expression"],
+                    ),
                 }
             )
         elif kind == "translation":

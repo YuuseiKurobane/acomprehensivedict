@@ -1,6 +1,6 @@
 {
   "schema_version": "acomprehensive-markers-1",
-  "script_version": "1.0.0",
+  "script_version": "1.2.0",
   "data_flow": [
     "PDF",
     "intermediate/debug.json",

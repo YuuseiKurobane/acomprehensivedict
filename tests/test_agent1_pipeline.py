@@ -17,7 +17,7 @@ class ExtractionRegressionTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         tag_map = pipeline.load_tag_map(TAGS)
-        debug = pipeline.group_debug_entries(PDF, [21, 25, 70, 236, 500])
+        debug = pipeline.group_debug_entries(PDF, [21, 23, 25, 70, 236, 500])
         cls.human_text = pipeline.human_intermediate_text(debug, tag_map)
         with tempfile.TemporaryDirectory() as temp_dir:
             cls.human_path = Path(temp_dir) / "human-readable.txt"
@@ -55,7 +55,7 @@ class ExtractionRegressionTests(unittest.TestCase):
 
         accented_a = self.find_form("à")
         self.assertIn("@", accented_a["variants"])
-        self.assertIn("à Rp 1.000,-", self.content_values(accented_a, "example"))
+        self.assertIn("– Rp 1.000,-", self.content_values(accented_a, "example"))
 
         year_form = self.find_form("A ’45")
         self.assertEqual("Angkatan ’45", year_form["expansion"])
@@ -93,7 +93,7 @@ class ExtractionRegressionTests(unittest.TestCase):
             form for form in root_entry["forms"] if form["expression"] == "menganyang"
         )
         self.assertIn(
-            "menganyang hati",
+            "~ hati",
             self.content_values(menganyang, "example"),
         )
 
@@ -122,7 +122,7 @@ class ExtractionRegressionTests(unittest.TestCase):
         ]
         self.assertEqual([1, 2, 3], [item["number"] for item in definitions])
         self.assertIn(
-            "Soalnya uang belanja dapur terasa menjadi cupet (sempit)",
+            "Soalnya uang belanja dapur terasa menjadi – (sempit)",
             self.content_values(cupet, "example")[0],
         )
         self.assertIn("PICIK", self.content_values(cupet, "see"))
@@ -142,8 +142,85 @@ class ExtractionRegressionTests(unittest.TestCase):
 
         cuping = self.find_form("cuping")
         self.assertIn(
-            "tidak memperlihatkan cuping hidungnya",
+            "tidak memperlihatkan – hidungnya",
             self.content_values(cuping, "example"),
+        )
+
+    def test_substitution_dash_binds_to_following_example(self) -> None:
+        abu = self.find_form("abu", homograph="I")
+        self.assertIn("– bara", self.content_values(abu, "example"))
+        self.assertIn("– batu bara", self.content_values(abu, "example"))
+        definitions = [
+            item["value"]
+            for item in abu["content"]
+            if item["type"] == "definition"
+        ]
+        self.assertEqual("dust.", definitions[1])
+        self.assertIn(
+            "(seperti) – di atas tunggul",
+            self.content_values(abu, "example"),
+        )
+        self.assertIn(
+            "to stir up a hornet’s nest.",
+            self.content_values(abu, "translation"),
+        )
+        self.assertNotIn(
+            "to stir up a hornet’s nest. –",
+            self.content_values(abu, "translation"),
+        )
+        self.assertFalse(
+            any(value.endswith("–") for value in self.content_values(abu, "translation"))
+        )
+
+        abuk = self.find_form("abuk", homograph="I")
+        self.assertEqual(
+            ["– bunga", "– gergaji"],
+            self.content_values(abuk, "example"),
+        )
+        self.assertEqual(
+            ["pollen.", "sawdust."],
+            self.content_values(abuk, "translation"),
+        )
+
+    def test_labels_preserve_source_position(self) -> None:
+        abu = self.find_form("abu", homograph="I")
+        content = [(item["type"], item["value"]) for item in abu["content"]]
+        self.assertLess(
+            content.index(("example", "berdiang di – dingin")),
+            content.index(("label", "M"), content.index(("example", "berdiang di – dingin"))),
+        )
+        second_m = content.index(
+            ("label", "M"),
+            content.index(("example", "berdiang di – dingin")),
+        )
+        self.assertLess(
+            second_m,
+            content.index(
+                ("translation", "to obtain nothing (from brothers/family heads, etc.).")
+            ),
+        )
+        javanese = content.index(("label", "Jv"))
+        self.assertLess(content.index(("example", "– blarak")), javanese)
+        self.assertLess(
+            javanese,
+            content.index(
+                ("translation", "dried coconut leaf powder (used as a cleanser).")
+            ),
+        )
+
+        abubakar = self.find_form("abubakar", homograph="II")
+        metadata = [
+            (item["type"], item["value"])
+            for item in abubakar["content"]
+            if item["type"] in {"label", "expansion"}
+        ]
+        self.assertEqual(
+            [
+                ("label", "joc"),
+                ("label", "acr"),
+                ("expansion", "atas budi baik Golkar"),
+            ],
+            metadata,
         )
 
 
@@ -170,6 +247,36 @@ class HumanBoundaryTests(unittest.TestCase):
         serialized = json.dumps(rows, ensure_ascii=False)
         self.assertIn("from the marker intermediate.", serialized)
         self.assertIn("?query=coba", serialized)
+
+    def test_example_placeholders_are_resolved_only_in_layer_two(self) -> None:
+        source = (
+            "[Entry] abu\n"
+            "[Example] – bara\n"
+            "[Translation] cinder.\n"
+            "\n"
+            "[Subentry] abu-abu\n"
+            "[Example] udara ~\n"
+            "[Translation] an overcast sky.\n"
+        )
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp = Path(temp_dir)
+            human = temp / "human-readable.txt"
+            output = temp / "output"
+            human.write_text(source, encoding="utf-8")
+            parsed = pipeline.parse_human_intermediate(human)
+            self.assertEqual("– bara", parsed[0]["forms"][0]["content"][0]["value"])
+            self.assertEqual("udara ~", parsed[0]["forms"][1]["content"][0]["value"])
+            pipeline.build_yomitan_from_human(human, output, TAGS)
+            rows = json.loads((output / "yomitan" / "term_bank_1.json").read_text("utf-8"))
+
+        root_row = next(row for row in rows if row[0] == "abu")
+        subentry_row = next(row for row in rows if row[0] == "abu-abu")
+        root_rendered = json.dumps(root_row[5], ensure_ascii=False)
+        subentry_rendered = json.dumps(subentry_row[5], ensure_ascii=False)
+        self.assertIn("abu bara", root_rendered)
+        self.assertNotIn("– bara", root_rendered)
+        self.assertIn("udara abu-abu", subentry_rendered)
+        self.assertNotIn("udara ~", subentry_rendered)
 
     def test_optional_forms_are_layer_two_lookup_aliases(self) -> None:
         self.assertEqual(

@@ -57,3 +57,14 @@ Blank lines are cosmetic. Every nonblank line must begin with a recognized
 marker. Optional-spelling expansion, accentless lookup aliases, source-label
 colors, and clickable cross-references are Layer 2 operations performed while
 building Yomitan.
+
+Marker order is semantic. In particular, `[Label]` remains at its printed
+source position instead of being promoted to the top of an entry. A Layer 2
+renderer may collect labels if it wants a collapsed presentation, but the
+human intermediate retains enough information for source-faithful rendering.
+
+A standalone `–` immediately before an italic example belongs to that next
+example. Layer 1 preserves `–` (root placeholder) and `~` (current-form
+placeholder) literally in `[Example]`; Layer 2 resolves them while rendering
+Yomitan. A placeholder must not remain attached to the preceding
+`[Translation]`.
