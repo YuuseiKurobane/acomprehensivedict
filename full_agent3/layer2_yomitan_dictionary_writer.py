@@ -13,7 +13,7 @@ from typing import Any, Iterable, Iterator
 from urllib.parse import parse_qs, quote, urlparse
 
 
-LAYER2_VERSION = "3.0.0"
+LAYER2_VERSION = "3.0.1"
 MARKER_RE = re.compile(r"^\[([^\]]+)\](?:\s(.*))?$")
 OPTIONAL_GROUP_RE = re.compile(r"\(([^()]*)\)")
 AFFIXED_ACRONYM_RE = re.compile(r"^(.+?)-([A-Z][A-Z0-9]+)-(.+)$")
@@ -331,6 +331,12 @@ def _lexical_phrase_candidates(
         if value.startswith("~"):
             phrase = clean_text(
                 str(form["expression"]) + " " + value.removeprefix("~")
+            )
+            if phrase:
+                yield phrase
+        if value.startswith("–"):
+            phrase = clean_text(
+                root_expression + " " + value.removeprefix("–")
             )
             if phrase:
                 yield phrase
@@ -1368,7 +1374,7 @@ def build_yomitan(
 
     index = {
         "title": "A Comprehensive Indonesian-English Dictionary",
-        "revision": f"full-agent2-layer2-{LAYER2_VERSION}",
+        "revision": f"full-agent3-layer2-{LAYER2_VERSION}",
         "format": 3,
         "sequenced": True,
         "author": (

@@ -37,6 +37,20 @@ unrelated small-cap text stays `[SmallCaps]`. The detailed debug JSON remains
 the place to inspect page, line, font, geometry, raw text, and character
 repairs.
 
+Layer 1 repairs ASCII hyphens printed at physical PDF line wraps only when the
+debug geometry reaches a known column edge and resumes at the same column's
+start in the same source style. Corpus evidence determines whether to remove
+a discretionary hyphen (`sau- dara` → `saudara`) or preserve a lexical hyphen
+while removing the layout space (`asset- backed` → `asset-backed`). Remaining
+cases are resolved by the reviewed `audit1_line_wrap_resolutions.csv`; its LLM
+draft decisions are explicit and editable. Every build writes the applied and
+unresolved evidence to `intermediate/audit1_line_wrap_<profile>.json`.
+
+When the PDF isolates a boundary `~` or en dash in a Roman run directly beside
+an italic phrase, Layer 1 moves the operator into that italic run and removes
+the emptied Roman run. It does not move operators across labels, senses,
+parentheses, or other structural markers.
+
 Layer 2 owns all reader-facing cleanup:
 
 - Consecutive homographs of one expression become one Yomitan result with
@@ -62,7 +76,8 @@ Layer 2 owns all reader-facing cleanup:
   `Kata Terkait` links under star bullets. Inline bold aliases do not create
   hierarchy.
 - Standalone `–` and `~` source operators are resolved only in Layer 2.
-  ASCII hyphens are never replaced.
+  Layer 1 may already have attached them to the correct italic run; Layer 2
+  performs the lexical substitution. Layer 2 does not alter ASCII hyphens.
 - Parentheses used only to wrap a source label are suppressed around the
   rendered badge. The underlying Layer 1 run sequence remains unchanged.
 

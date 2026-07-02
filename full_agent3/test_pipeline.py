@@ -9,8 +9,15 @@ import layer1_pdf_extractor as layer1
 import layer2_yomitan_dictionary_writer as layer2
 
 
-def span(style: str, text: str) -> dict[str, str]:
-    return {"style": style, "clean_text": text}
+def span(
+    style: str,
+    text: str,
+    bbox: list[float] | None = None,
+) -> dict[str, Any]:
+    result: dict[str, Any] = {"style": style, "clean_text": text}
+    if bbox is not None:
+        result["bbox"] = bbox
+    return result
 
 
 def flatten(node: Any) -> str:
@@ -36,6 +43,171 @@ def anchors(node: Any) -> list[dict[str, Any]]:
 
 
 class Layer1SurfaceTests(unittest.TestCase):
+    @staticmethod
+    def wrapped_form(
+        left: str,
+        right: str,
+        *,
+        first_line_id: str = "first",
+        second_line_id: str = "second",
+    ) -> dict[str, Any]:
+        return {
+            "lines": [
+                {
+                    "line_id": first_line_id,
+                    "pdf_page": 25,
+                    "column": 1,
+                    "bbox": [270.0, 1.0, 462.0, 10.0],
+                    "join_next_without_space": False,
+                    "spans": [
+                        span("bold", "test", [270.0, 1.0, 290.0, 10.0]),
+                        span(
+                            "italic",
+                            left,
+                            [440.0, 1.0, 462.0, 10.0],
+                        ),
+                    ],
+                },
+                {
+                    "line_id": second_line_id,
+                    "pdf_page": 25,
+                    "column": 1,
+                    "bbox": [270.0, 10.0, 350.0, 19.0],
+                    "join_next_without_space": False,
+                    "spans": [
+                        span(
+                            "italic",
+                            right,
+                            [270.0, 10.0, 350.0, 19.0],
+                        ),
+                    ],
+                },
+            ]
+        }
+
+    def test_ascii_hyphen_wrap_uses_corpus_then_approved_csv(self) -> None:
+        saudara = self.wrapped_form("sau-", "dara melihat adik saya?")
+        parsed = layer1.parse_debug_form(
+            saudara,
+            {},
+            line_wrap_evidence={
+                "words": {"saudara"},
+                "hyphenated_words": set(),
+            },
+        )
+        self.assertEqual(parsed["content"][0]["value"], "saudara melihat adik saya?")
+        self.assertEqual(
+            saudara["line_wrap_repairs"][0]["source"],
+            "corpus_joined",
+        )
+
+        asset_backed = self.wrapped_form("asset-", "backed securities")
+        parsed = layer1.parse_debug_form(
+            asset_backed,
+            {},
+            line_wrap_evidence={
+                "words": set(),
+                "hyphenated_words": {"asset-backed"},
+            },
+        )
+        self.assertEqual(
+            parsed["content"][0]["value"],
+            "asset-backed securities",
+        )
+        self.assertEqual(
+            asset_backed["line_wrap_repairs"][0]["source"],
+            "corpus_hyphenated",
+        )
+
+        pulosari = self.wrapped_form(
+            "pu-",
+            "losari",
+            first_line_id="p0027-l0062",
+            second_line_id="p0027-l0063",
+        )
+        key = layer1._line_wrap_key(
+            "p0027-l0062",
+            "p0027-l0063",
+            "pu",
+            "losari",
+        )
+        parsed = layer1.parse_debug_form(
+            pulosari,
+            {},
+            line_wrap_evidence={
+                "words": set(),
+                "hyphenated_words": set(),
+            },
+            line_wrap_resolutions={
+                "approved": {
+                    key: {
+                        "joined_candidate": "pulosari",
+                        "hyphenated_candidate": "pu-losari",
+                        "approved_resolution": "remove_hyphen",
+                    }
+                }
+            },
+        )
+        self.assertEqual(parsed["content"][0]["value"], "pulosari")
+        self.assertEqual(
+            pulosari["line_wrap_repairs"][0]["source"],
+            "manual_csv",
+        )
+
+        unresolved = self.wrapped_form("un-", "known")
+        parsed = layer1.parse_debug_form(
+            unresolved,
+            {},
+            line_wrap_evidence={
+                "words": set(),
+                "hyphenated_words": set(),
+            },
+        )
+        self.assertEqual(parsed["content"][0]["value"], "un- known")
+        self.assertNotIn("line_wrap_repairs", unresolved)
+
+    def test_boundary_operators_move_into_adjacent_italics(self) -> None:
+        corrected = layer1._attach_boundary_operators_to_italics(
+            [
+                {"kind": "run", "style": "roman", "value": "~"},
+                {"kind": "run", "style": "italic", "value": "saja"},
+                {"kind": "run", "style": "roman", "value": "gloss ~"},
+                {"kind": "run", "style": "italic", "value": "zaman sekarang"},
+                {"kind": "run", "style": "italic", "value": "sebelum"},
+                {"kind": "run", "style": "roman", "value": "– explanation"},
+                {"kind": "run", "style": "roman", "value": "gloss –"},
+                {"kind": "run", "style": "italic", "value": "sesudah"},
+                {"kind": "run", "style": "roman", "value": "members – –"},
+                {"kind": "run", "style": "italic", "value": "prajurit"},
+            ]
+        )
+        self.assertEqual(
+            [
+                (item["style"], item["value"])
+                for item in corrected
+            ],
+            [
+                ("italic", "~ saja"),
+                ("roman", "gloss"),
+                ("italic", "~ zaman sekarang"),
+                ("italic", "sebelum –"),
+                ("roman", "explanation"),
+                ("roman", "gloss"),
+                ("italic", "– sesudah"),
+                ("roman", "members"),
+                ("italic", "– prajurit"),
+            ],
+        )
+
+        nonadjacent = layer1._attach_boundary_operators_to_italics(
+            [
+                {"kind": "run", "style": "roman", "value": "~"},
+                {"kind": "label", "value": "coq"},
+                {"kind": "run", "style": "italic", "value": "saja"},
+            ]
+        )
+        self.assertEqual(nonadjacent[0]["value"], "~")
+
     def test_variant_surface_is_not_consumed(self) -> None:
         form = {
             "lines": [

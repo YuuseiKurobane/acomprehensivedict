@@ -8,6 +8,7 @@ in the source PDF. Presentation decisions belong to Layer 2.
 
 from __future__ import annotations
 
+import csv
 import hashlib
 import json
 import re
@@ -28,7 +29,8 @@ if str(REPO_DIR) not in sys.path:
 import extract_agent1 as source_parser  # noqa: E402
 
 
-LAYER1_VERSION = "3.0.0"
+LAYER1_VERSION = "3.2.0"
+LINE_WRAP_RESOLUTIONS_PATH = WORK_DIR / "audit1_line_wrap_resolutions.csv"
 SMALL_PAGE_SPEC = source_parser.DEFAULT_PAGES
 FULL_PAGE_SPEC = "21-1123"
 PROFILE_PAGE_SPECS = {
@@ -42,6 +44,30 @@ RUN_STYLE_MARKERS = {
     "bold_italic": "BoldItalic",
     "small_caps": "SmallCaps",
     "symbol": "Symbol",
+}
+LETTER_PATTERN = r"[^\W\d_]"
+WORD_RE = re.compile(rf"{LETTER_PATTERN}+", flags=re.UNICODE)
+HYPHENATED_WORD_RE = re.compile(
+    rf"(?<!{LETTER_PATTERN})"
+    rf"({LETTER_PATTERN}+)-({LETTER_PATTERN}+)"
+    rf"(?!{LETTER_PATTERN})",
+    flags=re.UNICODE,
+)
+TRAILING_LINE_WRAP_RE = re.compile(
+    rf"({LETTER_PATTERN}+)-\s*$",
+    flags=re.UNICODE,
+)
+LEADING_LINE_WRAP_RE = re.compile(
+    rf"^\s*({LETTER_PATTERN}+)",
+    flags=re.UNICODE,
+)
+BODY_COLUMN_LEFT = {0: 54.0, 1: 270.0}
+BODY_COLUMN_RIGHT = {0: 246.0, 1: 462.0}
+LINE_WRAP_GEOMETRY_TOLERANCE = 2.5
+APPLIED_LINE_WRAP_ACTIONS = {"remove_hyphen", "preserve_hyphen"}
+MANUAL_LINE_WRAP_ACTIONS = {
+    *APPLIED_LINE_WRAP_ACTIONS,
+    "leave_unchanged",
 }
 
 
@@ -57,7 +83,348 @@ def profile_paths(intermediate_dir: Path, profile: str) -> dict[str, Path]:
     return {
         "human": intermediate_dir / f"human_readable_{profile}.txt",
         "debug": intermediate_dir / f"debug_{profile}.json",
+        "line_wrap_audit": (
+            intermediate_dir / f"audit1_line_wrap_{profile}.json"
+        ),
         "manifest": intermediate_dir / f"layer1_{profile}_manifest.json",
+    }
+
+
+def _line_wrap_key(
+    previous_line_id: str,
+    next_line_id: str,
+    left_fragment: str,
+    right_fragment: str,
+) -> str:
+    return "|".join(
+        (
+            previous_line_id,
+            next_line_id,
+            left_fragment.casefold(),
+            right_fragment.casefold(),
+        )
+    )
+
+
+def _line_wrap_word_evidence(
+    debug_entries: list[dict[str, Any]],
+) -> dict[str, set[str]]:
+    """Collect source-attested joined and hyphenated word spellings."""
+    words: set[str] = set()
+    hyphenated_words: set[str] = set()
+    for debug_entry in debug_entries:
+        for form in debug_entry.get("forms", []):
+            for line in form.get("lines", []):
+                text = str(line.get("clean_text", ""))
+                words.update(
+                    match.group(0).casefold()
+                    for match in WORD_RE.finditer(text)
+                )
+                hyphenated_words.update(
+                    f"{match.group(1)}-{match.group(2)}".casefold()
+                    for match in HYPHENATED_WORD_RE.finditer(text)
+                )
+    return {
+        "words": words,
+        "hyphenated_words": hyphenated_words,
+    }
+
+
+def _load_line_wrap_resolutions(
+    path: Path,
+) -> dict[str, Any]:
+    """Load reviewed decisions while retaining pending rows for audit."""
+    if not path.is_file():
+        raise FileNotFoundError(
+            f"Layer 1 line-wrap resolution table is missing: {path}"
+        )
+
+    with path.open("r", encoding="utf-8-sig", newline="") as stream:
+        rows = list(csv.DictReader(stream))
+    required = {
+        "resolution_key",
+        "previous_line_id",
+        "next_line_id",
+        "left_fragment",
+        "right_fragment",
+        "joined_candidate",
+        "hyphenated_candidate",
+        "approved_resolution",
+        "review_status",
+    }
+    missing = required.difference(rows[0] if rows else ())
+    if missing:
+        raise ValueError(
+            "Line-wrap resolution CSV is missing columns: "
+            + ", ".join(sorted(missing))
+        )
+
+    by_key: dict[str, dict[str, str]] = {}
+    approved: dict[str, dict[str, str]] = {}
+    for row_number, row in enumerate(rows, start=2):
+        expected_key = _line_wrap_key(
+            row["previous_line_id"],
+            row["next_line_id"],
+            row["left_fragment"],
+            row["right_fragment"],
+        )
+        key = row["resolution_key"].strip()
+        if key != expected_key:
+            raise ValueError(
+                f"Line-wrap CSV row {row_number} has an invalid key: {key!r}"
+            )
+        if key in by_key:
+            raise ValueError(
+                f"Duplicate line-wrap resolution key on row {row_number}: "
+                f"{key}"
+            )
+        by_key[key] = row
+
+        if row["review_status"].strip().casefold() != "approved":
+            continue
+        resolution = row["approved_resolution"].strip()
+        if resolution not in MANUAL_LINE_WRAP_ACTIONS:
+            raise ValueError(
+                f"Approved line-wrap CSV row {row_number} has invalid "
+                f"resolution {resolution!r}"
+            )
+        approved[key] = row
+
+    return {
+        "path": path,
+        "rows": by_key,
+        "approved": approved,
+    }
+
+
+def _ascii_line_wrap_decisions(
+    form: dict[str, Any],
+    evidence: dict[str, set[str]] | None,
+    resolutions: dict[str, Any] | None = None,
+) -> dict[int, dict[str, Any]]:
+    """Classify high-confidence ASCII-hyphen wraps between PDF lines.
+
+    Candidates must end at a known body-column edge, resume at that column's
+    left edge, remain on the same page, and retain the same source style.
+    Attested corpus spellings take precedence. Approved CSV decisions are
+    consulted only when corpus evidence cannot decide.
+    """
+    if evidence is None:
+        return {}
+
+    words = evidence["words"]
+    hyphenated_words = evidence["hyphenated_words"]
+    approved = (resolutions or {}).get("approved", {})
+    lines = form.get("lines", [])
+    decisions: dict[int, dict[str, Any]] = {}
+    for next_index in range(1, len(lines)):
+        previous_line = lines[next_index - 1]
+        next_line = lines[next_index]
+        if (
+            previous_line.get("pdf_page") != next_line.get("pdf_page")
+            or previous_line.get("column") != next_line.get("column")
+        ):
+            continue
+
+        previous_spans = [
+            span
+            for span in previous_line.get("spans", [])
+            if str(span.get("clean_text", "")).strip()
+        ]
+        next_spans = [
+            span
+            for span in next_line.get("spans", [])
+            if str(span.get("clean_text", "")).strip()
+        ]
+        if not previous_spans or not next_spans:
+            continue
+        previous_span = previous_spans[-1]
+        next_span = next_spans[0]
+        if previous_span.get("style") != next_span.get("style"):
+            continue
+
+        trailing = TRAILING_LINE_WRAP_RE.search(
+            str(previous_span.get("clean_text", ""))
+        )
+        leading = LEADING_LINE_WRAP_RE.match(
+            str(next_span.get("clean_text", ""))
+        )
+        if trailing is None or leading is None:
+            continue
+
+        column = int(previous_line["column"])
+        previous_bbox = previous_span.get("bbox", [])
+        next_bbox = next_span.get("bbox", [])
+        if len(previous_bbox) < 3 or not next_bbox:
+            continue
+        if (
+            abs(float(previous_bbox[2]) - BODY_COLUMN_RIGHT[column])
+            > LINE_WRAP_GEOMETRY_TOLERANCE
+            or abs(float(next_bbox[0]) - BODY_COLUMN_LEFT[column])
+            > LINE_WRAP_GEOMETRY_TOLERANCE
+        ):
+            continue
+
+        left_fragment = trailing.group(1)
+        right_fragment = leading.group(1)
+        joined = f"{left_fragment}{right_fragment}"
+        hyphenated = f"{left_fragment}-{right_fragment}"
+        key = _line_wrap_key(
+            str(previous_line["line_id"]),
+            str(next_line["line_id"]),
+            left_fragment,
+            right_fragment,
+        )
+        manual_row = approved.get(key)
+
+        if hyphenated.casefold() in hyphenated_words:
+            action = "preserve_hyphen"
+            source = "corpus_hyphenated"
+        elif joined.casefold() in words:
+            action = "remove_hyphen"
+            source = "corpus_joined"
+        elif manual_row is None:
+            action = "ambiguous"
+            source = "unresolved"
+        elif (
+            manual_row["joined_candidate"] != joined
+            or manual_row["hyphenated_candidate"] != hyphenated
+        ):
+            action = "conflict"
+            source = "manual_csv_mismatch"
+        else:
+            action = manual_row["approved_resolution"].strip()
+            source = "manual_csv"
+
+        replacement = None
+        if action == "remove_hyphen":
+            replacement = joined
+        elif action == "preserve_hyphen":
+            replacement = hyphenated
+
+        decisions[next_index] = {
+            "resolution_key": key,
+            "previous_line_id": previous_line["line_id"],
+            "next_line_id": next_line["line_id"],
+            "pdf_page": previous_line["pdf_page"],
+            "column": column,
+            "style": previous_span["style"],
+            "left_fragment": left_fragment,
+            "right_fragment": right_fragment,
+            "printed": f"{left_fragment}- {right_fragment}",
+            "joined_candidate": joined,
+            "hyphenated_candidate": hyphenated,
+            "action": action,
+            "source": source,
+            "replacement": replacement,
+        }
+    return decisions
+
+
+def _line_wrap_audit(
+    debug_entries: list[dict[str, Any]],
+    evidence: dict[str, set[str]],
+    resolutions: dict[str, Any],
+    *,
+    profile: str,
+) -> dict[str, Any]:
+    """Return a persistent audit of repaired and unresolved line wraps."""
+    decisions: list[dict[str, Any]] = []
+    for debug_entry in debug_entries:
+        forms = debug_entry.get("forms", [])
+        root_expression = ""
+        if forms:
+            root_expression = str(
+                forms[0].get("expression_parse", {}).get("expression", "")
+            )
+        for form in forms:
+            form_expression = str(
+                form.get("expression_parse", {}).get("expression", "")
+            )
+            for decision in _ascii_line_wrap_decisions(
+                form,
+                evidence,
+                resolutions,
+            ).values():
+                decisions.append(
+                    {
+                        "entry": root_expression,
+                        "form": form_expression,
+                        **decision,
+                    }
+                )
+
+    repairs = [
+        decision
+        for decision in decisions
+        if decision["action"] in APPLIED_LINE_WRAP_ACTIONS
+    ]
+    ambiguous = [
+        decision
+        for decision in decisions
+        if decision["action"] == "ambiguous"
+    ]
+    conflicts = [
+        decision
+        for decision in decisions
+        if decision["action"] == "conflict"
+    ]
+    unchanged = [
+        decision
+        for decision in decisions
+        if decision["action"] == "leave_unchanged"
+    ]
+    encountered_keys = {
+        str(decision["resolution_key"]) for decision in decisions
+    }
+    csv_rows = resolutions["rows"]
+    csv_approved = resolutions["approved"]
+    unmatched = (
+        sorted(set(csv_rows).difference(encountered_keys))
+        if profile == "full"
+        else []
+    )
+
+    def action_count(value: str) -> int:
+        return sum(
+            decision["action"] == value for decision in decisions
+        )
+
+    def source_count(value: str) -> int:
+        return sum(
+            decision["source"] == value for decision in decisions
+        )
+
+    return {
+        "schema": "acomprehensive-line-wrap-audit-1",
+        "profile": profile,
+        "policy": (
+            "Repair only same-style ASCII-hyphen wraps at verified PDF "
+            "column boundaries. Corpus spellings decide first. Approved CSV "
+            "rows may resolve otherwise ambiguous candidates; pending rows "
+            "never affect the intermediate."
+        ),
+        "resolution_csv": str(resolutions["path"].resolve()),
+        "counts": {
+            "candidates": len(decisions),
+            "remove_hyphen": action_count("remove_hyphen"),
+            "preserve_hyphen": action_count("preserve_hyphen"),
+            "approved_leave_unchanged": len(unchanged),
+            "ambiguous_unchanged": len(ambiguous),
+            "conflicts": len(conflicts),
+            "corpus_joined": source_count("corpus_joined"),
+            "corpus_hyphenated": source_count("corpus_hyphenated"),
+            "manual_csv_applied": source_count("manual_csv"),
+            "csv_rows": len(csv_rows),
+            "csv_approved": len(csv_approved),
+            "csv_pending": len(csv_rows) - len(csv_approved),
+            "csv_unmatched_full_profile": len(unmatched),
+        },
+        "repairs": repairs,
+        "approved_unchanged": unchanged,
+        "ambiguous": ambiguous,
+        "conflicts": conflicts,
+        "csv_unmatched_full_profile": unmatched,
     }
 
 
@@ -103,19 +470,69 @@ def _raw_content_events(
     zone: dict[str, Any],
     parsed_zone: dict[str, Any],
     tag_map: dict[str, dict[str, str]],
+    line_wrap_evidence: dict[str, set[str]] | None = None,
+    line_wrap_resolutions: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
     events: list[dict[str, Any]] = []
     lines = form["lines"]
+    line_wrap_decisions = _ascii_line_wrap_decisions(
+        form,
+        line_wrap_evidence,
+        line_wrap_resolutions,
+    )
+    applied_repairs = [
+        decision
+        for decision in line_wrap_decisions.values()
+        if decision["action"] in APPLIED_LINE_WRAP_ACTIONS
+    ]
+    if applied_repairs:
+        form["line_wrap_repairs"] = applied_repairs
+    else:
+        form.pop("line_wrap_repairs", None)
+
     for line_index, line in enumerate(lines):
         spans = zone["remaining_spans"] if line_index == 0 else line["spans"]
+        repair_before = line_wrap_decisions.get(line_index)
+        repair_after = line_wrap_decisions.get(line_index + 1)
+        last_meaningful_span = next(
+            (
+                index
+                for index in range(len(spans) - 1, -1, -1)
+                if str(spans[index].get("clean_text", "")).strip()
+            ),
+            None,
+        )
         first_event_on_line = True
         line_boundary = ""
         if line_index:
             line_boundary = (
-                "" if lines[line_index - 1]["join_next_without_space"] else " "
+                ""
+                if (
+                    lines[line_index - 1]["join_next_without_space"]
+                    or (
+                        repair_before is not None
+                        and repair_before["action"]
+                        in APPLIED_LINE_WRAP_ACTIONS
+                    )
+                )
+                else " "
             )
-        for span in spans:
-            for event in _span_events(span, tag_map):
+        for span_index, span in enumerate(spans):
+            effective_span = span
+            if (
+                repair_after is not None
+                and repair_after["action"] == "remove_hyphen"
+                and span_index == last_meaningful_span
+            ):
+                effective_span = {
+                    **span,
+                    "clean_text": re.sub(
+                        r"-\s*$",
+                        "",
+                        str(span["clean_text"]),
+                    ),
+                }
+            for event in _span_events(effective_span, tag_map):
                 if first_event_on_line:
                     event["boundary"] = line_boundary
                     first_event_on_line = False
@@ -252,6 +669,86 @@ def _coalesce_runs(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
         )
     flush()
     return output
+
+
+def _attach_boundary_operators_to_italics(
+    events: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Move boundary ``~``/``–`` placeholders into adjacent italic runs.
+
+    The PDF occasionally isolates a lexical placeholder in the roman font
+    even though it belongs to the neighboring italic phrase. Layer 1 repairs
+    only direct boundaries: a trailing operator moves to the following italic
+    run, and a leading operator moves to the preceding italic run. A
+    standalone operator prefers the following italic run, matching the
+    dictionary's common ``~ phrase``/``– phrase`` template.
+    """
+    output = [dict(event) for event in events]
+
+    def italic_run(index: int) -> bool:
+        return (
+            0 <= index < len(output)
+            and output[index]["kind"] == "run"
+            and output[index].get("style") == "italic"
+        )
+
+    def operator_text(value: str) -> str:
+        operators = re.findall(r"[~–]", value)
+        if operators and len(set(operators)) == 1:
+            return operators[0]
+        return " ".join(operators)
+
+    def prefix_italic(index: int, operator: str) -> None:
+        existing = str(output[index]["value"])
+        if existing.lstrip().startswith(operator):
+            return
+        output[index]["value"] = source_parser.clean_text(
+            f"{operator} {existing}"
+        )
+
+    def suffix_italic(index: int, operator: str) -> None:
+        existing = str(output[index]["value"])
+        if existing.rstrip().endswith(operator):
+            return
+        output[index]["value"] = source_parser.clean_text(
+            f"{existing} {operator}"
+        )
+
+    for index, event in enumerate(output):
+        if event["kind"] != "run" or event.get("style") != "roman":
+            continue
+        value = str(event.get("value", ""))
+        stripped = value.strip()
+
+        standalone = re.fullmatch(r"[~–](?:\s*[~–])*", stripped)
+        if standalone is not None:
+            operator = operator_text(standalone.group(0))
+            if italic_run(index + 1):
+                prefix_italic(index + 1, operator)
+                event["value"] = ""
+            elif italic_run(index - 1):
+                suffix_italic(index - 1, operator)
+                event["value"] = ""
+            continue
+
+        trailing = re.search(r"([~–](?:\s*[~–])*)\s*$", value)
+        if trailing is not None and italic_run(index + 1):
+            operator = operator_text(trailing.group(1))
+            event["value"] = value[: trailing.start()].rstrip()
+            prefix_italic(index + 1, operator)
+            value = str(event["value"])
+
+        leading = re.match(r"^\s*([~–](?:\s*[~–])*)", value)
+        if leading is not None and italic_run(index - 1):
+            operator = operator_text(leading.group(1))
+            suffix_italic(index - 1, operator)
+            event["value"] = value[leading.end() :].lstrip()
+
+    return [
+        event
+        for event in output
+        if event["kind"] != "run" or str(event.get("value", "")).strip()
+    ]
 
 
 def _primary_expression_zone(line: dict[str, Any]) -> dict[str, Any]:
@@ -429,6 +926,8 @@ def parse_debug_form(
     tag_map: dict[str, dict[str, str]],
     *,
     root_expression: str | None = None,
+    line_wrap_evidence: dict[str, set[str]] | None = None,
+    line_wrap_resolutions: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Parse high-confidence form structure and retain honest body runs."""
     first_line = form["lines"][0]
@@ -450,8 +949,17 @@ def parse_debug_form(
             ]
         )
     )
-    raw_events = _raw_content_events(form, zone, expression, tag_map)
-    content = _coalesce_runs(_arrow_cross_references(raw_events))
+    raw_events = _raw_content_events(
+        form,
+        zone,
+        expression,
+        tag_map,
+        line_wrap_evidence,
+        line_wrap_resolutions,
+    )
+    content = _attach_boundary_operators_to_italics(
+        _coalesce_runs(_arrow_cross_references(raw_events))
+    )
     form["expression_parse"] = expression
     return {
         **expression,
@@ -489,13 +997,20 @@ def _content_marker_lines(content: list[dict[str, Any]]) -> list[str]:
 def human_intermediate_text(
     debug_entries: list[dict[str, Any]],
     tag_map: dict[str, dict[str, str]],
+    line_wrap_evidence: dict[str, set[str]] | None = None,
+    line_wrap_resolutions: dict[str, Any] | None = None,
 ) -> str:
     """Create the typography-preserving Layer 1 marker document."""
     blocks: list[str] = []
     for debug_entry in debug_entries:
         if debug_entry["entry_type"] != "root" or not debug_entry["forms"]:
             continue
-        root = parse_debug_form(debug_entry["forms"][0], tag_map)
+        root = parse_debug_form(
+            debug_entry["forms"][0],
+            tag_map,
+            line_wrap_evidence=line_wrap_evidence,
+            line_wrap_resolutions=line_wrap_resolutions,
+        )
         if not root["expression"]:
             continue
 
@@ -512,6 +1027,8 @@ def human_intermediate_text(
                 debug_form,
                 tag_map,
                 root_expression=root["expression"],
+                line_wrap_evidence=line_wrap_evidence,
+                line_wrap_resolutions=line_wrap_resolutions,
             )
             if not parsed["expression"]:
                 lines.append(
@@ -571,8 +1088,27 @@ def run_layer1(
     )
     tag_map = source_parser.load_tag_map(tag_map_path)
     debug_entries = source_parser.group_debug_entries(pdf_path, selected_pages)
-    human_text = human_intermediate_text(debug_entries, tag_map)
+    line_wrap_evidence = _line_wrap_word_evidence(debug_entries)
+    line_wrap_resolutions = _load_line_wrap_resolutions(
+        LINE_WRAP_RESOLUTIONS_PATH
+    )
+    human_text = human_intermediate_text(
+        debug_entries,
+        tag_map,
+        line_wrap_evidence,
+        line_wrap_resolutions,
+    )
+    line_wrap_audit = _line_wrap_audit(
+        debug_entries,
+        line_wrap_evidence,
+        line_wrap_resolutions,
+        profile=profile,
+    )
     paths["human"].write_text(human_text, encoding="utf-8")
+    paths["line_wrap_audit"].write_text(
+        json.dumps(line_wrap_audit, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
     source_parser.write_debug_intermediate(
         paths["debug"],
         pdf_path=pdf_path,
@@ -608,6 +1144,16 @@ def run_layer1(
         ),
         "numbered_senses": sum(
             line.startswith("[Sense] ") for line in human_text.splitlines()
+        ),
+        "line_wrap_counts": line_wrap_audit["counts"],
+        "line_wrap_resolution_csv": str(
+            LINE_WRAP_RESOLUTIONS_PATH.resolve()
+        ),
+        "line_wrap_resolution_csv_sha256": source_parser.sha256_file(
+            LINE_WRAP_RESOLUTIONS_PATH
+        ),
+        "line_wrap_audit_output": str(
+            paths["line_wrap_audit"].resolve()
         ),
         "human_output": str(paths["human"].resolve()),
         "debug_output": str(paths["debug"].resolve()),
