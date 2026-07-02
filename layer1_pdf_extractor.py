@@ -29,7 +29,7 @@ if str(REPO_DIR) not in sys.path:
 import extract_agent1 as source_parser  # noqa: E402
 
 
-LAYER1_VERSION = "3.4.0"
+LAYER1_VERSION = "3.4.2"
 LINE_WRAP_RESOLUTIONS_PATH = WORK_DIR / "audit1_line_wrap_resolutions.csv"
 SMALL_PAGE_SPEC = source_parser.DEFAULT_PAGES
 FULL_PAGE_SPEC = "21-1123"
@@ -810,6 +810,42 @@ def _arrow_cross_references(events: list[dict[str, Any]]) -> list[dict[str, Any]
             else:
                 break
 
+        # A bold number directly attached to an arrow target is a target
+        # sense suffix, not a new sense in the current entry. The following
+        # Roman period remains source punctuation.
+        suffix_cursor = last_target_end
+        while (
+            target_parts
+            and suffix_cursor < len(events)
+            and events[suffix_cursor]["kind"] == "run"
+            and not str(events[suffix_cursor]["value"]).strip()
+        ):
+            suffix_cursor += 1
+        if (
+            target_parts
+            and not re.search(r"[.;:!?]\s*$", target_parts[-1])
+            and suffix_cursor < len(events)
+            and events[suffix_cursor]["kind"] == "sense"
+        ):
+            after_suffix = suffix_cursor + 1
+            while (
+                after_suffix < len(events)
+                and events[after_suffix]["kind"] == "run"
+                and not str(events[after_suffix]["value"]).strip()
+            ):
+                after_suffix += 1
+            if (
+                after_suffix < len(events)
+                and events[after_suffix]["kind"] == "run"
+                and events[after_suffix].get("style") == "roman"
+                and re.match(
+                    r"^\s*[.,;:!?)]",
+                    str(events[after_suffix].get("value", "")),
+                )
+            ):
+                target_parts.append(str(events[suffix_cursor]["value"]))
+                last_target_end = suffix_cursor + 1
+
         if target_parts:
             output.append(
                 {
@@ -829,6 +865,75 @@ def _arrow_cross_references(events: list[dict[str, Any]]) -> list[dict[str, Any]
                 }
             )
             index += 1
+    return output
+
+
+def _demote_reference_suffix_senses(
+    events: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Retain a non-arrow ``SMALL CAPS 2.`` reference on the same line."""
+    output: list[dict[str, Any]] = []
+    for index, event in enumerate(events):
+        previous = output[-1] if output else None
+        following = events[index + 1] if index + 1 < len(events) else None
+        before_previous = output[-2] if len(output) >= 2 else None
+        if (
+            event["kind"] == "sense"
+            and previous is not None
+            and previous["kind"] == "run"
+            and previous.get("style") == "small_caps"
+            and before_previous is not None
+            and before_previous["kind"] == "run"
+            and before_previous.get("style") == "roman"
+            and re.search(
+                r"\bof\s*$",
+                str(before_previous.get("value", "")),
+                flags=re.I,
+            )
+            and following is not None
+            and following["kind"] == "run"
+            and following.get("style") == "roman"
+            and re.match(
+                r"^\s*\.(?!\.)",
+                str(following.get("value", "")),
+            )
+        ):
+            output.append(
+                {
+                    "kind": "run",
+                    "style": "bold",
+                    "value": str(event["value"]),
+                    "boundary": str(event.get("boundary", "")),
+                }
+            )
+            continue
+        output.append(event)
+    return output
+
+
+def _strip_redundant_sense_delimiters(
+    events: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Remove a source period already represented by a ``sense`` event."""
+    output: list[dict[str, Any]] = []
+    for event in events:
+        if (
+            event["kind"] == "run"
+            and event.get("style") == "roman"
+            and output
+            and output[-1]["kind"] == "sense"
+        ):
+            value = str(event.get("value", ""))
+            delimiter = re.match(
+                r"^\s*\.(?!\.)(?:\s+|(?=\()|$)",
+                value,
+            )
+            if delimiter is not None:
+                remainder = value[delimiter.end() :].lstrip()
+                if remainder:
+                    output.append({**event, "value": remainder})
+                continue
+        output.append(event)
     return output
 
 
@@ -1212,6 +1317,15 @@ def parse_debug_form(
             ]
         )
     )
+    structural_prefix = ""
+    inline_subentry = str(expression.get("inline_subentry") or "")
+    if inline_subentry and not any(
+        character.isalnum() for character in inline_subentry
+    ):
+        # Source punctuation can share the headword's bold PDF span. It
+        # belongs to the definition header, not a punctuation-only lookup.
+        structural_prefix = inline_subentry
+        expression["inline_subentry"] = None
     raw_events = _raw_content_events(
         form,
         zone,
@@ -1220,9 +1334,25 @@ def parse_debug_form(
         line_wrap_evidence,
         line_wrap_resolutions,
     )
+    if structural_prefix:
+        raw_events.insert(
+            0,
+            {
+                "kind": "run",
+                "style": "roman",
+                "value": structural_prefix,
+                "boundary": "",
+            },
+        )
     content = _attach_boundary_operators_to_italics(
         _split_parenthesized_template_operators(
-            _coalesce_runs(_arrow_cross_references(raw_events))
+            _coalesce_runs(
+                _strip_redundant_sense_delimiters(
+                    _demote_reference_suffix_senses(
+                        _arrow_cross_references(raw_events)
+                    )
+                )
+            )
         )
     )
     form["expression_parse"] = expression
@@ -1284,7 +1414,15 @@ def human_intermediate_text(
         if root["homograph"]:
             lines.append(marker_line("Homograph", root["homograph"]))
         if root["inline_subentry"]:
-            lines.extend(["", marker_line("Subentry", root["inline_subentry"])])
+            lines.extend(
+                [
+                    "",
+                    marker_line(
+                        "InlineSubentry",
+                        root["inline_subentry"],
+                    ),
+                ]
+            )
         lines.extend(_content_marker_lines(root["content"]))
 
         for debug_form in debug_entry["forms"][1:]:
@@ -1405,7 +1543,12 @@ def run_layer1(
             line.startswith("[Entry] ") for line in human_text.splitlines()
         ),
         "human_subentries": sum(
-            line.startswith("[Subentry] ") for line in human_text.splitlines()
+            line.startswith(("[Subentry] ", "[InlineSubentry] "))
+            for line in human_text.splitlines()
+        ),
+        "human_inline_subentries": sum(
+            line.startswith("[InlineSubentry] ")
+            for line in human_text.splitlines()
         ),
         "numbered_senses": sum(
             line.startswith("[Sense] ") for line in human_text.splitlines()

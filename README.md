@@ -18,8 +18,8 @@ rebuild from that file; PDF extraction does not need to run again.
 ## Responsibility boundary
 
 Layer 1 records high-confidence lexical structure—entries, subentries,
-variants, homographs, senses, labels, and arrow-led cross-references—plus the
-typography observed in the PDF:
+inline subentries, variants, homographs, senses, labels, and arrow-led
+cross-references—plus the typography observed in the PDF:
 
 ```text
 [Roman] [Italic] [Bold] [BoldItalic] [SmallCaps] [Symbol]
@@ -33,6 +33,8 @@ silent corruption in earlier designs.
 Layer 2 owns presentation and lookup behavior. It:
 
 - groups consecutive homographs and starts numbered senses on new lines;
+- expands attached forms when a homograph has no definition of its own,
+  preserving compact source lines such as `acah I beracah-acah ...`;
 - emits optional-spelling and accent-folded lookup aliases while preserving
   the printed spelling;
 - renders case-sensitive source labels from `acomprehensive_tags_map.csv`;

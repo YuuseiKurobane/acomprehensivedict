@@ -524,6 +524,137 @@ class Layer1SurfaceTests(unittest.TestCase):
         self.assertEqual(parsed["content"][0]["value"], "(")
         self.assertEqual(parsed["content"][2]["value"], ")")
 
+    def test_punctuation_in_headword_span_stays_with_definition(self) -> None:
+        for headword, punctuation, expected in (
+            ("Ajam I (", "(", "Ajam"),
+            ("bangsawan II =", "=", "bangsawan"),
+        ):
+            with self.subTest(headword=headword):
+                form = {
+                    "lines": [
+                        {
+                            "line_id": "test",
+                            "join_next_without_space": False,
+                            "spans": [
+                                span("bold", headword),
+                                span("roman", " definition."),
+                            ],
+                        }
+                    ]
+                }
+                parsed = layer1.parse_debug_form(form, {})
+                self.assertEqual(parsed["expression"], expected)
+                self.assertIsNone(parsed["inline_subentry"])
+                self.assertTrue(
+                    parsed["content"][0]["value"].startswith(punctuation)
+                )
+
+    def test_bold_reference_suffix_is_not_a_new_sense(self) -> None:
+        arrow_form = {
+            "lines": [
+                {
+                    "line_id": "arrow",
+                    "join_next_without_space": False,
+                    "spans": [
+                        span("bold", "mengantara"),
+                        span("roman", " "),
+                        span("symbol", "→"),
+                        span("small_caps", "MENGANTARAI"),
+                        span("roman", " "),
+                        span("bold", "2"),
+                        span("roman", "."),
+                    ],
+                }
+            ]
+        }
+        parsed = layer1.parse_debug_form(arrow_form, {})
+        self.assertEqual(
+            [(item["kind"], item.get("value")) for item in parsed["content"]],
+            [("see", "MENGANTARAI 2"), ("run", ".")],
+        )
+
+        new_sense_form = {
+            "lines": [
+                {
+                    "line_id": "new-sense",
+                    "join_next_without_space": False,
+                    "spans": [
+                        span("bold", "kav"),
+                        span("roman", " "),
+                        span("symbol", "→"),
+                        span("small_caps", "KAVALERI."),
+                        span("bold", " 2"),
+                        span("roman", " definition."),
+                    ],
+                }
+            ]
+        }
+        parsed = layer1.parse_debug_form(new_sense_form, {})
+        self.assertEqual(
+            [(item["kind"], item.get("value")) for item in parsed["content"]],
+            [
+                ("see", "KAVALERI."),
+                ("sense", 2),
+                ("run", "definition."),
+            ],
+        )
+
+        prose_form = {
+            "lines": [
+                {
+                    "line_id": "prose",
+                    "join_next_without_space": False,
+                    "spans": [
+                        span("bold", "habaib"),
+                        span("roman", " pl of "),
+                        span("small_caps", "HABIB "),
+                        span("bold", "2"),
+                        span("roman", "."),
+                    ],
+                }
+            ]
+        }
+        parsed = layer1.parse_debug_form(prose_form, {})
+        self.assertFalse(
+            any(item["kind"] == "sense" for item in parsed["content"])
+        )
+        self.assertEqual(
+            [(item["style"], item["value"]) for item in parsed["content"]],
+            [
+                ("roman", "pl of"),
+                ("small_caps", "HABIB"),
+                ("bold", "2"),
+                ("roman", "."),
+            ],
+        )
+
+    def test_sense_delimiter_is_not_duplicated(self) -> None:
+        form = {
+            "lines": [
+                {
+                    "line_id": "test",
+                    "join_next_without_space": False,
+                    "spans": [
+                        span("bold", "menyabun "),
+                        span("bold", "4"),
+                        span("roman", ". ("),
+                        span("italic", "coq"),
+                        span("roman", ") definition."),
+                    ],
+                }
+            ]
+        }
+        parsed = layer1.parse_debug_form(form, {"coq": {}})
+        self.assertEqual(
+            [(item["kind"], item.get("value")) for item in parsed["content"]],
+            [
+                ("sense", 4),
+                ("run", "("),
+                ("label", "coq"),
+                ("run", ") definition."),
+            ],
+        )
+
 
 class Layer2PresentationTests(unittest.TestCase):
     MARKERS = """\
@@ -600,7 +731,9 @@ class Layer2PresentationTests(unittest.TestCase):
         self.assertEqual({row[6] for row in rows}, {2})
         for row in rows:
             text = flatten(row[5][0]["content"][0])
-            self.assertTrue(text.startswith("aco Javanesemengaco [and ngaco"))
+            self.assertTrue(
+                text.startswith("aco Javanese mengaco [and ngaco")
+            )
             self.assertTrue(text.endswith("Colloquial]"))
         hrefs = anchors(rows[0][5])
         self.assertIn(
@@ -665,6 +798,130 @@ class Layer2PresentationTests(unittest.TestCase):
             ["label", "label", "roman"],
         )
         self.assertEqual(prepared[-1]["value"], "]")
+
+    def test_sense_span_owns_its_separator_margin(self) -> None:
+        glossary = layer2.form_glossary(
+            [
+                {
+                    "expression": "abu",
+                    "variants": [],
+                    "homograph": "I",
+                    "labels": [],
+                    "content": [
+                        {"type": "sense", "value": 1},
+                        {"type": "roman", "value": "ash(es)."},
+                        {"type": "sense", "value": 2},
+                        {"type": "roman", "value": "dust."},
+                        {"type": "sense", "value": 3},
+                        {
+                            "type": "roman",
+                            "value": "... times as much.",
+                        },
+                    ],
+                }
+            ],
+            "abu",
+            self.tag_map,
+        )
+        lines = glossary[0]["content"]
+        self.assertEqual(flatten(lines[0]), "abu I 1.ash(es).")
+        self.assertEqual(flatten(lines[1]), "2.dust.")
+        self.assertEqual(flatten(lines[2]), "3.... times as much.")
+        self.assertEqual(lines[0]["content"][4]["content"], "1.")
+        self.assertEqual(lines[0]["content"][5], "ash(es).")
+        self.assertEqual(lines[1]["content"][0]["content"], "2.")
+        self.assertEqual(lines[1]["content"][1], "dust.")
+        self.assertEqual(lines[2]["content"][0]["content"], "3.")
+        self.assertEqual(lines[2]["content"][1], "... times as much.")
+        for line in lines:
+            sense = next(
+                child
+                for child in line["content"]
+                if isinstance(child, dict)
+                and str(child.get("content", "")).rstrip(".").isdigit()
+            )
+            self.assertEqual(sense["style"]["marginRight"], "0.35em")
+            sense_index = line["content"].index(sense)
+            self.assertNotEqual(line["content"][sense_index + 1], " ")
+
+    def test_label_spacing_is_contextual(self) -> None:
+        label = {"type": "label", "value": "coq"}
+        words = layer2.inline_content_nodes(
+            [label, {"type": "roman", "value": "definition"}],
+            self.tag_map,
+        )
+        punctuation = layer2.inline_content_nodes(
+            [label, {"type": "roman", "value": "]"}],
+            self.tag_map,
+        )
+        self.assertEqual(flatten(words), "Colloquial definition")
+        self.assertEqual(flatten(punctuation), "Colloquial]")
+        self.assertNotIn("marginRight", words[0]["style"])
+
+    def test_empty_homographs_expand_attached_forms_in_source_order(
+        self,
+    ) -> None:
+        markers = """\
+[Entry] acah
+[Homograph] I
+[InlineSubentry] beracah-acah
+[Roman] to pretend.
+
+[Subentry] mengacah
+[Roman] to bluff.
+
+[Subentry] acahan
+[Roman] feint.
+
+[Entry] acah
+[Homograph] II
+[InlineSubentry] mengacah
+[Roman] to violate the law.
+
+[Entry] abu
+[Roman] ash.
+
+[Subentry] berabu
+[Roman] dusty.
+"""
+        path = Path(self.temp.name) / "empty-roots.txt"
+        path.write_text(markers, encoding="utf-8")
+        groups = layer2.build_row_groups(path)
+        resolver = layer2.CrossReferenceResolver(groups)
+        rows = list(
+            layer2.iter_row_group_term_rows(
+                groups,
+                self.tag_map,
+                resolver,
+            )
+        )
+
+        acah = next(row for row in rows if row[0] == "acah")
+        acah_lines = acah[5][0]["content"]
+        self.assertEqual(
+            [flatten(line) for line in acah_lines[:4]],
+            [
+                "acah I beracah-acah to pretend.",
+                "mengacah to bluff.",
+                "acahan feint.",
+                "acah II mengacah to violate the law.",
+            ],
+        )
+        self.assertIn(
+            "Kata Turunanberacah-acah, mengacah, acahan",
+            flatten(acah_lines[-1]),
+        )
+        acah_hrefs = {item["href"] for item in anchors(acah_lines[-1])}
+        self.assertIn("?query=beracah-acah&wildcards=off", acah_hrefs)
+        self.assertIn("?query=mengacah&wildcards=off", acah_hrefs)
+        self.assertIn("?query=acahan&wildcards=off", acah_hrefs)
+        self.assertTrue(any(row[0] == "beracah-acah" for row in rows))
+
+        abu = next(row for row in rows if row[0] == "abu")
+        abu_text = flatten(abu[5])
+        self.assertIn("abu ash.", abu_text)
+        self.assertNotIn("dusty.", abu_text)
+        self.assertIn("Kata Turunanberabu", abu_text)
 
 
 if __name__ == "__main__":

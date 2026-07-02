@@ -13,7 +13,7 @@ from typing import Any, Iterable, Iterator
 from urllib.parse import parse_qs, quote, urlparse
 
 
-LAYER2_VERSION = "3.0.1"
+LAYER2_VERSION = "3.0.6"
 MARKER_RE = re.compile(r"^\[([^\]]+)\](?:\s(.*))?$")
 OPTIONAL_GROUP_RE = re.compile(r"\(([^()]*)\)")
 AFFIXED_ACRONYM_RE = re.compile(r"^(.+?)-([A-Z][A-Z0-9]+)-(.+)$")
@@ -157,8 +157,15 @@ def iter_human_intermediate(path: Path) -> Iterator[dict[str, Any]]:
                 raise ValueError(
                     f"{path}:{line_number}: [{marker}] appears before [Entry]"
                 )
-            if marker == "Subentry":
-                current_form = _new_form("subentry", value)
+            if marker in {"Subentry", "InlineSubentry"}:
+                current_form = _new_form(
+                    (
+                        "inline_subentry"
+                        if marker == "InlineSubentry"
+                        else "subentry"
+                    ),
+                    value,
+                )
                 current_entry["forms"].append(current_form)
                 continue
             if current_form is None:
@@ -582,7 +589,6 @@ def label_badge(code: str, tag_map: dict[str, dict[str, str]]) -> dict[str, Any]
             "backgroundColor": row["color"] if row else "#626273",
             "color": "white",
             "wordBreak": "keep-all",
-            "marginRight": "0.25em",
         },
         "content": row["tag_rename"] if row else code,
     }
@@ -851,8 +857,9 @@ def _needs_space(
 ) -> bool:
     if not previous_surface or not current_surface:
         return False
-    if previous_kind == "label":
-        return False  # the existing badge margin supplies this spacing
+    if previous_kind == "sense":
+        # The sense span owns its trailing separator space.
+        return False
     if current_surface[0] in ".,;:!?%)]}”’":
         return False
     if previous_surface[-1] in "([{“‘/":
@@ -943,7 +950,6 @@ def form_glossary(
                         "style": {
                             "fontWeight": "bold",
                             "fontSize": "1.05em",
-                            "marginRight": "0.45em",
                         },
                         "content": form["homograph"],
                     }
@@ -975,6 +981,15 @@ def form_glossary(
                     initial_kind=previous_kind,
                 )
             )
+
+            if (
+                form.get("kind") == "inline_subentry"
+                and segment_index == 0
+                and lines
+            ):
+                lines[-1]["content"].append(" ")
+                lines[-1]["content"].extend(content)
+                continue
 
             line_style: dict[str, str] = {}
             if form_index or segment_index:
@@ -1128,6 +1143,16 @@ def build_row_groups(human_path: Path) -> list[dict[str, Any]]:
     for entries in iter_entry_groups(human_path):
         root_expression = str(entries[0]["entry"])
         root_forms = [entry["forms"][0] for entry in entries]
+        display_forms: list[dict[str, Any]] = []
+        for entry in entries:
+            root_form = entry["forms"][0]
+            display_forms.append(root_form)
+            if not root_form["content"]:
+                # An empty root followed by derived forms is how the source
+                # prints entries such as ``acah I beracah-acah ...``. Include
+                # those definitions in the parent display while retaining
+                # their independent lookup rows.
+                display_forms.extend(entry["forms"][1:])
         subentry_groups = _subentry_form_groups(entries)
         child_names = list(
             dict.fromkeys(
@@ -1140,6 +1165,7 @@ def build_row_groups(human_path: Path) -> list[dict[str, Any]]:
             {
                 "kind": "root",
                 "forms": root_forms,
+                "display_forms": display_forms,
                 "root_expression": root_expression,
                 "sequence": sequence,
                 "relationships": {
@@ -1180,6 +1206,7 @@ def build_row_groups(human_path: Path) -> list[dict[str, Any]]:
 def _form_group_rows(
     forms: list[dict[str, Any]],
     *,
+    display_forms: list[dict[str, Any]] | None = None,
     root_expression: str,
     tag_map: dict[str, dict[str, str]],
     sequence: int,
@@ -1187,7 +1214,7 @@ def _form_group_rows(
     relationships: dict[str, list[str]] | None = None,
 ) -> Iterator[list[Any]]:
     glossary = form_glossary(
-        forms,
+        display_forms if display_forms is not None else forms,
         root_expression,
         tag_map,
         resolver=resolver,
@@ -1228,6 +1255,7 @@ def iter_row_group_term_rows(
     for group in row_groups:
         yield from _form_group_rows(
             group["forms"],
+            display_forms=group.get("display_forms"),
             root_expression=str(group["root_expression"]),
             tag_map=tag_map,
             sequence=int(group["sequence"]),
