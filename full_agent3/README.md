@@ -46,10 +46,54 @@ cases are resolved by the reviewed `audit1_line_wrap_resolutions.csv`; its LLM
 draft decisions are explicit and editable. Every build writes the applied and
 unresolved evidence to `intermediate/audit1_line_wrap_<profile>.json`.
 
+Punctuated italic initials such as `A.S.`, `A.K.`, and `G.M.` remain ordinary
+italic runs even when an individual initial is also a valid source-label code.
+Layer 1 recognizes the alternating italic-letter/roman-period span pattern
+before applying label classification; genuine standalone labels are unchanged.
+
 When the PDF isolates a boundary `~` or en dash in a Roman run directly beside
 an italic phrase, Layer 1 moves the operator into that italic run and removes
 the emptied Roman run. It does not move operators across labels, senses,
-parentheses, or other structural markers.
+parentheses, or other structural markers unless one of the validated template
+grammars below applies.
+
+### Contextual template repairs and manual review
+
+Layer 1 version 3.4 adds two deliberately narrow repairs for source typography
+that collides with structural parsing:
+
+- A valid tag code immediately following an unparenthesized `~` or en dash is
+  treated as the operator's italic lexical operand, not as a label. This fixes
+  12 cases including `– lingkungan`, `– bio`, `– G`, `– mil`, `– S`, and
+  `~ Pap`. Parenthesized labels such as `(A)`, `(gram)`, and `(petro)` remain
+  labels. In `ling- kungan`, the existing verified line-wrap repair can then
+  coalesce the two italic fragments into `lingkungan`.
+- A Roman run ending in `~ (` or `– (` moves only its operator into Italic
+  when immediately followed by italic content with a confirmed closing
+  parenthesis. This fixes five cases: `pembangun (perumahan)`, `penggenjot
+  (pédal) bécak`, `ingkar (akan/kepada)`, `merawankan (hati)`, and `tangkur
+  (kuda)`. The parentheses retain their observed source styles.
+
+The following 15 boundary-operator cases remain unchanged for manual review.
+They mix ellipses, punctuation, senses, prose, or nonlocal operators, so the
+current evidence does not justify a general automatic rewrite:
+
+1. `baik` — homograph II: `[Roman] –...` before `[Italic] –`.
+2. `basit` — `[Italic] Al`, then `[Roman] .–`, then Roman prose.
+3. `betis` — translation ending in `–` before more Roman prose.
+4. `bis` — `[Bold] 1 –`, then `[Roman] .–`, then Roman prose.
+5. `daba` — `[Italic] hawa`, then `[Roman] ) –`, then a numbered sense.
+6. `kalau`, sense 6 — `[Roman] –...` before `[Italic] maka`.
+7. `kali > kalian` — `[Roman] multiplication table. ~.~` before `[See] DAFTAR`.
+8. `kambing` — `[Italic] akar –`, then `[Roman] .–`, then Roman prose.
+9. `mapak` — a label followed by `[Roman] ) –` and Roman `and`.
+10. `nisf sya’ban` — a label followed by `[Roman] ) –` and Roman prose.
+11. `paling`, sense 3 — `[Roman] (–` before a transitive-verb explanation.
+12. `pegawai`, sense 2 — `[Roman] (–.–` before Roman `and`.
+13. `pelosok` — `[Italic] sampai ke –`, then `[Roman] .–`, then Roman `and`.
+14. `sayup > sayup-sayup`, sense 2 — `[Roman] ~ and` before `[Italic] ~ sampai`.
+15. `ya`, sense 6 — multiple ellipsis templates in Roman before an italic
+    example.
 
 Layer 2 owns all reader-facing cleanup:
 

@@ -29,7 +29,7 @@ if str(REPO_DIR) not in sys.path:
 import extract_agent1 as source_parser  # noqa: E402
 
 
-LAYER1_VERSION = "3.2.0"
+LAYER1_VERSION = "3.4.0"
 LINE_WRAP_RESOLUTIONS_PATH = WORK_DIR / "audit1_line_wrap_resolutions.csv"
 SMALL_PAGE_SPEC = source_parser.DEFAULT_PAGES
 FULL_PAGE_SPEC = "21-1123"
@@ -431,6 +431,8 @@ def _line_wrap_audit(
 def _span_events(
     span: dict[str, Any],
     tag_map: dict[str, dict[str, str]],
+    *,
+    protect_label: bool = False,
 ) -> list[dict[str, Any]]:
     """Translate one observed PDF span without assigning speculative roles."""
     text = str(span["clean_text"])
@@ -443,7 +445,7 @@ def _span_events(
             else []
         )
 
-    if style in {"italic", "bold_italic"}:
+    if style in {"italic", "bold_italic"} and not protect_label:
         codes = source_parser.tag_codes(stripped, tag_map)
         if codes:
             return [
@@ -465,6 +467,175 @@ def _span_events(
     ]
 
 
+def _merge_punctuated_abbreviation_spans(
+    spans: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Consolidate italic initials such as ``A.S.`` before tag detection.
+
+    The PDF stores each initial in italic but each period in Roman. Since
+    single initials can also be valid source-tag codes, classifying one span
+    at a time turns abbreviations into unrelated language labels. A pair of
+    italic capital initials separated and followed by Roman periods is strong
+    enough context to retain the complete abbreviation as one italic run.
+    Consolidation also prevents the marker format from inserting spaces into
+    ``A.S.`` while retaining spaces that are present in forms such as
+    ``K. H.``.
+    """
+    meaningful = [
+        index
+        for index, span in enumerate(spans)
+        if str(span.get("clean_text", "")).strip()
+    ]
+    groups: list[tuple[int, int, re.Match[str]]] = []
+
+    def italic_initial(index: int) -> bool:
+        span = spans[index]
+        return bool(
+            span.get("style") in {"italic", "bold_italic"}
+            and re.fullmatch(
+                r"[A-Z]",
+                str(span.get("clean_text", "")).strip(),
+            )
+        )
+
+    def roman_period(index: int) -> bool:
+        span = spans[index]
+        return bool(
+            span.get("style") == "roman"
+            and re.fullmatch(
+                r"\s*\.\s*",
+                str(span.get("clean_text", "")),
+            )
+        )
+
+    position = 0
+    while position + 3 < len(meaningful):
+        first_index = meaningful[position]
+        separator_index = meaningful[position + 1]
+        second_index = meaningful[position + 2]
+        if not (
+            italic_initial(first_index)
+            and roman_period(separator_index)
+            and italic_initial(second_index)
+        ):
+            position += 1
+            continue
+
+        cursor = position + 2
+        while (
+            cursor + 2 < len(meaningful)
+            and roman_period(meaningful[cursor + 1])
+            and italic_initial(meaningful[cursor + 2])
+        ):
+            cursor += 2
+        if cursor + 1 >= len(meaningful):
+            position += 1
+            continue
+
+        suffix_index = meaningful[cursor + 1]
+        suffix = spans[suffix_index]
+        suffix_match = (
+            re.match(r"^\s*\.", str(suffix.get("clean_text", "")))
+            if suffix.get("style") == "roman"
+            else None
+        )
+        if suffix_match is None:
+            position += 1
+            continue
+        groups.append((first_index, suffix_index, suffix_match))
+        position = cursor + 2
+
+    if not groups:
+        return spans
+
+    output: list[dict[str, Any]] = []
+    group_by_start = {start: (end, match) for start, end, match in groups}
+    index = 0
+    while index < len(spans):
+        group = group_by_start.get(index)
+        if group is None:
+            output.append(spans[index])
+            index += 1
+            continue
+
+        end_index, suffix_match = group
+        abbreviation = "".join(
+            str(span.get("clean_text", ""))
+            for span in spans[index:end_index]
+        )
+        suffix_text = str(spans[end_index].get("clean_text", ""))
+        abbreviation += suffix_text[: suffix_match.end()]
+        output.append(
+            {
+                **spans[index],
+                "clean_text": source_parser.clean_text(abbreviation),
+            }
+        )
+        suffix_remainder = suffix_text[suffix_match.end() :]
+        if suffix_remainder:
+            output.append(
+                {
+                    **spans[end_index],
+                    "clean_text": suffix_remainder,
+                }
+            )
+        index = end_index + 1
+    return output
+
+
+def _template_operand_span_indices(
+    spans: list[dict[str, Any]],
+    tag_map: dict[str, dict[str, str]],
+    previous_span: dict[str, Any] | None = None,
+) -> set[int]:
+    """Protect tag-like words that are operands of ``~``/``–`` templates.
+
+    Source tags may also be ordinary lexical material: ``ling`` is both the
+    Linguistics tag and the first line-wrapped fragment of ``lingkungan``;
+    ``bio``, ``mil``, and single initials have similar collisions. An italic
+    token immediately following an unparenthesized template operator is the
+    operator's lexical operand, not a usage label. Parenthesized labels remain
+    unaffected because their preceding Roman span ends in ``(``, not in the
+    operator.
+    """
+    meaningful = [
+        index
+        for index, span in enumerate(spans)
+        if str(span.get("clean_text", "")).strip()
+    ]
+    protected: set[int] = set()
+
+    def follows_template_operator(
+        previous: dict[str, Any],
+        candidate: dict[str, Any],
+    ) -> bool:
+        candidate_text = str(candidate.get("clean_text", "")).strip()
+        return bool(
+            previous.get("style") == "roman"
+            and re.search(
+                r"[~–]\s*$",
+                str(previous.get("clean_text", "")),
+            )
+            and candidate.get("style") in {"italic", "bold_italic"}
+            and source_parser.tag_codes(candidate_text, tag_map)
+        )
+
+    if meaningful and previous_span is not None:
+        first_index = meaningful[0]
+        if follows_template_operator(previous_span, spans[first_index]):
+            protected.add(first_index)
+
+    for position in range(1, len(meaningful)):
+        previous_index = meaningful[position - 1]
+        candidate_index = meaningful[position]
+        previous = spans[previous_index]
+        candidate = spans[candidate_index]
+        if not follows_template_operator(previous, candidate):
+            continue
+        protected.add(candidate_index)
+    return protected
+
+
 def _raw_content_events(
     form: dict[str, Any],
     zone: dict[str, Any],
@@ -475,6 +646,7 @@ def _raw_content_events(
 ) -> list[dict[str, Any]]:
     events: list[dict[str, Any]] = []
     lines = form["lines"]
+    previous_effective_span: dict[str, Any] | None = None
     line_wrap_decisions = _ascii_line_wrap_decisions(
         form,
         line_wrap_evidence,
@@ -517,26 +689,46 @@ def _raw_content_events(
                 )
                 else " "
             )
-        for span_index, span in enumerate(spans):
-            effective_span = span
-            if (
-                repair_after is not None
-                and repair_after["action"] == "remove_hyphen"
-                and span_index == last_meaningful_span
+        effective_spans = list(spans)
+        if (
+            repair_after is not None
+            and repair_after["action"] == "remove_hyphen"
+            and last_meaningful_span is not None
+        ):
+            effective_spans[last_meaningful_span] = {
+                **effective_spans[last_meaningful_span],
+                "clean_text": re.sub(
+                    r"-\s*$",
+                    "",
+                    str(effective_spans[last_meaningful_span]["clean_text"]),
+                ),
+            }
+        effective_spans = _merge_punctuated_abbreviation_spans(
+            effective_spans
+        )
+        protected_label_spans = _template_operand_span_indices(
+            effective_spans,
+            tag_map,
+            previous_effective_span,
+        )
+        for span_index, span in enumerate(effective_spans):
+            for event in _span_events(
+                span,
+                tag_map,
+                protect_label=span_index in protected_label_spans,
             ):
-                effective_span = {
-                    **span,
-                    "clean_text": re.sub(
-                        r"-\s*$",
-                        "",
-                        str(span["clean_text"]),
-                    ),
-                }
-            for event in _span_events(effective_span, tag_map):
                 if first_event_on_line:
                     event["boundary"] = line_boundary
                     first_event_on_line = False
                 events.append(event)
+        previous_effective_span = next(
+            (
+                span
+                for span in reversed(effective_spans)
+                if str(span.get("clean_text", "")).strip()
+            ),
+            None,
+        )
 
     pronunciation_prefix = parsed_zone["pronunciation_prefix"]
     if pronunciation_prefix:
@@ -668,6 +860,77 @@ def _coalesce_runs(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
             str(event.get("boundary", "")),
         )
     flush()
+    return output
+
+
+def _split_parenthesized_template_operators(
+    events: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Italicize a template operator before a confirmed parenthetical phrase.
+
+    This recognizes only a Roman run ending in ``~ (`` or ``– (``, followed
+    immediately by italic content whose closing parenthesis is either in that
+    italic run or at the start of the next Roman run. It moves only the
+    operator into its own italic run and retains the observed parenthesis
+    styles. Other parentheses, ellipses, labels, and mixed prose are left
+    untouched.
+    """
+    output: list[dict[str, Any]] = []
+    for index, event in enumerate(events):
+        if event["kind"] != "run" or event.get("style") != "roman":
+            output.append(event)
+            continue
+
+        value = str(event.get("value", ""))
+        match = re.search(r"([~–])\s*\(\s*$", value)
+        following = events[index + 1] if index + 1 < len(events) else None
+        if not (
+            match is not None
+            and following is not None
+            and following["kind"] == "run"
+            and following.get("style") == "italic"
+        ):
+            output.append(event)
+            continue
+
+        italic_value = str(following.get("value", ""))
+        closes_in_italic = ")" in italic_value
+        after_italic = (
+            events[index + 2] if index + 2 < len(events) else None
+        )
+        closes_in_roman = bool(
+            after_italic is not None
+            and after_italic["kind"] == "run"
+            and after_italic.get("style") == "roman"
+            and re.match(r"^\s*\)", str(after_italic.get("value", "")))
+        )
+        if not (closes_in_italic or closes_in_roman):
+            output.append(event)
+            continue
+
+        prefix = value[: match.start()].rstrip()
+        original_boundary = str(event.get("boundary", ""))
+        if prefix:
+            output.append({**event, "value": prefix})
+            operator_boundary = ""
+        else:
+            operator_boundary = original_boundary
+        output.extend(
+            [
+                {
+                    "kind": "run",
+                    "style": "italic",
+                    "value": match.group(1),
+                    "boundary": operator_boundary,
+                },
+                {
+                    "kind": "run",
+                    "style": "roman",
+                    "value": "(",
+                    "boundary": "",
+                },
+            ]
+        )
     return output
 
 
@@ -958,7 +1221,9 @@ def parse_debug_form(
         line_wrap_resolutions,
     )
     content = _attach_boundary_operators_to_italics(
-        _coalesce_runs(_arrow_cross_references(raw_events))
+        _split_parenthesized_template_operators(
+            _coalesce_runs(_arrow_cross_references(raw_events))
+        )
     )
     form["expression_parse"] = expression
     return {

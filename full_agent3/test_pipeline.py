@@ -166,6 +166,251 @@ class Layer1SurfaceTests(unittest.TestCase):
         self.assertEqual(parsed["content"][0]["value"], "un- known")
         self.assertNotIn("line_wrap_repairs", unresolved)
 
+    def test_punctuated_initials_are_not_source_labels(self) -> None:
+        form = {
+            "lines": [
+                {
+                    "line_id": "dolar",
+                    "join_next_without_space": False,
+                    "spans": [
+                        span("bold", "dolar I"),
+                        span("roman", " ("),
+                        span("italic", "E"),
+                        span("roman", ") dollar ("),
+                        span("italic", "esp"),
+                        span("roman", " the U.S. dollar). – "),
+                        span("italic", "A"),
+                        span("roman", "."),
+                        span("italic", "S"),
+                        span("roman", ". U.S. dollar."),
+                    ],
+                }
+            ]
+        }
+        parsed = layer1.parse_debug_form(
+            form,
+            {
+                "A": {},
+                "E": {},
+                "S": {},
+                "esp": {},
+            },
+        )
+        self.assertEqual(
+            [
+                item["value"]
+                for item in parsed["content"]
+                if item["kind"] == "label"
+            ],
+            ["E", "esp"],
+        )
+        self.assertEqual(
+            [
+                item["value"]
+                for item in parsed["content"]
+                if item["kind"] == "run"
+                and item.get("style") == "italic"
+            ],
+            ["– A.S."],
+        )
+
+        merged = layer1._merge_punctuated_abbreviation_spans(
+            [
+                span("italic", "K"),
+                span("roman", ". "),
+                span("italic", "P"),
+                span("roman", "."),
+                span("italic", "M"),
+                span("roman", ". steamer"),
+            ]
+        )
+        self.assertEqual(
+            [(item["style"], item["clean_text"]) for item in merged],
+            [
+                ("italic", "K. P.M."),
+                ("roman", " steamer"),
+            ],
+        )
+
+    def test_template_operands_override_colliding_label_codes(self) -> None:
+        rona = {
+            "lines": [
+                {
+                    "line_id": "p0858-l0075",
+                    "pdf_page": 858,
+                    "column": 1,
+                    "bbox": [270.0, 1.0, 462.0, 10.0],
+                    "join_next_without_space": False,
+                    "spans": [
+                        span("bold", "rona", [270.0, 1.0, 290.0, 10.0]),
+                        span(
+                            "roman",
+                            " base-line. – ",
+                            [390.0, 1.0, 448.0, 10.0],
+                        ),
+                        span(
+                            "italic",
+                            "ling-",
+                            [448.0, 1.0, 462.0, 10.0],
+                        ),
+                    ],
+                },
+                {
+                    "line_id": "p0858-l0076",
+                    "pdf_page": 858,
+                    "column": 1,
+                    "bbox": [270.0, 10.0, 350.0, 19.0],
+                    "join_next_without_space": False,
+                    "spans": [
+                        span(
+                            "italic",
+                            "kungan",
+                            [270.0, 10.0, 310.0, 19.0],
+                        ),
+                        span(
+                            "roman",
+                            " environmental setting.",
+                            [310.0, 10.0, 350.0, 19.0],
+                        ),
+                    ],
+                },
+            ]
+        }
+        parsed = layer1.parse_debug_form(
+            rona,
+            {"ling": {}},
+            line_wrap_evidence={
+                "words": {"lingkungan"},
+                "hyphenated_words": set(),
+            },
+        )
+        self.assertFalse(
+            any(item["kind"] == "label" for item in parsed["content"])
+        )
+        self.assertEqual(
+            [
+                item["value"]
+                for item in parsed["content"]
+                if item["kind"] == "run"
+                and item.get("style") == "italic"
+            ],
+            ["– lingkungan"],
+        )
+
+        genuine_label = {
+            "lines": [
+                {
+                    "line_id": "label",
+                    "join_next_without_space": False,
+                    "spans": [
+                        span("bold", "gas"),
+                        span("roman", " ("),
+                        span("italic", "petro"),
+                        span("roman", ") wet gas."),
+                    ],
+                }
+            ]
+        }
+        genuine = layer1.parse_debug_form(
+            genuine_label,
+            {"petro": {}},
+        )
+        self.assertEqual(
+            [
+                item["value"]
+                for item in genuine["content"]
+                if item["kind"] == "label"
+            ],
+            ["petro"],
+        )
+
+        cross_line = {
+            "lines": [
+                {
+                    "line_id": "first",
+                    "join_next_without_space": False,
+                    "spans": [
+                        span("bold", "kapal"),
+                        span("roman", " gunboat. –"),
+                    ],
+                },
+                {
+                    "line_id": "second",
+                    "join_next_without_space": False,
+                    "spans": [
+                        span("italic", "mil"),
+                        span("roman", " mail boat."),
+                    ],
+                },
+            ]
+        }
+        cross_line_parsed = layer1.parse_debug_form(
+            cross_line,
+            {"mil": {}},
+        )
+        self.assertFalse(
+            any(
+                item["kind"] == "label"
+                for item in cross_line_parsed["content"]
+            )
+        )
+        self.assertEqual(
+            [
+                item["value"]
+                for item in cross_line_parsed["content"]
+                if item["kind"] == "run"
+                and item.get("style") == "italic"
+            ],
+            ["– mil"],
+        )
+
+    def test_parenthesized_template_operator_requires_closure(self) -> None:
+        corrected = layer1._split_parenthesized_template_operators(
+            [
+                {"kind": "run", "style": "roman", "value": "~ ("},
+                {"kind": "run", "style": "italic", "value": "pédal"},
+                {"kind": "run", "style": "roman", "value": ")"},
+                {"kind": "run", "style": "italic", "value": "bécak"},
+                {
+                    "kind": "run",
+                    "style": "roman",
+                    "value": "definition. – (",
+                },
+                {
+                    "kind": "run",
+                    "style": "italic",
+                    "value": "perumahan)",
+                },
+            ]
+        )
+        self.assertEqual(
+            [
+                (item["style"], item["value"])
+                for item in corrected
+            ],
+            [
+                ("italic", "~"),
+                ("roman", "("),
+                ("italic", "pédal"),
+                ("roman", ")"),
+                ("italic", "bécak"),
+                ("roman", "definition."),
+                ("italic", "–"),
+                ("roman", "("),
+                ("italic", "perumahan)"),
+            ],
+        )
+
+        incomplete = [
+            {"kind": "run", "style": "roman", "value": "~ ("},
+            {"kind": "run", "style": "italic", "value": "unfinished"},
+            {"kind": "run", "style": "roman", "value": "definition"},
+        ]
+        self.assertEqual(
+            layer1._split_parenthesized_template_operators(incomplete),
+            incomplete,
+        )
+
     def test_boundary_operators_move_into_adjacent_italics(self) -> None:
         corrected = layer1._attach_boundary_operators_to_italics(
             [
