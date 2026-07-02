@@ -1416,18 +1416,20 @@ def build_yomitan(
 
     index = {
         "title": "A Comprehensive Indonesian-English Dictionary",
-        "revision": f"acomprehensive-layer2-{LAYER2_VERSION}",
+        "revision": "acomprehensive-rc1",
         "format": 3,
+        "url": "https://discord.com/invite/9mN2RajgeF",
         "sequenced": True,
-        "author": (
-            "Source by Alan M. Stevens and A. Ed. Schmidgall-Tellings"
-        ),
+        "author": "Alan M. Stevens and A. Ed. Schmidgall-Tellings",
         "description": (
-            "Generated from faithful typographic Layer 1 marker text; "
-            "compact presentation, lexical relationships, and verified "
-            "cross-references are applied in Layer 2."
+            "Reverse-engineered from the pdf file, available "
+            "https://github.com/YuuseiKurobane/acomprehensivedict, "
+            "join the Discord server if Github is nuked."
         ),
-        "attribution": "Confirm redistribution rights before publication.",
+        "attribution": (
+            "Join discord server Belajar Bahasa Indonesia "
+            "https://discord.com/invite/9mN2RajgeF"
+        ),
         "sourceLanguage": "id",
         "targetLanguage": "en",
     }

@@ -103,7 +103,12 @@ def run_layer2_command(args: argparse.Namespace) -> dict[str, Any]:
         output_dir=args.yomitan_dir,
         tag_map_path=args.tag_map,
         dictionary_name=(
-            args.name or f"AComprehensive_{args.profile}"
+            args.name
+            or (
+                "AComprehensive-rc1"
+                if args.profile == "full"
+                else f"AComprehensive_{args.profile}"
+            )
         ),
         max_component_bytes=args.max_component_bytes,
     )
