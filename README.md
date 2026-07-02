@@ -1,0 +1,122 @@
+# A Comprehensive Indonesian–English Dictionary for Yomitan
+
+This project converts *A Comprehensive Indonesian–English Dictionary* into a
+Yomitan dictionary through two deliberately separate layers:
+
+```text
+acomprehensive.pdf
+  → Layer 1: faithful typography-aware extraction
+  → intermediate/human_readable_full.txt
+  → Layer 2: reader-facing Yomitan presentation
+  → yomitan/*.json + ZIP
+```
+
+The intermediate marker text is the contract between the layers. To change
+the dictionary's layout, badges, links, or lookup behavior, edit Layer 2 and
+rebuild from that file; PDF extraction does not need to run again.
+
+## Responsibility boundary
+
+Layer 1 records high-confidence lexical structure—entries, subentries,
+variants, homographs, senses, labels, and arrow-led cross-references—plus the
+typography observed in the PDF:
+
+```text
+[Roman] [Italic] [Bold] [BoldItalic] [SmallCaps] [Symbol]
+```
+
+It does not guess that italic text is an example or that following Roman text
+is a translation. Italics also represent collocations, cited forms,
+scientific names, labels, and other material, so those semantic guesses caused
+silent corruption in earlier designs.
+
+Layer 2 owns presentation and lookup behavior. It:
+
+- groups consecutive homographs and starts numbered senses on new lines;
+- emits optional-spelling and accent-folded lookup aliases while preserving
+  the printed spelling;
+- renders case-sensitive source labels from `acomprehensive_tags_map.csv`;
+- resolves `–` to the root form and `~` to the current form;
+- adds root, derived-word, and sibling relationships;
+- hyperlinks a cross-reference only when its query is guaranteed to resolve;
+- validates Yomitan structured content, internal links, ZIP integrity, and the
+  strict 8,000,000-byte component limit.
+
+## PDF extraction rules
+
+The low-level layout parser is `extract_agent1.py`; Layer 1 pins its normalized
+SHA-256 so accidental parser edits cannot silently change the intermediate.
+Dictionary text is read in two columns. Root starts are recognized near
+x=42/258, derived forms near x=48/264, and body text between y=50 and 690.
+
+Observed font roles:
+
+| PDF font | Preserved role |
+| --- | --- |
+| `Indrev-Bold`, `Indrev-BoldItalic` | headword structure, homographs, senses |
+| `Indrev-Italic`, `Indrev-Italic-SC700` | italic source runs |
+| `Inresc-Roman`, `Indrev-Roman-SC700`, `Indrev-Bold-SC700` | small caps |
+| `SymbolMT` | symbols, principally cross-reference arrows |
+| other fonts | Roman source runs |
+
+Verified legacy-font substitutions:
+
+| Extracted character | Meaning |
+| --- | --- |
+| `¤` (U+00A4) | `fi` |
+| `¶` (U+00B6) | `fl` |
+| `Ø` (U+00D8) | `1/5` |
+| `‰` (U+2030) | `1/6` |
+| `³` (U+00B3) | `1/3` |
+| `¿` (U+00BF) | `1/12` |
+| soft hyphen (U+00AD) | removed at a visual line break |
+
+ASCII-hyphen line wraps are repaired only when both fragments have the same
+style and touch verified edges of the same PDF column. Corpus-attested
+spellings decide first; otherwise an approved row from
+`audit1_line_wrap_resolutions.csv` may decide. Ambiguous or mismatched cases
+remain unchanged and appear in the generated audit. ASCII hyphens are never
+replaced globally.
+
+Punctuated italic initials such as `A.S.` are protected from label
+classification. The `–` and `~` template operators may be attached to an
+adjacent italic operand only under narrow, tested boundary patterns; the
+extractor does not move them across labels, senses, or unrelated prose.
+
+## Files
+
+- `_main.py` — command-line entry point.
+- `extract_agent1.py` — pinned low-level PDF and layout parser.
+- `layer1_pdf_extractor.py` — faithful marker-text generator.
+- `layer2_yomitan_dictionary_writer.py` — Yomitan renderer.
+- `test_pipeline.py` — focused regression tests.
+- `acomprehensive_tags_map.csv` — label names, types, and colors.
+- `audit1_line_wrap_resolutions.csv` — reviewed ambiguous-wrap decisions.
+- `intermediate/human_readable_full.txt` — canonical Layer 2 input.
+
+## Run
+
+```powershell
+python -m pip install -r requirements.txt
+
+# Focused regression tests
+python -m unittest -v test_pipeline.py
+
+# Extract pages 21–1123
+python _main.py layer1 --profile full
+
+# Build Yomitan from the existing intermediate only
+python _main.py layer2 --profile full
+
+# Run both layers
+python _main.py all --profile full
+```
+
+Generated debug data, manifests, audits, and unpacked term-bank JSON files are
+ignored because the tracked inputs reproduce them. The distributable
+`yomitan/AComprehensive_full.zip` is tracked.
+
+Earlier prototypes and design history remain on the
+[`archive/pre-cleanup-2026-07-02`](https://github.com/YuuseiKurobane/acomprehensivedict/tree/archive/pre-cleanup-2026-07-02)
+branch. Confirm redistribution rights for the source PDF and derived dictionary
+before publication.

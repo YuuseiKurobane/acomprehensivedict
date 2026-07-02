@@ -1,5 +1,9 @@
 .venv/
 work/
 __pycache__/
-tests/__pycache__/
-
+*.py[cod]
+.pytest_cache/
+intermediate/debug_*.json
+intermediate/layer1_*_manifest.json
+intermediate/audit1_line_wrap_*.json
+yomitan/*.json
