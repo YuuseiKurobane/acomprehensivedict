@@ -693,6 +693,31 @@ class Layer2PresentationTests(unittest.TestCase):
 
 [Entry] deadref
 [See] DOES NOT EXIST
+
+[Entry] ganding
+[Homograph] I
+[Roman] equal, match, peer.
+
+[Subentry] berganding(an)
+[Roman] to vie, compete.
+
+[Subentry] menggandingkan
+[Variant] mempergandingkan
+[Roman] to compare.
+
+[Subentry] terganding
+[Roman] equaled, matched.
+
+[Subentry] pengganding
+[Roman] competitor.
+
+[Entry] ganding
+[Homograph] II
+[InlineSubentry] berganding(an)
+[Roman] joined.
+
+[Subentry] gandingan
+[Roman] appendix.
 """
 
     def setUp(self) -> None:
@@ -756,6 +781,57 @@ class Layer2PresentationTests(unittest.TestCase):
         hrefs = {item["href"] for item in anchors(bottom)}
         self.assertIn("?query=acung&wildcards=off", hrefs)
         self.assertIn("?query=mengacungi&wildcards=off", hrefs)
+
+    def test_homograph_parent_label_preserves_source_distinction(self) -> None:
+        rows = self.rows_for("berganding")
+        self.assertEqual(len(rows), 2)
+        by_definition = {
+            flatten(row[5][0]["content"][0]): row
+            for row in rows
+        }
+
+        first = by_definition["berganding(an) to vie, compete."]
+        second = by_definition["berganding(an) joined."]
+        self.assertIn("Kata Dasarganding I", flatten(first[5]))
+        self.assertIn("Kata Dasarganding II", flatten(second[5]))
+        for row in (first, second):
+            parent_block = row[5][0]["content"][-1]
+            parent_anchor = next(
+                anchor
+                for anchor in anchors(parent_block)
+                if flatten(anchor).startswith("ganding ")
+            )
+            self.assertEqual(
+                parent_anchor["href"],
+                "?query=ganding&wildcards=off",
+            )
+
+        for expression in (
+            "menggandingkan",
+            "mempergandingkan",
+            "terganding",
+            "pengganding",
+        ):
+            self.assertIn(
+                "Kata Dasarganding I",
+                flatten(self.rows_for(expression)[0][5]),
+            )
+        self.assertIn(
+            "Kata Dasarganding II",
+            flatten(self.rows_for("gandingan")[0][5]),
+        )
+
+        root = self.rows_for("ganding")[0]
+        root_text = flatten(root[5])
+        self.assertIn("ganding I equal, match, peer.", root_text)
+        self.assertIn("ganding II berganding(an) joined.", root_text)
+        self.assertIn(
+            (
+                "Kata Turunanberganding(an), menggandingkan, "
+                "terganding, pengganding, gandingan"
+            ),
+            root_text,
+        )
 
     def test_unresolved_reference_is_black_text_not_an_anchor(self) -> None:
         row = self.rows_for("deadref")[0]

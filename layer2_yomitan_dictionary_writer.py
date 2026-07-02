@@ -13,7 +13,7 @@ from typing import Any, Iterable, Iterator
 from urllib.parse import parse_qs, quote, urlparse
 
 
-LAYER2_VERSION = "3.0.6"
+LAYER2_VERSION = "3.0.7"
 MARKER_RE = re.compile(r"^\[([^\]]+)\](?:\s(.*))?$")
 OPTIONAL_GROUP_RE = re.compile(r"\(([^()]*)\)")
 AFFIXED_ACRONYM_RE = re.compile(r"^(.+?)-([A-Z][A-Z0-9]+)-(.+)$")
@@ -1121,18 +1121,30 @@ def iter_entry_groups(
 
 def _subentry_form_groups(
     entries: list[dict[str, Any]],
-) -> list[list[dict[str, Any]]]:
-    groups: list[list[dict[str, Any]]] = []
+) -> list[dict[str, Any]]:
+    groups: list[dict[str, Any]] = []
     homograph_group_indexes: dict[str, int] = {}
     for entry in entries:
+        root_form = entry["forms"][0]
+        parent_display = str(entry["entry"])
+        if root_form["homograph"]:
+            parent_display += f" {root_form['homograph']}"
         for form in entry["forms"][1:]:
             key = unicodedata.normalize("NFC", str(form["expression"]))
             if form["homograph"] and key in homograph_group_indexes:
-                groups[homograph_group_indexes[key]].append(form)
+                group = groups[homograph_group_indexes[key]]
+                group["forms"].append(form)
+                if parent_display not in group["parent_displays"]:
+                    group["parent_displays"].append(parent_display)
             else:
                 if form["homograph"]:
                     homograph_group_indexes[key] = len(groups)
-                groups.append([form])
+                groups.append(
+                    {
+                        "forms": [form],
+                        "parent_displays": [parent_display],
+                    }
+                )
     return groups
 
 
@@ -1156,7 +1168,8 @@ def build_row_groups(human_path: Path) -> list[dict[str, Any]]:
         subentry_groups = _subentry_form_groups(entries)
         child_names = list(
             dict.fromkeys(
-                str(forms[0]["expression"]) for forms in subentry_groups
+                str(group["forms"][0]["expression"])
+                for group in subentry_groups
             )
         )
 
@@ -1176,7 +1189,8 @@ def build_row_groups(human_path: Path) -> list[dict[str, Any]]:
             }
         )
 
-        for forms in subentry_groups:
+        for subentry_group in subentry_groups:
+            forms = subentry_group["forms"]
             current = unicodedata.normalize(
                 "NFC",
                 str(forms[0]["expression"]),
@@ -1194,7 +1208,7 @@ def build_row_groups(human_path: Path) -> list[dict[str, Any]]:
                     "root_expression": root_expression,
                     "sequence": sequence,
                     "relationships": {
-                        "parent": [root_expression],
+                        "parent": subentry_group["parent_displays"],
                         "children": [],
                         "related": related,
                     },
