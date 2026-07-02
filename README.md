@@ -1,3 +1,6 @@
+sane user: go to `yomitan/` folder n then download the zip. then import to yomitan.
+ok now enjoy reading this ai slop if ur a developer or wana tweak the yomitan dict.
+
 # A Comprehensive Indonesian–English Dictionary for Yomitan
 
 This project converts *A Comprehensive Indonesian–English Dictionary* into a
