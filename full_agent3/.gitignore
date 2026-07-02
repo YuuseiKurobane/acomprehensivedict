@@ -1,0 +1,6 @@
+__pycache__/
+acomprehensive.pdf
+intermediate/debug_*.json
+intermediate/layer1_*_manifest.json
+yomitan/*.json
+yomitan/*.zip
