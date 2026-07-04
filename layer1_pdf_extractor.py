@@ -29,7 +29,7 @@ if str(REPO_DIR) not in sys.path:
 import extract_agent1 as source_parser  # noqa: E402
 
 
-LAYER1_VERSION = "3.5.0"
+LAYER1_VERSION = "3.5.1"
 LINE_WRAP_RESOLUTIONS_PATH = WORK_DIR / "audit1_line_wrap_resolutions.csv"
 SMALL_PAGE_SPEC = source_parser.DEFAULT_PAGES
 FULL_PAGE_SPEC = "21-1123"
@@ -114,6 +114,14 @@ REVIEWED_RUN_REPAIRS = {
     "early- retirement": "early-retirement",
     "au- thority": "authority",
     "m encerucup": "mencerucup",
+    "– kuda- kuda": "– kuda-kuda",
+    "in- patient": "inpatient",
+    "– an- gan-angan": "– angan-angan",
+    "24- carat": "24-carat",
+    "1821- 1837": "1821-1837",
+    "82- page": "82-page",
+    "lima -delapan": "lima per delapan",
+    "completely, very, well- all-,": "completely, very, well-, all-,",
 }
 REVIEWED_REFERENCE_REPAIRS = {
     "URANG- ARING": "URANG-ARING",
@@ -144,6 +152,68 @@ REVIEWED_VARIANT_REPAIRS = {
     "trapis": ({"t"}, ["trapist"]),
     "vip": ({"P"}, ["V.I.P."]),
 }
+REVIEWED_MARKER_SEQUENCE_REPAIRS = (
+    (
+        ("[Italic] ikat-", "[Roman] style headgear permanently sewn in shape."),
+        ("[Italic] ikat-style", "[Roman] headgear permanently sewn in shape."),
+    ),
+    (
+        ("[Italic] merbau-", "[Roman] tree, ironwood,"),
+        ("[Italic] merbau-tree", "[Roman] , ironwood,"),
+    ),
+    (
+        ("[Italic] suku", "[Roman] -name."),
+        ("[Italic] suku-name", "[Roman] ."),
+    ),
+    (
+        ("[Italic] kajang-", "[Roman] covered ship’s cabin."),
+        ("[Italic] kajang-covered", "[Roman] ship’s cabin."),
+    ),
+    (
+        ("[Italic] mantri", "[Roman] -ship, office of a"),
+        ("[Italic] mantri-ship", "[Roman] , office of a"),
+    ),
+    (
+        ("[Italic] pandan", "[Roman] -like epiphyte,"),
+        ("[Italic] pandan-like", "[Roman] epiphyte,"),
+    ),
+    (
+        ("[Italic] rambutan", "[Roman] -like fruit,"),
+        ("[Italic] rambutan-like", "[Roman] fruit,"),
+    ),
+    (
+        ("[Italic] opelét", "[Roman] -drivers."),
+        ("[Italic] opelét-drivers", "[Roman] ."),
+    ),
+    (
+        ("[Italic] bécak", "[Roman] -driver."),
+        ("[Italic] bécak-driver", "[Roman] ."),
+    ),
+    (
+        ("[Italic] wali-", "[Roman] mayor."),
+        ("[Italic] wali kota", "[Roman] mayor."),
+    ),
+    (
+        ("[Roman] pre-", "[Italic] Lebaran", "[Roman] ;"),
+        ("[Roman] pre-Lebaran;",),
+    ),
+    (
+        ("[Italic] wereng-", "[Roman] proof Superior Variety, i.e. a rice variety from the"),
+        ("[Italic] wereng-proof", "[Roman] Superior Variety, i.e. a rice variety from the"),
+    ),
+    (
+        ("[See] ID-", "[Italic] ul", "[Italic] fitri"),
+        ("[See] ID-ul fitri",),
+    ),
+    (
+        ("[See] INGGANG-", "[Bold] inggung"),
+        ("[See] INGGANG-inggung",),
+    ),
+    (
+        ("[See] BYAR-", "[Italic] pet"),
+        ("[See] BYAR-PET",),
+    ),
+)
 
 
 def normalized_source_sha256(path: Path) -> str:
@@ -1537,8 +1607,16 @@ def _repair_variants(lines: list[str]) -> list[str]:
         ]
 
     replaced, replacements = repair
+    existing_variants = {
+        value
+        for line in lines[1:]
+        for marker, value in [_marker_parts(line)]
+        if marker == "Variant"
+    }
     output = [lines[0]]
-    inserted = False
+    inserted = all(
+        replacement in existing_variants for replacement in replacements
+    )
     for line in lines[1:]:
         marker, value = _marker_parts(line)
         if marker == "Variant" and value in replaced:
@@ -1546,6 +1624,7 @@ def _repair_variants(lines: list[str]) -> list[str]:
                 output.extend(
                     marker_line("Variant", replacement)
                     for replacement in replacements
+                    if replacement not in existing_variants
                 )
                 inserted = True
             continue
@@ -1557,6 +1636,7 @@ def _repair_variants(lines: list[str]) -> list[str]:
         output[insertion:insertion] = [
             marker_line("Variant", replacement)
             for replacement in replacements
+            if replacement not in existing_variants
         ]
     return output
 
@@ -1619,6 +1699,21 @@ def _merge_fragmented_release_runs(lines: list[str]) -> list[str]:
                 *lines[index + len(source) :],
             ]
     return lines
+
+
+def _apply_reviewed_marker_sequence_repairs(lines: list[str]) -> list[str]:
+    """Join reviewed compounds split only by source typography."""
+    output = list(lines)
+    for source, replacement in REVIEWED_MARKER_SEQUENCE_REPAIRS:
+        width = len(source)
+        index = 0
+        while index <= len(output) - width:
+            if tuple(output[index : index + width]) != source:
+                index += 1
+                continue
+            output[index : index + width] = replacement
+            index += len(replacement)
+    return output
 
 
 def _promote_embedded_senses(lines: list[str]) -> list[str]:
@@ -1777,7 +1872,7 @@ def _normalize_sense_boundaries(lines: list[str]) -> list[str]:
 
 
 def normalize_human_intermediate_text(text: str) -> str:
-    """Apply reviewed RC2 structural repairs to generated marker text."""
+    """Apply reviewed release repairs to generated marker text."""
     forms: list[list[str]] = []
     current: list[str] = []
     for raw_line in text.splitlines():
@@ -1857,7 +1952,8 @@ def normalize_human_intermediate_text(text: str) -> str:
             normalized_values.append(
                 marker_line(marker, _reviewed_marker_value(marker, value))
             )
-        lines = _merge_fragmented_release_runs(normalized_values)
+        lines = _apply_reviewed_marker_sequence_repairs(normalized_values)
+        lines = _merge_fragmented_release_runs(lines)
 
         if expression == "fisiografi":
             source = ["[Label] D", "[Roman] /E)) physiography."]

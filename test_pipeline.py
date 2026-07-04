@@ -741,6 +741,10 @@ class Layer1SurfaceTests(unittest.TestCase):
         self.assertIn("[Roman] both... and...", normalized)
         self.assertIn("[Roman] The community asked... to help.", normalized)
         self.assertIn("[Roman] strengthened.", normalized)
+        self.assertEqual(
+            layer1.normalize_human_intermediate_text(normalized),
+            normalized,
+        )
 
     def test_cross_line_small_caps_preserve_reviewed_hyphen(self) -> None:
         events = [
@@ -762,6 +766,89 @@ class Layer1SurfaceTests(unittest.TestCase):
             layer1._arrow_cross_references(events),
             [{"kind": "see", "value": "DAYA-UPAYA", "boundary": ""}],
         )
+
+    def test_rc3_marker_normalization_joins_reviewed_spacing_defects(
+        self,
+    ) -> None:
+        source = """\
+[Entry] compounds
+[Italic] ikat-
+[Roman] style headgear permanently sewn in shape.
+[Italic] merbau-
+[Roman] tree, ironwood,
+[Italic] suku
+[Roman] -name.
+[Italic] kajang-
+[Roman] covered ship’s cabin.
+[Italic] mantri
+[Roman] -ship, office of a
+[Italic] pandan
+[Roman] -like epiphyte,
+[Italic] rambutan
+[Roman] -like fruit,
+[Italic] opelét
+[Roman] -drivers.
+[Italic] bécak
+[Roman] -driver.
+[Italic] wali-
+[Roman] mayor.
+[Roman] pre-
+[Italic] Lebaran
+[Roman] ;
+[Italic] wereng-
+[Roman] proof Superior Variety, i.e. a rice variety from the
+[See] ID-
+[Italic] ul
+[Italic] fitri
+[See] INGGANG-
+[Bold] inggung
+[See] BYAR-
+[Italic] pet
+"""
+        normalized = "\n".join(
+            layer1._apply_reviewed_marker_sequence_repairs(
+                source.strip().splitlines()
+            )
+        )
+        for expected in (
+            "[Italic] ikat-style\n[Roman] headgear",
+            "[Italic] merbau-tree\n[Roman] , ironwood,",
+            "[Italic] suku-name\n[Roman] .",
+            "[Italic] kajang-covered\n[Roman] ship’s cabin.",
+            "[Italic] mantri-ship\n[Roman] , office of a",
+            "[Italic] pandan-like\n[Roman] epiphyte,",
+            "[Italic] rambutan-like\n[Roman] fruit,",
+            "[Italic] opelét-drivers\n[Roman] .",
+            "[Italic] bécak-driver\n[Roman] .",
+            "[Italic] wali kota\n[Roman] mayor.",
+            "[Roman] pre-Lebaran;",
+            "[Italic] wereng-proof\n[Roman] Superior Variety",
+            "[See] ID-ul fitri",
+            "[See] INGGANG-inggung",
+            "[See] BYAR-PET",
+        ):
+            with self.subTest(expected=expected):
+                self.assertIn(expected, normalized)
+
+        for marker, source_value, expected in (
+            ("Italic", "– kuda- kuda", "– kuda-kuda"),
+            ("Roman", "in- patient facilities.", "inpatient facilities."),
+            ("Italic", "– an- gan-angan", "– angan-angan"),
+            ("Roman", "24- carat gold.", "24-carat gold."),
+            ("Roman", "(1821- 1837)", "(1821-1837)"),
+            ("Roman", "an 82- page book.", "an 82-page book."),
+            ("Italic", "lima -delapan", "lima per delapan"),
+            (
+                "Roman",
+                "completely, very, well- all-, purely.",
+                "completely, very, well-, all-, purely.",
+            ),
+        ):
+            with self.subTest(source_value=source_value):
+                self.assertEqual(
+                    layer1._reviewed_marker_value(marker, source_value),
+                    expected,
+                )
 
 
 class Layer2PresentationTests(unittest.TestCase):
@@ -1041,6 +1128,25 @@ class Layer2PresentationTests(unittest.TestCase):
         self.assertEqual(flatten(words), "Colloquial definition")
         self.assertEqual(flatten(punctuation), "Colloquial]")
         self.assertNotIn("marginRight", words[0]["style"])
+
+    def test_prefix_template_does_not_insert_space_after_hyphen(self) -> None:
+        for content in (
+            [
+                {"type": "italic", "value": "–"},
+                {"type": "italic", "value": "berisik"},
+            ],
+            [{"type": "italic", "value": "– berisik"}],
+        ):
+            with self.subTest(content=content):
+                prepared = layer2.prepare_content(
+                    content,
+                    root_expression="anti-",
+                    current_expression="anti-",
+                )
+                self.assertEqual(
+                    prepared,
+                    [{"type": "italic", "value": "anti-berisik"}],
+                )
 
     def test_closing_parenthesis_spacing_is_normalized(self) -> None:
         self.assertEqual(

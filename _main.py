@@ -105,7 +105,7 @@ def run_layer2_command(args: argparse.Namespace) -> dict[str, Any]:
         dictionary_name=(
             args.name
             or (
-                "AComprehensive-rc2"
+                "AComprehensive-rc3"
                 if args.profile == "full"
                 else f"AComprehensive_{args.profile}"
             )

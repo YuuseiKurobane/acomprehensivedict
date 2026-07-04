@@ -13,7 +13,7 @@ from typing import Any, Iterable, Iterator
 from urllib.parse import parse_qs, quote, urlparse
 
 
-LAYER2_VERSION = "3.1.0"
+LAYER2_VERSION = "3.1.1"
 MARKER_RE = re.compile(r"^\[([^\]]+)\](?:\s(.*))?$")
 OPTIONAL_GROUP_RE = re.compile(r"\(([^()]*)\)")
 AFFIXED_ACRONYM_RE = re.compile(r"^(.+?)-([A-Z][A-Z0-9]+)-(.+)$")
@@ -760,13 +760,20 @@ def _resolve_placeholders(
             following = output[index + 1]
             if following["type"] in {"italic", "bold_italic"}:
                 item["value"] = clean_text(text[: trailing_dash.start()])
+                separator = "" if root_expression.endswith("-") else " "
                 following["value"] = clean_text(
-                    f"{root_expression} {following['value']}"
+                    f"{root_expression}{separator}{following['value']}"
                 )
                 continue
-        item["value"] = clean_text(
-            re.sub(r"(?<!\w)–(?!\w)", root_expression, text)
-        )
+        if root_expression.endswith("-"):
+            resolved = re.sub(
+                r"(?<!\w)–(?!\w)\s*",
+                root_expression,
+                text,
+            )
+        else:
+            resolved = re.sub(r"(?<!\w)–(?!\w)", root_expression, text)
+        item["value"] = clean_text(resolved)
     return [
         item
         for item in output
@@ -1445,7 +1452,7 @@ def build_yomitan(
 
     index = {
         "title": "A Comprehensive Indonesian-English Dictionary",
-        "revision": "acomprehensive-rc2",
+        "revision": "acomprehensive-rc3",
         "format": 3,
         "url": "https://discord.com/invite/9mN2RajgeF",
         "sequenced": True,
