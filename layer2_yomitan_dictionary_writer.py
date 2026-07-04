@@ -13,7 +13,7 @@ from typing import Any, Iterable, Iterator
 from urllib.parse import parse_qs, quote, urlparse
 
 
-LAYER2_VERSION = "3.0.7"
+LAYER2_VERSION = "3.1.0"
 MARKER_RE = re.compile(r"^\[([^\]]+)\](?:\s(.*))?$")
 OPTIONAL_GROUP_RE = re.compile(r"\(([^()]*)\)")
 AFFIXED_ACRONYM_RE = re.compile(r"^(.+?)-([A-Z][A-Z0-9]+)-(.+)$")
@@ -79,7 +79,7 @@ def json_dump(value: Any, *, indent: int | None = None) -> str:
 def clean_text(text: str) -> str:
     text = text.replace("\t", " ")
     text = re.sub(r"\s+", " ", text).strip()
-    text = re.sub(r"\s+([,.;:!?%\]])", r"\1", text)
+    text = re.sub(r"\s+([,.;:!?%\]\)])", r"\1", text)
     text = re.sub(r"([\[(])\s+", r"\1", text)
     return text
 
@@ -467,6 +467,8 @@ class CrossReferenceResolver:
             re.sub(r"(?<=\w)-\s+(?=\w)", "", normalized),
             re.sub(r"(?<=\w)\s+(?=\w)", "", normalized),
             re.sub(r"\s*-\s*", "-", normalized),
+            re.sub(r"\s*-\s*", " ", normalized),
+            re.sub(r"\s*/\s*", "/", normalized),
         }
         repaired_queries: set[str] = set()
         for key in repaired_keys - {normalized}:
@@ -492,6 +494,16 @@ class CrossReferenceResolver:
         phrase = self._unique_query(self.phrase_queries.get(normalized))
         if phrase is not None:
             return {"query": phrase, "method": "source-phrase", "target": base}
+        repaired_phrases: set[str] = set()
+        for key in repaired_keys - {normalized}:
+            repaired_phrases.update(self.phrase_queries.get(key, set()))
+        repaired_phrase = self._unique_query(repaired_phrases)
+        if repaired_phrase is not None:
+            return {
+                "query": repaired_phrase,
+                "method": "source-phrase-spacing",
+                "target": base,
+            }
         return None
 
     def render(
@@ -1398,6 +1410,23 @@ def validate_internal_link_targets(bank_paths: Iterable[Path]) -> dict[str, int]
     }
 
 
+def _write_reproducible_zip_member(
+    archive: zipfile.ZipFile,
+    path: Path,
+    archive_name: str,
+) -> None:
+    info = zipfile.ZipInfo(archive_name, date_time=(1980, 1, 1, 0, 0, 0))
+    info.compress_type = zipfile.ZIP_DEFLATED
+    info.create_system = 3
+    info.external_attr = (0o100644 & 0xFFFF) << 16
+    archive.writestr(
+        info,
+        path.read_bytes(),
+        compress_type=zipfile.ZIP_DEFLATED,
+        compresslevel=9,
+    )
+
+
 def build_yomitan(
     *,
     human_path: Path,
@@ -1416,7 +1445,7 @@ def build_yomitan(
 
     index = {
         "title": "A Comprehensive Indonesian-English Dictionary",
-        "revision": "acomprehensive-rc1",
+        "revision": "acomprehensive-rc2",
         "format": 3,
         "url": "https://discord.com/invite/9mN2RajgeF",
         "sequenced": True,
@@ -1465,9 +1494,13 @@ def build_yomitan(
         compression=zipfile.ZIP_DEFLATED,
         compresslevel=9,
     ) as archive:
-        archive.write(index_path, "index.json")
+        _write_reproducible_zip_member(archive, index_path, "index.json")
         for bank_path in bank_paths:
-            archive.write(bank_path, bank_path.name)
+            _write_reproducible_zip_member(
+                archive,
+                bank_path,
+                bank_path.name,
+            )
     with zipfile.ZipFile(zip_path) as archive:
         bad_member = archive.testzip()
     if bad_member is not None:

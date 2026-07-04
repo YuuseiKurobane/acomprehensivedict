@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import tempfile
 import unittest
+import zipfile
 from pathlib import Path
 from typing import Any
 
@@ -655,6 +656,113 @@ class Layer1SurfaceTests(unittest.TestCase):
             ],
         )
 
+    def test_rc2_marker_normalization_repairs_audited_structure(self) -> None:
+        source = """\
+[Entry] apriori
+[Variant] a
+[Variant] priori
+[Roman] dry- cleaned.
+
+[Entry] punctuation
+[Variant] /
+[Variant] @
+[Roman] definition.
+
+[Entry] akhlakul (
+[Label] A
+[Roman] ) definition.
+
+[Entry] Super
+[Sense] 98
+[Sense] 1
+[Roman] first.
+[Sense] 2
+[Roman] second.
+
+[Entry] abus
+[Sense] 1
+[Roman] (
+[Label] col
+[Roman] )
+[Sense] 1
+[Roman] coins.
+[Sense] 2
+[Roman] little.
+
+[Entry] root
+[Sense] 1
+[Roman] one.
+[Sense] 2
+[Roman] two.
+[Sense] 3
+[Roman] three.
+[Bold] inline
+[Sense] 1
+[Roman] local one.
+[Sense] 2
+[Roman] local two.
+[Sense] 4
+[Roman] parent four.
+
+[Entry] implicit
+[Roman] ) 1 first.
+[Sense] 2
+[Roman] second.
+
+[Entry] link
+[See] LALU-LALANG/ LANDANG, LALU- LINTAS.
+
+[Entry] punctuation-text
+[Roman] both.. and...
+[Roman] The community asked.. to help.
+[Roman] strengthened..
+"""
+        normalized = layer1.normalize_human_intermediate_text(source)
+        self.assertIn("[Variant] a priori", normalized)
+        self.assertNotIn("[Variant] a\n", normalized)
+        self.assertNotIn("[Variant] priori", normalized)
+        self.assertNotIn("[Variant] /", normalized)
+        self.assertIn("[Variant] @", normalized)
+        self.assertIn("[Roman] dry-cleaned.", normalized)
+        self.assertIn("[Entry] akhlakul\n[Roman] (\n[Label] A", normalized)
+        self.assertIn("[Entry] Super 98\n[Sense] 1", normalized)
+        self.assertEqual(normalized.count("[Entry] abus\n[Sense] 1"), 1)
+        self.assertNotIn("[Sense] 1\n[Roman] coins.\n[Sense] 1", normalized)
+        self.assertIn("[Bold] inline\n[Bold] 1", normalized)
+        self.assertIn("[Bold] 2\n[Roman] local two.\n[Sense] 4", normalized)
+        self.assertIn(
+            "[Entry] implicit\n[Roman] )\n[Sense] 1\n[Roman] first.",
+            normalized,
+        )
+        self.assertIn(
+            "[See] LALU-LALANG/LANDANG, LALU-LINTAS.",
+            normalized,
+        )
+        self.assertIn("[Roman] both... and...", normalized)
+        self.assertIn("[Roman] The community asked... to help.", normalized)
+        self.assertIn("[Roman] strengthened.", normalized)
+
+    def test_cross_line_small_caps_preserve_reviewed_hyphen(self) -> None:
+        events = [
+            {"kind": "arrow", "value": "→", "boundary": ""},
+            {
+                "kind": "run",
+                "style": "small_caps",
+                "value": "DAYA-",
+                "boundary": "",
+            },
+            {
+                "kind": "run",
+                "style": "small_caps",
+                "value": "UPAYA",
+                "boundary": "",
+            },
+        ]
+        self.assertEqual(
+            layer1._arrow_cross_references(events),
+            [{"kind": "see", "value": "DAYA-UPAYA", "boundary": ""}],
+        )
+
 
 class Layer2PresentationTests(unittest.TestCase):
     MARKERS = """\
@@ -933,6 +1041,28 @@ class Layer2PresentationTests(unittest.TestCase):
         self.assertEqual(flatten(words), "Colloquial definition")
         self.assertEqual(flatten(punctuation), "Colloquial]")
         self.assertNotIn("marginRight", words[0]["style"])
+
+    def test_closing_parenthesis_spacing_is_normalized(self) -> None:
+        self.assertEqual(
+            layer2.clean_text("broaden (one’s knowledge of )"),
+            "broaden (one’s knowledge of)",
+        )
+
+    def test_zip_members_are_reproducible(self) -> None:
+        payload = Path(self.temp.name) / "payload.json"
+        payload.write_text('{"value":1}\n', encoding="utf-8")
+        archives = [
+            Path(self.temp.name) / "first.zip",
+            Path(self.temp.name) / "second.zip",
+        ]
+        for path in archives:
+            with zipfile.ZipFile(path, "w") as archive:
+                layer2._write_reproducible_zip_member(
+                    archive,
+                    payload,
+                    "payload.json",
+                )
+        self.assertEqual(archives[0].read_bytes(), archives[1].read_bytes())
 
     def test_empty_homographs_expand_attached_forms_in_source_order(
         self,

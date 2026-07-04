@@ -29,7 +29,7 @@ if str(REPO_DIR) not in sys.path:
 import extract_agent1 as source_parser  # noqa: E402
 
 
-LAYER1_VERSION = "3.4.2"
+LAYER1_VERSION = "3.5.0"
 LINE_WRAP_RESOLUTIONS_PATH = WORK_DIR / "audit1_line_wrap_resolutions.csv"
 SMALL_PAGE_SPEC = source_parser.DEFAULT_PAGES
 FULL_PAGE_SPEC = "21-1123"
@@ -68,6 +68,81 @@ APPLIED_LINE_WRAP_ACTIONS = {"remove_hyphen", "preserve_hyphen"}
 MANUAL_LINE_WRAP_ACTIONS = {
     *APPLIED_LINE_WRAP_ACTIONS,
     "leave_unchanged",
+}
+MARKER_RE = re.compile(r"^\[([^\]]+)\](?:\s(.*))?$")
+FORM_MARKERS = {"Entry", "Subentry", "InlineSubentry"}
+RUN_MARKERS = {
+    "Roman",
+    "Italic",
+    "Bold",
+    "BoldItalic",
+    "SmallCaps",
+    "Symbol",
+}
+FALSE_LOOKUP_VARIANTS = {"/", "-", ".", ")", "!", "+", "–.", "1"}
+
+# These are the high-confidence, manually reviewed source repairs from the
+# RC1 corpus audit. They are deliberately exact instead of global hyphen
+# normalization: suspended forms such as ``far- or nearsightedness`` remain
+# untouched.
+REVIEWED_RUN_REPAIRS = {
+    "dry- cleaned": "dry-cleaned",
+    "menda- pat": "mendapat",
+    "tu- kang": "tukang",
+    "prob- lems": "problems",
+    "as- sets": "assets",
+    "ex- aminee": "examinee",
+    "pur- posely": "purposely",
+    "over- land": "overland",
+    "stimu- lans": "stimulans",
+    "government- appointed": "government-appointed",
+    "deep- rooted": "deep-rooted",
+    "light- fingered": "light-fingered",
+    "pres- ent": "present",
+    "con- sume": "consume",
+    "develop- ment": "development",
+    "produc- tion": "production",
+    "atti- tude": "attitude",
+    "part- nership": "partnership",
+    "asyik- asyoi": "asyik-asyoi",
+    "macro- project": "macro-project",
+    "kesem- patan": "kesempatan",
+    "men- cari": "mencari",
+    "factory- produced": "factory-produced",
+    "gu- nanya": "gunanya",
+    "six- sided": "six-sided",
+    "early- retirement": "early-retirement",
+    "au- thority": "authority",
+    "m encerucup": "mencerucup",
+}
+REVIEWED_REFERENCE_REPAIRS = {
+    "URANG- ARING": "URANG-ARING",
+    "COBAK- CABIK": "COBAK-CABIK",
+    "BERSELANG- SELANG": "BERSELANG-SELANG",
+    "MOGA- MOGA": "MOGA-MOGA",
+    "TU- WA-GA": "TU-WA-GA",
+    "MAAF- MEMAAFKAN": "MAAF-MEMAAFKAN",
+    "KRÉSÉH- PÉSÉH": "KRÉSÉH-PÉSÉH",
+    "TERKATUNG- KATUNG": "TERKATUNG-KATUNG",
+    "LALU-LALANG/ LANDANG": "LALU-LALANG/LANDANG",
+    "LALU- LINTAS": "LALU-LINTAS",
+    "ENGAH- ENGAH": "ENGAH-ENGAH",
+    "GUNA- GUNA": "GUNA-GUNA",
+    "SERBAH- SERBIH": "SERBAH-SERBIH",
+    "SLINTAT- SLINTUT": "SLINTAT-SLINTUT",
+    "KARÉSÉH- PÉSÉH": "KARÉSÉH-PÉSÉH",
+    "DAYA- UPAYA": "DAYA-UPAYA",
+}
+REVIEWED_VARIANT_REPAIRS = {
+    "apriori": ({"a", "priori"}, ["a priori"]),
+    "bercerucup": ({"m"}, ["mencerucup"]),
+    "geragu": ({"k"}, ["geraguk"]),
+    "hérménéutik": ({"a"}, ["hérménéutika"]),
+    "OK": ({"O", "K"}, ["O.K."]),
+    "PBR": ({"é", "."}, ["Réformasi"]),
+    "SH": ({"S", "H"}, ["S.H."]),
+    "trapis": ({"t"}, ["trapist"]),
+    "vip": ({"P"}, ["V.I.P."]),
 }
 
 
@@ -783,7 +858,7 @@ def _arrow_cross_references(events: list[dict[str, Any]]) -> list[dict[str, Any]
         ):
             cursor += 1
 
-        target_parts: list[str] = []
+        target_parts: list[tuple[str, str]] = []
         last_target_end = cursor
         while (
             cursor < len(events)
@@ -792,7 +867,9 @@ def _arrow_cross_references(events: list[dict[str, Any]]) -> list[dict[str, Any]
         ):
             value = source_parser.clean_text(str(events[cursor]["value"]))
             if value:
-                target_parts.append(value)
+                target_parts.append(
+                    (value, str(events[cursor].get("boundary", "")))
+                )
             last_target_end = cursor + 1
             lookahead = last_target_end
             while (
@@ -823,7 +900,7 @@ def _arrow_cross_references(events: list[dict[str, Any]]) -> list[dict[str, Any]
             suffix_cursor += 1
         if (
             target_parts
-            and not re.search(r"[.;:!?]\s*$", target_parts[-1])
+            and not re.search(r"[.;:!?]\s*$", target_parts[-1][0])
             and suffix_cursor < len(events)
             and events[suffix_cursor]["kind"] == "sense"
         ):
@@ -843,14 +920,29 @@ def _arrow_cross_references(events: list[dict[str, Any]]) -> list[dict[str, Any]
                     str(events[after_suffix].get("value", "")),
                 )
             ):
-                target_parts.append(str(events[suffix_cursor]["value"]))
+                target_parts.append(
+                    (
+                        str(events[suffix_cursor]["value"]),
+                        " ",
+                    )
+                )
                 last_target_end = suffix_cursor + 1
 
         if target_parts:
+            target = ""
+            for value, boundary in target_parts:
+                separator = boundary
+                if (
+                    target
+                    and not separator
+                    and not target.endswith(("-", "/", "'", "’"))
+                ):
+                    separator = " "
+                target = source_parser.join_piece(target, value, separator)
             output.append(
                 {
                     "kind": "see",
-                    "value": " ".join(target_parts),
+                    "value": target,
                     "boundary": str(event.get("boundary", "")),
                 }
             )
@@ -1389,6 +1481,401 @@ def _content_marker_lines(content: list[dict[str, Any]]) -> list[str]:
     return lines
 
 
+def _marker_parts(line: str) -> tuple[str, str]:
+    match = MARKER_RE.fullmatch(line)
+    if match is None:
+        raise ValueError(f"Invalid generated marker line: {line!r}")
+    return match.group(1), match.group(2) or ""
+
+
+def _metadata_end(lines: list[str]) -> int:
+    index = 1
+    while index < len(lines):
+        marker, _value = _marker_parts(lines[index])
+        if marker not in {"Variant", "Homograph"}:
+            break
+        index += 1
+    return index
+
+
+def _reviewed_marker_value(marker: str, value: str) -> str:
+    if marker in RUN_MARKERS:
+        for source, replacement in REVIEWED_RUN_REPAIRS.items():
+            value = value.replace(source, replacement)
+        value = value.replace("both.. and...", "both... and...")
+        value = value.replace("asked.. to", "asked... to")
+        value = re.sub(r"(?<!\.)\.\.(?!\.)", ".", value)
+        value = re.sub(r"\s+\)", ")", value)
+    elif marker == "See":
+        for source, replacement in REVIEWED_REFERENCE_REPAIRS.items():
+            value = value.replace(source, replacement)
+    return value
+
+
+def _repair_variants(lines: list[str]) -> list[str]:
+    _marker, expression = _marker_parts(lines[0])
+    repair = REVIEWED_VARIANT_REPAIRS.get(expression)
+    if (
+        expression == "engah"
+        and "[Homograph] II" in lines
+        and "[Variant] engah-engah" not in lines
+    ):
+        insertion = 1
+        lines = [
+            *lines[:insertion],
+            "[Variant] engah-engah",
+            *lines[insertion:],
+        ]
+    if repair is None:
+        return [
+            line
+            for line in lines
+            if not (
+                _marker_parts(line)[0] == "Variant"
+                and _marker_parts(line)[1] in FALSE_LOOKUP_VARIANTS
+            )
+        ]
+
+    replaced, replacements = repair
+    output = [lines[0]]
+    inserted = False
+    for line in lines[1:]:
+        marker, value = _marker_parts(line)
+        if marker == "Variant" and value in replaced:
+            if not inserted:
+                output.extend(
+                    marker_line("Variant", replacement)
+                    for replacement in replacements
+                )
+                inserted = True
+            continue
+        if marker == "Variant" and value in FALSE_LOOKUP_VARIANTS:
+            continue
+        output.append(line)
+    if not inserted:
+        insertion = _metadata_end(output)
+        output[insertion:insertion] = [
+            marker_line("Variant", replacement)
+            for replacement in replacements
+        ]
+    return output
+
+
+def _merge_fragmented_release_runs(lines: list[str]) -> list[str]:
+    _marker, expression = _marker_parts(lines[0])
+    replacements: dict[str, tuple[list[str], list[str]]] = {
+        "OK": (
+            [
+                "[Roman] and",
+                "[Bold] O",
+                "[Roman] .",
+                "[Bold] K",
+                "[Roman] .",
+            ],
+            ["[Roman] and", "[Bold] O.K."],
+        ),
+        "SH": (
+            [
+                "[Roman] and",
+                "[Bold] S",
+                "[Roman] .",
+                "[Bold] H",
+                "[Roman] . (",
+            ],
+            ["[Roman] and", "[Bold] S.H.", "[Roman] ("],
+        ),
+        "vip": (
+            [
+                "[Roman] and",
+                "[Bold] V",
+                "[Roman] .",
+                "[Bold] I",
+                "[Roman] .",
+                "[Bold] P",
+                "[Roman] .",
+            ],
+            ["[Roman] and", "[Bold] V.I.P."],
+        ),
+        "PBR": (
+            [
+                "[Italic] Bintang R",
+                "[BoldItalic] é",
+                "[Italic] formasi",
+                "[Bold] .",
+            ],
+            ["[Italic] Bintang Réformasi", "[Roman] ."],
+        ),
+    }
+    repair = replacements.get(expression)
+    if repair is None:
+        return lines
+
+    source, replacement = repair
+    for index in range(len(lines) - len(source) + 1):
+        if lines[index : index + len(source)] == source:
+            return [
+                *lines[:index],
+                *replacement,
+                *lines[index + len(source) :],
+            ]
+    return lines
+
+
+def _promote_embedded_senses(lines: list[str]) -> list[str]:
+    """Promote source numbers fused into typographic runs.
+
+    Promotion requires the next explicit source sense to be exactly the
+    successor. This prevents ordinary years, measurements, and example
+    numbers from becoming dictionary structure.
+    """
+    output: list[str] = []
+    for index, line in enumerate(lines):
+        marker, value = _marker_parts(line)
+        candidates: list[tuple[str, Any, int]] = []
+        if marker in {"Bold", "BoldItalic"}:
+            trailing = re.fullmatch(r"(.+?[\w)])\s+(\d{1,2})", value)
+            if trailing is not None:
+                candidates.append(
+                    ("trailing", trailing.group(1), int(trailing.group(2)))
+                )
+        if marker in {"Bold", "BoldItalic", "Roman"}:
+            leading = re.fullmatch(r"([^\w]*)(\d{1,2})\s+(.+)", value)
+            if leading is not None:
+                candidates.append(
+                    (
+                        "leading",
+                        (leading.group(1), leading.group(3)),
+                        int(leading.group(2)),
+                    )
+                )
+
+        promoted = False
+        for position, remainder, number in candidates:
+            following_number = next(
+                (
+                    int(next_value)
+                    for next_line in lines[index + 1 :]
+                    for next_marker, next_value in [_marker_parts(next_line)]
+                    if next_marker == "Sense"
+                ),
+                None,
+            )
+            if following_number != number + 1:
+                continue
+            if position == "trailing":
+                output.extend(
+                    [
+                        marker_line(marker, remainder),
+                        marker_line("Sense", number),
+                    ]
+                )
+            else:
+                prefix, suffix = remainder
+                if prefix.strip():
+                    output.append(marker_line(marker, prefix))
+                output.extend(
+                    [
+                        marker_line("Sense", number),
+                        marker_line(marker, suffix),
+                    ]
+                )
+            promoted = True
+            break
+        if not promoted:
+            output.append(line)
+    return output
+
+
+def _normalize_sense_boundaries(lines: list[str]) -> list[str]:
+    """Keep root senses structural and inline-form resets typographic.
+
+    The source frequently places a bold inline form inside a root entry and
+    restarts numbering for that form. The marker schema has no nested sense
+    scope, so treating both sequences as one structural series creates false
+    discontinuities. Local numbers remain visible as bold source text; a
+    later nonconsecutive successor resumes the enclosing structural series.
+    """
+    lines = _promote_embedded_senses(lines)
+    first_sense = next(
+        (
+            int(value)
+            for line in lines
+            for marker, value in [_marker_parts(line)]
+            if marker == "Sense"
+        ),
+        None,
+    )
+    if first_sense is not None and first_sense > 1:
+        lines.insert(_metadata_end(lines), marker_line("Sense", 1))
+
+    output: list[str] = []
+    previous: int | None = None
+    bold_form_since_sense = False
+    local_numbering = False
+    last_local_number: int | None = None
+
+    for line in lines:
+        marker, value = _marker_parts(line)
+        if marker != "Sense":
+            if (
+                marker in {"Bold", "BoldItalic"}
+                and re.search(r"[^\W\d_]", value, flags=re.UNICODE)
+            ):
+                bold_form_since_sense = True
+            output.append(line)
+            continue
+
+        number = int(value)
+        if previous is None:
+            output.append(line)
+            previous = number
+            bold_form_since_sense = False
+            continue
+
+        if local_numbering:
+            resumes_parent = (
+                number == previous + 1
+                and (
+                    last_local_number is None
+                    or number != last_local_number + 1
+                )
+            )
+            if resumes_parent:
+                output.append(line)
+                previous = number
+                bold_form_since_sense = False
+                local_numbering = False
+                last_local_number = None
+            else:
+                output.append(marker_line("Bold", number))
+                last_local_number = number
+            continue
+
+        if number <= previous and bold_form_since_sense:
+            output.append(marker_line("Bold", number))
+            local_numbering = True
+            last_local_number = number
+            bold_form_since_sense = False
+            continue
+        if number == previous:
+            # Repeated source numbers without a new bold form describe the
+            # same sense. Keep one structural boundary and merge its text.
+            continue
+        if number < previous:
+            # A bold number embedded in prose (for example "[same as 4]")
+            # is not a boundary in the current entry.
+            output.append(marker_line("Bold", number))
+            continue
+        if number > previous + 1:
+            number = previous + 1
+            line = marker_line("Sense", number)
+
+        output.append(line)
+        previous = number
+        bold_form_since_sense = False
+    return output
+
+
+def normalize_human_intermediate_text(text: str) -> str:
+    """Apply reviewed RC2 structural repairs to generated marker text."""
+    forms: list[list[str]] = []
+    current: list[str] = []
+    for raw_line in text.splitlines():
+        if not raw_line:
+            continue
+        marker, _value = _marker_parts(raw_line)
+        if marker in FORM_MARKERS:
+            if current:
+                forms.append(current)
+            current = [raw_line]
+        elif current:
+            current.append(raw_line)
+        else:
+            raise ValueError(f"Content appears before a form: {raw_line!r}")
+    if current:
+        forms.append(current)
+
+    repaired_forms: list[list[str]] = []
+    for original in forms:
+        lines = list(original)
+        head_marker, expression = _marker_parts(lines[0])
+        prefixed_content: list[str] = []
+
+        combined_homograph = (
+            re.fullmatch(r"(.+?)\s+([IVXLCDM]+)(\d+)", expression)
+            if head_marker == "Entry"
+            else None
+        )
+        if combined_homograph is not None:
+            expression = combined_homograph.group(1)
+            lines[0] = marker_line(head_marker, expression)
+            prefixed_content.extend(
+                [
+                    marker_line("Homograph", combined_homograph.group(2)),
+                    marker_line("Sense", combined_homograph.group(3)),
+                ]
+            )
+
+        inline_sense = re.fullmatch(r"(.*?)\s*(\d+)\s+(=.+)", expression)
+        if inline_sense is not None:
+            expression = inline_sense.group(1).strip()
+            prefixed_content.extend(
+                [
+                    marker_line("Sense", inline_sense.group(2)),
+                    marker_line("Bold", inline_sense.group(3)),
+                ]
+            )
+            if not expression:
+                if not repaired_forms:
+                    raise ValueError("Orphaned numeric inline form.")
+                repaired_forms[-1].extend([*prefixed_content, *lines[1:]])
+                continue
+            lines[0] = marker_line(head_marker, expression)
+
+        if expression == "Super" and lines[1:3] == [
+            "[Sense] 98",
+            "[Sense] 1",
+        ]:
+            expression = "Super 98"
+            lines[0] = marker_line(head_marker, expression)
+            del lines[1]
+
+        opening_parenthesis = expression.endswith(" (")
+        if opening_parenthesis:
+            expression = expression[:-2].rstrip()
+            lines[0] = marker_line(head_marker, expression)
+            prefixed_content.append("[Roman] (")
+
+        lines = _repair_variants(lines)
+        insertion = _metadata_end(lines)
+        if prefixed_content:
+            lines[insertion:insertion] = prefixed_content
+
+        normalized_values: list[str] = []
+        for line in lines:
+            marker, value = _marker_parts(line)
+            normalized_values.append(
+                marker_line(marker, _reviewed_marker_value(marker, value))
+            )
+        lines = _merge_fragmented_release_runs(normalized_values)
+
+        if expression == "fisiografi":
+            source = ["[Label] D", "[Roman] /E)) physiography."]
+            replacement = ["[Label] D/E", "[Roman] ) physiography."]
+            for index in range(len(lines) - 1):
+                if lines[index : index + 2] == source:
+                    lines[index : index + 2] = replacement
+                    break
+
+        repaired_forms.append(lines)
+
+    repaired_forms = [
+        _normalize_sense_boundaries(lines)
+        for lines in repaired_forms
+    ]
+    return "\n\n".join("\n".join(form) for form in repaired_forms) + "\n"
+
+
 def human_intermediate_text(
     debug_entries: list[dict[str, Any]],
     tag_map: dict[str, dict[str, str]],
@@ -1450,7 +1937,8 @@ def human_intermediate_text(
                 )
             lines.extend(_content_marker_lines(parsed["content"]))
         blocks.append("\n".join(lines))
-    return "\n\n".join(blocks).rstrip() + "\n"
+    generated = "\n\n".join(blocks).rstrip() + "\n"
+    return normalize_human_intermediate_text(generated)
 
 
 def run_layer1(
