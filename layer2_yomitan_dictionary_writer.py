@@ -13,7 +13,7 @@ from typing import Any, Iterable, Iterator
 from urllib.parse import parse_qs, quote, urlparse
 
 
-LAYER2_VERSION = "3.1.1"
+LAYER2_VERSION = "3.1.2"
 MARKER_RE = re.compile(r"^\[([^\]]+)\](?:\s(.*))?$")
 OPTIONAL_GROUP_RE = re.compile(r"\(([^()]*)\)")
 AFFIXED_ACRONYM_RE = re.compile(r"^(.+?)-([A-Z][A-Z0-9]+)-(.+)$")
@@ -417,6 +417,18 @@ class CrossReferenceResolver:
                     self.phrase_queries[
                         normalize_lookup(phrase).casefold()
                     ].add(canonical_query)
+                for item in form["content"]:
+                    if item["type"] not in {"bold", "bold_italic"}:
+                        continue
+                    embedded_value = _xref_base_text(
+                        str(item.get("value", ""))
+                    )
+                    if not re.search(r"[^\W\d_]", embedded_value):
+                        continue
+                    for spelling in expand_optional_form(embedded_value):
+                        self.embedded_form_queries[
+                            normalize_lookup(spelling).casefold()
+                        ].add(canonical_query)
 
     def _unique_query(self, queries: set[str] | None) -> str | None:
         if not queries:
@@ -432,6 +444,19 @@ class CrossReferenceResolver:
         return sorted(queries, key=lambda value: (len(value), value))[0]
 
     def resolve_segment(self, text: str) -> dict[str, str] | None:
+        visible = clean_text(text)
+        visible_direct = self._unique_query(
+            self.lookup_queries.get(
+                normalize_lookup(visible).casefold()
+            )
+        )
+        if visible_direct is not None:
+            return {
+                "query": visible_direct,
+                "method": "exact",
+                "target": visible,
+            }
+
         base = _xref_base_text(text)
         if not base:
             return None
@@ -462,6 +487,23 @@ class CrossReferenceResolver:
         optional = self._unique_query(optional_queries)
         if optional is not None:
             return {"query": optional, "method": "optional", "target": base}
+        # Source notation such as ``(A)DIPATI`` deliberately names more than
+        # one spelling. If those spellings are separate dictionary rows,
+        # prefer the fully written (last) expansion instead of treating the
+        # valid reference as unresolved merely because it has two targets.
+        for spelling in reversed(expand_optional_form(base)):
+            optional = self._unique_query(
+                self.lookup_queries.get(
+                    normalize_lookup(spelling).casefold(),
+                    set(),
+                )
+            )
+            if optional is not None:
+                return {
+                    "query": optional,
+                    "method": "optional",
+                    "target": base,
+                }
 
         repaired_keys = {
             re.sub(r"(?<=\w)-\s+(?=\w)", "", normalized),
@@ -469,6 +511,8 @@ class CrossReferenceResolver:
             re.sub(r"\s*-\s*", "-", normalized),
             re.sub(r"\s*-\s*", " ", normalized),
             re.sub(r"\s*/\s*", "/", normalized),
+            re.sub(r"[()]", "", normalized),
+            re.sub(r"\s+", "-", normalized),
         }
         repaired_queries: set[str] = set()
         for key in repaired_keys - {normalized}:
@@ -515,16 +559,36 @@ class CrossReferenceResolver:
         """Render each resolvable target as a link and leave the rest black."""
         nodes: list[Any] = []
         arrow_written = False
-        parts = re.split(r"([,;]\s*)", value)
+        separator_pattern = r"([,;]\s*)"
+        slash_parts = re.split(r"(/\s*)", value)
+        slash_targets = [
+            part
+            for part in slash_parts
+            if part and not re.fullmatch(r"/\s*", part)
+        ]
+        if (
+            len(slash_targets) > 1
+            and all(
+                self.resolve_segment(part) is not None
+                for part in slash_targets
+            )
+        ):
+            separator_pattern = r"([,;/]\s*)"
+
+        parts = re.split(separator_pattern, value)
         for part in parts:
             if not part:
                 continue
-            if re.fullmatch(r"[,;]\s*", part):
+            if re.fullmatch(r"[,;/]\s*", part):
                 nodes.append(part)
                 continue
             visible = f"{'→ ' if not arrow_written else ''}{part}"
             arrow_written = True
-            if re.fullmatch(r"\s*[IVXLCDM]+(?:\s+\d+)?\.?\s*", part, re.I):
+            if re.fullmatch(
+                r"\s*(?:[IVXLCDM]+(?:\s+\d+)?|\d+)\.?\s*",
+                part,
+                re.I,
+            ):
                 nodes.append(visible)
                 continue
 
@@ -750,6 +814,15 @@ def _resolve_placeholders(
     current_expression: str,
 ) -> list[dict[str, Any]]:
     """Resolve source operators after extraction and before DOM rendering."""
+    def resolve_root(text: str) -> str:
+        if root_expression.endswith("-"):
+            return re.sub(
+                r"(?<!\w)–(?!\w)\s*",
+                root_expression,
+                text,
+            )
+        return re.sub(r"(?<!\w)–(?!\w)", root_expression, text)
+
     output = [dict(item) for item in items]
     for index, item in enumerate(output):
         if item["type"] not in RUN_KINDS:
@@ -759,21 +832,15 @@ def _resolve_placeholders(
         if trailing_dash and index + 1 < len(output):
             following = output[index + 1]
             if following["type"] in {"italic", "bold_italic"}:
-                item["value"] = clean_text(text[: trailing_dash.start()])
+                item["value"] = clean_text(
+                    resolve_root(text[: trailing_dash.start()])
+                )
                 separator = "" if root_expression.endswith("-") else " "
                 following["value"] = clean_text(
                     f"{root_expression}{separator}{following['value']}"
                 )
                 continue
-        if root_expression.endswith("-"):
-            resolved = re.sub(
-                r"(?<!\w)–(?!\w)\s*",
-                root_expression,
-                text,
-            )
-        else:
-            resolved = re.sub(r"(?<!\w)–(?!\w)", root_expression, text)
-        item["value"] = clean_text(resolved)
+        item["value"] = clean_text(resolve_root(text))
     return [
         item
         for item in output
@@ -878,6 +945,10 @@ def _needs_space(
         return False
     if previous_kind == "sense":
         # The sense span owns its trailing separator space.
+        return False
+    if previous_surface == "-" or current_surface == "-":
+        # The PDF often gives a compound/reduplication hyphen its own
+        # typography run. It remains lexical punctuation, not a spaced dash.
         return False
     if current_surface[0] in ".,;:!?%)]}”’":
         return False

@@ -767,6 +767,40 @@ class Layer1SurfaceTests(unittest.TestCase):
             [{"kind": "see", "value": "DAYA-UPAYA", "boundary": ""}],
         )
 
+    def test_reference_does_not_consume_following_template_operator(
+        self,
+    ) -> None:
+        events = [
+            {"kind": "arrow", "value": "→", "boundary": ""},
+            {
+                "kind": "run",
+                "style": "small_caps",
+                "value": "KALI I. –",
+                "boundary": "",
+            },
+            {
+                "kind": "run",
+                "style": "italic",
+                "value": "sekala",
+                "boundary": " ",
+            },
+        ]
+        repaired = layer1._attach_boundary_operators_to_italics(
+            layer1._arrow_cross_references(events)
+        )
+        self.assertEqual(
+            repaired,
+            [
+                {"kind": "see", "value": "KALI I.", "boundary": ""},
+                {
+                    "kind": "run",
+                    "style": "italic",
+                    "value": "– sekala",
+                    "boundary": " ",
+                },
+            ],
+        )
+
     def test_rc3_marker_normalization_joins_reviewed_spacing_defects(
         self,
     ) -> None:
@@ -823,7 +857,7 @@ class Layer1SurfaceTests(unittest.TestCase):
             "[Italic] wali kota\n[Roman] mayor.",
             "[Roman] pre-Lebaran;",
             "[Italic] wereng-proof\n[Roman] Superior Variety",
-            "[See] ID-ul fitri",
+            "[See] IDULFITRI",
             "[See] INGGANG-inggung",
             "[See] BYAR-PET",
         ):
@@ -849,6 +883,134 @@ class Layer1SurfaceTests(unittest.TestCase):
                     layer1._reviewed_marker_value(marker, source_value),
                     expected,
                 )
+
+    def test_release_normalization_repairs_malformed_lookup_forms(
+        self,
+    ) -> None:
+        source = """\
+[Entry] badani(ah
+[Roman] ) (
+[Label] A
+[Roman] ) physical.
+
+[Entry] jrang, jréng
+[Variant] jrung
+[Roman] ,
+[Bold] jrung
+[Roman] a sound.
+
+[Entry] i and
+[Homograph] I
+[InlineSubentry] I
+[Roman] /i/ a letter.
+
+[Entry] limpap berlimpap(-limpap
+[Roman] )
+[Sense] 1
+[Roman] piled up.
+
+[Entry] old
+[Variant] new
+[Variant] berold-and-new
+[Roman] (
+[Label] E
+[Roman] )
+[Bold] berold-and-new
+[Roman] to celebrate.
+
+[Subentry] mengutik(-ngutik), mengkutik(-kutik)
+[Variant] ngutik-ngutik
+[Roman] and
+[Bold] ngutik-ngutik
+[Roman] (
+[Label] coq
+[Roman] )
+[Sense] 1
+[Roman] to touch.
+[Italic] sebagai/seperti ular dikutik ékor
+[Roman] to start (with fright/anger/out of one’s sleep).
+[Italic] ~ gigi
+[Roman] to pick one’s teeth.
+"""
+        normalized = layer1.normalize_human_intermediate_text(source)
+        for expected in (
+            "[Entry] badani(ah)\n[Roman] (",
+            "[Entry] jrang\n[Variant] jréng\n[Variant] jrung",
+            "[Bold] jréng\n[Roman] ,\n[Bold] jrung",
+            "[Entry] i\n[Variant] I\n[Homograph] I",
+            "[Entry] limpap\n\n[InlineSubentry] berlimpap(-limpap)",
+            "[Entry] old and new\n\n[InlineSubentry] berold-and-new",
+            "[Italic] mengutik(-ngutik), mengkutik(-kutik) gigi",
+        ):
+            with self.subTest(expected=expected):
+                self.assertIn(expected, normalized)
+        self.assertEqual(
+            layer1.normalize_human_intermediate_text(normalized),
+            normalized,
+        )
+
+    def test_release_normalization_repairs_split_affix_hyphens(
+        self,
+    ) -> None:
+        lines = [
+            "[Entry] affixes",
+            "[Italic] de",
+            "[Roman] - and",
+            "[Italic] dis-",
+            "[Bold] 5 -",
+            "[Roman] borne.",
+            "[Bold] ny",
+            "[Roman] - also see entries beginning with",
+            "[Bold] c",
+            "[Roman] - or",
+            "[Bold] s-",
+        ]
+        repaired = layer1._apply_reviewed_marker_sequence_repairs(lines)
+        self.assertIn("[Italic] de-", repaired)
+        self.assertIn("[Sense] 5", repaired)
+        self.assertIn("[Roman] -borne.", repaired)
+        self.assertIn("[Bold] ny-", repaired)
+        self.assertIn("[Bold] c-", repaired)
+
+    def test_release_intermediate_has_no_malformed_lookup_markers(
+        self,
+    ) -> None:
+        human_path = (
+            Path(__file__).resolve().parent
+            / "intermediate"
+            / "human_readable_full.txt"
+        )
+        malformed: list[tuple[int, str]] = []
+        for line_number, line in enumerate(
+            human_path.read_text(encoding="utf-8").splitlines(),
+            1,
+        ):
+            match = layer1.MARKER_RE.fullmatch(line)
+            if match is None or match.group(1) not in {
+                "Entry",
+                "Subentry",
+                "InlineSubentry",
+                "Variant",
+            }:
+                continue
+            value = match.group(2) or ""
+            if (
+                value.count("(") != value.count(")")
+                or "," in value
+                or ":" in value
+            ):
+                malformed.append((line_number, line))
+        self.assertEqual(malformed, [])
+
+        text = human_path.read_text(encoding="utf-8")
+        for expected in ("[Entry] i\n", "[Entry] v\n", "[Entry] x\n"):
+            self.assertIn(expected, text)
+        self.assertFalse(
+            any(
+                line.startswith("[See]") and "–" in line
+                for line in text.splitlines()
+            )
+        )
 
 
 class Layer2PresentationTests(unittest.TestCase):
@@ -913,6 +1075,10 @@ class Layer2PresentationTests(unittest.TestCase):
 
 [Subentry] gandingan
 [Roman] appendix.
+
+[Entry] apa
+[Bold] apakah
+[Roman] question particle.
 """
 
     def setUp(self) -> None:
@@ -1147,6 +1313,96 @@ class Layer2PresentationTests(unittest.TestCase):
                     prepared,
                     [{"type": "italic", "value": "anti-berisik"}],
                 )
+
+    def test_standalone_hyphen_run_stays_unspaced(self) -> None:
+        nodes = layer2.inline_content_nodes(
+            [
+                {"type": "italic", "value": "anak laki"},
+                {"type": "roman", "value": "-"},
+                {"type": "italic", "value": "laki"},
+            ],
+            self.tag_map,
+        )
+        self.assertEqual(flatten(nodes), "anak laki-laki")
+
+    def test_trailing_template_resolution_also_resolves_earlier_operator(
+        self,
+    ) -> None:
+        prepared = layer2.prepare_content(
+            [
+                {"type": "bold", "value": "–.–"},
+                {"type": "italic", "value": "gigi"},
+            ],
+            root_expression="cukil",
+            current_expression="cukil",
+        )
+        self.assertEqual(
+            prepared,
+            [
+                {"type": "bold", "value": "cukil."},
+                {"type": "italic", "value": "cukil gigi"},
+            ],
+        )
+
+    def test_cross_reference_sense_list_is_not_an_unresolved_target(
+        self,
+    ) -> None:
+        nodes = self.resolver.render(
+            "ACAU 1, 2",
+            context=("test", "test"),
+        )
+        self.assertEqual(flatten(nodes), "→ ACAU 1, 2")
+        self.assertNotIn("2", self.resolver.unresolved)
+
+    def test_optional_and_slash_references_choose_valid_targets(self) -> None:
+        path = Path(self.temp.name) / "reference-targets.txt"
+        path.write_text(
+            """\
+[Entry] dipati
+[Roman] title.
+
+[Entry] adipati
+[Roman] title.
+
+[Entry] kain
+[Roman] cloth.
+
+[Entry] baju
+[Roman] shirt.
+""",
+            encoding="utf-8",
+        )
+        resolver = layer2.CrossReferenceResolver(
+            layer2.build_row_groups(path)
+        )
+        optional = resolver.resolve_segment("(A)DIPATI")
+        self.assertIsNotNone(optional)
+        self.assertEqual(optional["query"], "adipati")
+        self.assertEqual(
+            flatten(resolver.render("BAJU/KAIN", context=None)),
+            "→ BAJU/KAIN",
+        )
+        self.assertEqual(resolver.unresolved, {})
+
+    def test_unique_bold_form_resolves_to_owning_entry(self) -> None:
+        resolution = self.resolver.resolve_segment("APAKAH")
+        self.assertIsNotNone(resolution)
+        self.assertEqual(resolution["query"], "apa")
+
+    def test_punctuated_term_resolves_before_display_punctuation_stripping(
+        self,
+    ) -> None:
+        path = Path(self.temp.name) / "punctuated-reference.txt"
+        path.write_text(
+            "[Entry] W.C.\n[Roman] toilet.\n",
+            encoding="utf-8",
+        )
+        resolver = layer2.CrossReferenceResolver(
+            layer2.build_row_groups(path)
+        )
+        resolution = resolver.resolve_segment("W.C.")
+        self.assertIsNotNone(resolution)
+        self.assertEqual(resolution["query"], "W.C.")
 
     def test_closing_parenthesis_spacing_is_normalized(self) -> None:
         self.assertEqual(

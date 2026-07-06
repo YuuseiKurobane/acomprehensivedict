@@ -29,7 +29,7 @@ if str(REPO_DIR) not in sys.path:
 import extract_agent1 as source_parser  # noqa: E402
 
 
-LAYER1_VERSION = "3.5.1"
+LAYER1_VERSION = "3.5.2"
 LINE_WRAP_RESOLUTIONS_PATH = WORK_DIR / "audit1_line_wrap_resolutions.csv"
 SMALL_PAGE_SPEC = source_parser.DEFAULT_PAGES
 FULL_PAGE_SPEC = "21-1123"
@@ -122,6 +122,7 @@ REVIEWED_RUN_REPAIRS = {
     "82- page": "82-page",
     "lima -delapan": "lima per delapan",
     "completely, very, well- all-,": "completely, very, well-, all-,",
+    "terlénggék(- lénggék)": "terlénggék(-lénggék)",
 }
 REVIEWED_REFERENCE_REPAIRS = {
     "URANG- ARING": "URANG-ARING",
@@ -140,6 +141,21 @@ REVIEWED_REFERENCE_REPAIRS = {
     "SLINTAT- SLINTUT": "SLINTAT-SLINTUT",
     "KARÉSÉH- PÉSÉH": "KARÉSÉH-PÉSÉH",
     "DAYA- UPAYA": "DAYA-UPAYA",
+    "MEMBE LIAK": "MEMBELIAK",
+    "GE DUNG/RUMAH": "GEDUNG, RUMAH",
+    "MEN GIRIM": "MENGIRIM",
+    "HEN DAKLAH": "HENDAKLAH",
+    "KAKITANG AN": "KAKITANGAN",
+    "MELIPAT-GAN DAKAN": "MELIPAT-GANDAKAN",
+    "MENGU PAMA": "MENGUPAMA",
+    "SU WARNABHUMI": "SUWARNABHUMI",
+    "TA TANG": "TATANG",
+    "P(E) RANAKAN": "P(E)RANAKAN",
+    "P(E) RANCIS": "P(E)RANCIS",
+    "K(ER) UDUNG": "K(ER)UDUNG",
+    "S(EM) ERBAK": "S(EM)ERBAK",
+    "MENGG(ER) APAI": "MENGG(ER)APAI",
+    "HAUL II2": "HAUL II 2",
 }
 REVIEWED_VARIANT_REPAIRS = {
     "apriori": ({"a", "priori"}, ["a priori"]),
@@ -203,7 +219,7 @@ REVIEWED_MARKER_SEQUENCE_REPAIRS = (
     ),
     (
         ("[See] ID-", "[Italic] ul", "[Italic] fitri"),
-        ("[See] ID-ul fitri",),
+        ("[See] IDULFITRI",),
     ),
     (
         ("[See] INGGANG-", "[Bold] inggung"),
@@ -212,6 +228,421 @@ REVIEWED_MARKER_SEQUENCE_REPAIRS = (
     (
         ("[See] BYAR-", "[Italic] pet"),
         ("[See] BYAR-PET",),
+    ),
+    (
+        ("[Subentry] terambung(-ambung", "[Roman] )"),
+        ("[Subentry] terambung(-ambung)",),
+    ),
+    (
+        ("[Entry] badani(ah", "[Roman] ) ("),
+        ("[Entry] badani(ah)", "[Roman] ("),
+    ),
+    (
+        (
+            "[Subentry] berbahas(-bahasan",
+            "[Roman] ) to discuss, hold a discussion, (have a) debate, argue.",
+        ),
+        (
+            "[Subentry] berbahas(-bahasan)",
+            "[Roman] to discuss, hold a discussion, (have a) debate, argue.",
+        ),
+    ),
+    (
+        (
+            "[Variant] batéla)",
+            "[Homograph] III",
+            "[InlineSubentry] (= batél",
+            "[Roman] and",
+            "[Bold] batéla)",
+            "[Roman] (",
+        ),
+        (
+            "[Variant] batél",
+            "[Variant] batéla",
+            "[Homograph] III",
+            "[Roman] (=",
+            "[Bold] batél",
+            "[Roman] and",
+            "[Bold] batéla",
+            "[Roman] ) (",
+        ),
+    ),
+    (
+        ("[Variant] bekaman)",),
+        ("[Variant] bekaman",),
+    ),
+    (
+        ("[Subentry] berbeli-beli(an", "[Roman] )"),
+        ("[Subentry] berbeli-beli(an)",),
+    ),
+    (
+        ("[Entry] bloknot(es", "[Roman] ) ("),
+        ("[Entry] bloknot(es)", "[Roman] ("),
+    ),
+    (
+        ("[Variant] nyureng (",),
+        ("[Variant] nyureng",),
+    ),
+    (
+        ("[Variant] ) menggemik",),
+        ("[Variant] menggemik",),
+    ),
+    (
+        (
+            "[Subentry] berkerut(-kerut",
+            "[Variant] terkerut",
+            "[Roman] ) and",
+        ),
+        (
+            "[Subentry] berkerut(-kerut)",
+            "[Variant] terkerut",
+            "[Roman] and",
+        ),
+    ),
+    (
+        ("[Variant] terlénggék(-",),
+        ("[Variant] terlénggék(-lénggék)",),
+    ),
+    (
+        ("[Entry] limpap berlimpap(-limpap", "[Roman] )"),
+        (
+            "[Entry] limpap",
+            "[InlineSubentry] berlimpap(-limpap)",
+        ),
+    ),
+    (
+        ("[Subentry] bernyut(-nyut", "[Roman] ) to throb."),
+        ("[Subentry] bernyut(-nyut)", "[Roman] to throb."),
+    ),
+    (
+        ("[Subentry] merékonstruksi(kan", "[Roman] ) to reconstruct."),
+        ("[Subentry] merékonstruksi(kan)", "[Roman] to reconstruct."),
+    ),
+    (
+        ("[Subentry] beriak(-riak", "[Roman] )"),
+        ("[Subentry] beriak(-riak)",),
+    ),
+    (
+        ("[Variant] kesémanan)",),
+        ("[Variant] kesémanan",),
+    ),
+    (
+        ("[Variant] ) bertaaziah",),
+        ("[Variant] bertaaziah",),
+    ),
+    (
+        ("[Subentry] bertelau(-telau", "[Roman] )"),
+        ("[Subentry] bertelau(-telau)",),
+    ),
+    (
+        (
+            "[Entry] andosan, andoseman",
+            "[Variant] andosir",
+            "[Roman] and",
+            "[Bold] andosir",
+        ),
+        (
+            "[Entry] andosan",
+            "[Variant] andoseman",
+            "[Variant] andosir",
+            "[Roman] ,",
+            "[Bold] andoseman",
+            "[Roman] and",
+            "[Bold] andosir",
+        ),
+    ),
+    (
+        (
+            "[Subentry] mengasin, mengasini",
+            "[Variant] mengasinkan",
+            "[Roman] and",
+            "[Bold] mengasinkan 1",
+        ),
+        (
+            "[Subentry] mengasin",
+            "[Variant] mengasini",
+            "[Variant] mengasinkan",
+            "[Roman] ,",
+            "[Bold] mengasini",
+            "[Roman] and",
+            "[Bold] mengasinkan 1",
+        ),
+    ),
+    (
+        (
+            "[Subentry] mengasin, mengasini",
+            "[Variant] mengasinkan",
+            "[Roman] and",
+            "[Bold] mengasinkan",
+        ),
+        (
+            "[Subentry] mengasin",
+            "[Variant] mengasini",
+            "[Variant] mengasinkan",
+            "[Roman] ,",
+            "[Bold] mengasini",
+            "[Roman] and",
+            "[Bold] mengasinkan",
+        ),
+    ),
+    (
+        ("[Variant] in de hooi, in de hooy, in de hoy,",),
+        (
+            "[Variant] in de hooi",
+            "[Variant] in de hooy",
+            "[Variant] in de hoy",
+        ),
+    ),
+    (
+        (
+            "[Entry] jrang, jréng",
+            "[Variant] jrung",
+            "[Roman] ,",
+            "[Bold] jrung",
+        ),
+        (
+            "[Entry] jrang",
+            "[Variant] jréng",
+            "[Variant] jrung",
+            "[Roman] ,",
+            "[Bold] jréng",
+            "[Roman] ,",
+            "[Bold] jrung",
+        ),
+    ),
+    (
+        (
+            "[Entry] jumrah, jumrat,",
+            "[Variant] jumroh",
+            "[Roman] and",
+            "[Bold] jumroh",
+        ),
+        (
+            "[Entry] jumrah",
+            "[Variant] jumrat",
+            "[Variant] jumroh",
+            "[Roman] ,",
+            "[Bold] jumrat",
+            "[Roman] , and",
+            "[Bold] jumroh",
+        ),
+    ),
+    (
+        (
+            "[Subentry] mengutik(-ngutik), mengkutik(-kutik)",
+            "[Variant] ngutik-ngutik",
+            "[Roman] and",
+            "[Bold] ngutik-ngutik",
+        ),
+        (
+            "[Subentry] mengutik(-ngutik)",
+            "[Variant] mengkutik(-kutik)",
+            "[Variant] ngutik-ngutik",
+            "[Roman] ,",
+            "[Bold] mengkutik(-kutik)",
+            "[Roman] and",
+            "[Bold] ngutik-ngutik",
+        ),
+    ),
+    (
+        (
+            "[Italic] sebagai/seperti ular dikutik ékor",
+            "[Roman] to start (with fright/anger/out of one’s sleep).",
+            "[Italic] ~ gigi",
+        ),
+        (
+            "[Italic] sebagai/seperti ular dikutik ékor",
+            "[Roman] to start (with fright/anger/out of one’s sleep).",
+            "[Italic] mengutik(-ngutik), mengkutik(-kutik) gigi",
+        ),
+    ),
+    (
+        ("[Subentry] selingkung:",),
+        ("[Subentry] selingkung", "[Roman] :"),
+    ),
+    (
+        ("[Variant] magfirat,",),
+        ("[Variant] magfirat",),
+    ),
+    (
+        (
+            "[Entry] napza, Napza",
+            "[Variant] NAPZA",
+            "[Roman] and",
+            "[Bold] NAPZA",
+        ),
+        (
+            "[Entry] napza",
+            "[Variant] Napza",
+            "[Variant] NAPZA",
+            "[Roman] ,",
+            "[Bold] Napza",
+            "[Roman] and",
+            "[Bold] NAPZA",
+        ),
+    ),
+    (
+        ("[Variant] ontogénése,",),
+        ("[Variant] ontogénése",),
+    ),
+    (
+        (
+            "[Subentry] keopénan, kopén,",
+            "[Variant] kopénan",
+            "[Roman] and",
+            "[Bold] kopénan 1",
+        ),
+        (
+            "[Subentry] keopénan",
+            "[Variant] kopén",
+            "[Variant] kopénan",
+            "[Roman] ,",
+            "[Bold] kopén",
+            "[Roman] and",
+            "[Bold] kopénan 1",
+        ),
+    ),
+    (
+        (
+            "[Subentry] keopénan, kopén,",
+            "[Variant] kopénan",
+            "[Roman] and",
+            "[Bold] kopénan",
+        ),
+        (
+            "[Subentry] keopénan",
+            "[Variant] kopén",
+            "[Variant] kopénan",
+            "[Roman] ,",
+            "[Bold] kopén",
+            "[Roman] and",
+            "[Bold] kopénan",
+        ),
+    ),
+    (
+        (
+            "[Entry] old",
+            "[Variant] new",
+            "[Variant] berold-and-new",
+            "[Roman] (",
+            "[Label] E",
+            "[Roman] )",
+            "[Bold] berold-and-new",
+        ),
+        (
+            "[Entry] old and new",
+            "[InlineSubentry] berold-and-new",
+            "[Roman] (",
+            "[Label] E",
+            "[Roman] )",
+        ),
+    ),
+    (
+        (
+            "[Entry] i and",
+            "[Homograph] I",
+            "[InlineSubentry] I",
+        ),
+        (
+            "[Entry] i",
+            "[Variant] I",
+            "[Homograph] I",
+        ),
+    ),
+    (
+        (
+            "[Entry] v and",
+            "[Homograph] V",
+            "[InlineSubentry] I",
+        ),
+        (
+            "[Entry] v",
+            "[Variant] V",
+            "[Homograph] I",
+        ),
+    ),
+    (
+        ("[Entry] x and", "[Homograph] X"),
+        ("[Entry] x", "[Variant] X"),
+    ),
+    (
+        (
+            "[Roman] /éks/ the 24th letter of the Latin alphabet used for writing Indonesian (used only in spelling some foreign words and slang).",
+            "[Bold] Y",
+            "[Entry] y",
+        ),
+        (
+            "[Roman] /éks/ the 24th letter of the Latin alphabet used for writing Indonesian (used only in spelling some foreign words and slang).",
+            "[Entry] y",
+        ),
+    ),
+    (
+        ("[Italic] de", "[Roman] - and", "[Italic] dis-"),
+        ("[Italic] de-", "[Roman] and", "[Italic] dis-"),
+    ),
+    (
+        (
+            "[Roman] ) to cause to, let, make (often equivalent to verb with suffix -",
+            "[Italic] kan",
+            "[Roman] in standard language).",
+        ),
+        (
+            "[Roman] ) to cause to, let, make (often equivalent to verb with suffix",
+            "[Italic] -kan",
+            "[Roman] in standard language).",
+        ),
+    ),
+    (
+        ("[Bold] 5 -", "[Roman] borne."),
+        ("[Sense] 5", "[Roman] -borne."),
+    ),
+    (
+        (
+            "[Bold] ny",
+            "[Roman] - also see entries beginning with",
+            "[Bold] c",
+            "[Roman] - or",
+            "[Bold] s-",
+        ),
+        (
+            "[Bold] ny-",
+            "[Roman] also see entries beginning with",
+            "[Bold] c-",
+            "[Roman] or",
+            "[Bold] s-",
+        ),
+    ),
+    (
+        (
+            "[Roman] ) particle which precedes the verb, which often contains an infix -",
+            "[Italic] er",
+            "[Roman] - or -",
+            "[Italic] el",
+            "[Roman] -; it indicates that the subject is plural and/ or that the action is repeated, multiple, or chaotic.",
+        ),
+        (
+            "[Roman] ) particle which precedes the verb, which often contains an infix",
+            "[Italic] -er-",
+            "[Roman] or",
+            "[Italic] -el-",
+            "[Roman] ; it indicates that the subject is plural and/ or that the action is repeated, multiple, or chaotic.",
+        ),
+    ),
+    (
+        (
+            "[Entry] pl",
+            "[Roman] - also see entries beginning with",
+            "[Bold] pel-",
+        ),
+        (
+            "[Entry] pl-",
+            "[Roman] also see entries beginning with",
+            "[Bold] pel-",
+        ),
+    ),
+    (
+        ("[See] PASCA",),
+        ("[See] PASCA-",),
     ),
 )
 
@@ -929,6 +1360,7 @@ def _arrow_cross_references(events: list[dict[str, Any]]) -> list[dict[str, Any]
             cursor += 1
 
         target_parts: list[tuple[str, str]] = []
+        trailing_operator: dict[str, Any] | None = None
         last_target_end = cursor
         while (
             cursor < len(events)
@@ -937,6 +1369,18 @@ def _arrow_cross_references(events: list[dict[str, Any]]) -> list[dict[str, Any]
         ):
             value = source_parser.clean_text(str(events[cursor]["value"]))
             if value:
+                operator_match = re.fullmatch(
+                    r"(.*[.;:!?])\s+(–)",
+                    value,
+                )
+                if operator_match is not None:
+                    value = operator_match.group(1)
+                    trailing_operator = {
+                        "kind": "run",
+                        "style": "roman",
+                        "value": operator_match.group(2),
+                        "boundary": "",
+                    }
                 target_parts.append(
                     (value, str(events[cursor].get("boundary", "")))
                 )
@@ -1016,6 +1460,8 @@ def _arrow_cross_references(events: list[dict[str, Any]]) -> list[dict[str, Any]
                     "boundary": str(event.get("boundary", "")),
                 }
             )
+            if trailing_operator is not None:
+                output.append(trailing_operator)
             index = last_target_end
         else:
             output.append(
@@ -1873,11 +2319,16 @@ def _normalize_sense_boundaries(lines: list[str]) -> list[str]:
 
 def normalize_human_intermediate_text(text: str) -> str:
     """Apply reviewed release repairs to generated marker text."""
+    source_lines = [
+        raw_line
+        for raw_line in text.splitlines()
+        if raw_line
+    ]
+    source_lines = _apply_reviewed_marker_sequence_repairs(source_lines)
+
     forms: list[list[str]] = []
     current: list[str] = []
-    for raw_line in text.splitlines():
-        if not raw_line:
-            continue
+    for raw_line in source_lines:
         marker, _value = _marker_parts(raw_line)
         if marker in FORM_MARKERS:
             if current:
@@ -1952,8 +2403,15 @@ def normalize_human_intermediate_text(text: str) -> str:
             normalized_values.append(
                 marker_line(marker, _reviewed_marker_value(marker, value))
             )
-        lines = _apply_reviewed_marker_sequence_repairs(normalized_values)
-        lines = _merge_fragmented_release_runs(lines)
+        # A small number of reviewed sequences become recognizable only after
+        # their individual runs have been repaired (for example a line-wrapped
+        # spelling inside a composite subentry). The global pass above handles
+        # sequences spanning forms; this pass handles those now-normalized
+        # sequences within the current form.
+        normalized_values = _apply_reviewed_marker_sequence_repairs(
+            normalized_values
+        )
+        lines = _merge_fragmented_release_runs(normalized_values)
 
         if expression == "fisiografi":
             source = ["[Label] D", "[Roman] /E)) physiography."]
