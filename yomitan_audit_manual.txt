@@ -1,0 +1,165 @@
+RC3 MANUAL YOMITAN AUDIT LIST
+============================
+
+Archive to import:
+  yomitan/AComprehensive-rc3.zip
+
+Purpose:
+  Open exactly these 100 lookup entries in Yomitan. The selection emphasizes
+  many senses, homograph grouping, inline subentries, derived/related forms,
+  labels, template expansion, and cross-reference navigation.
+
+For every entry:
+  - Confirm headings, homograph numerals, sense numbers, labels, examples, and
+    related-form panels are visually separated and ordered correctly.
+  - Click a representative Kata Dasar, Kata Turunan/Kata Terkait, and internal
+    cross-reference link when present; confirm that the intended result opens.
+  - Check that template dashes expand to the headword without unwanted spaces
+    or swallowed hyphens.
+  - Try the listed spelling exactly. For entries with stated aliases, also try
+    those aliases and confirm that the visible definition still prints them.
+
+A. MANY SENSES / LARGE DERIVATIONAL FAMILIES
+--------------------------------------------
+
+001. lepas — 49 senses, 19 subentries, 20 labels, 7 cross-references, and many
+     template phrases.
+002. keras — 3 homographs, 54 senses, and 18 subentries.
+003. turun — 49 senses, 13 subentries, variants, and labels.
+004. jalan — 47 senses, 11 subentries, 20 labels, and 11 cross-references.
+005. potong — 42 senses and 19 subentries.
+006. tinggal — 42 senses and 13 subentries.
+007. balik — 2 homographs, 41 senses, 16 subentries, and 7 cross-references.
+008. berat — 41 senses and 11 subentries.
+009. kuat — 41 senses, 14 subentries, 16 labels, and many templates.
+010. buka — 41 senses, 12 subentries, variants, labels, and templates.
+011. kena — 38 senses and 11 subentries.
+012. ikat — 38 senses, 14 subentries, and 3 cross-references.
+013. arah — 3 homographs, 38 senses, and 13 subentries.
+014. tutup — 2 homographs, 37 senses, 11 subentries, and 3 variants.
+015. angkat — 5 homographs, 36 senses, 23 subentries, one inline subentry,
+     21 labels, and many templates.
+016. tahan — 3 homographs, 36 senses, 16 subentries, one inline subentry,
+     and many templates.
+017. jadi — 36 senses and 13 subentries.
+018. salah — 2 homographs, 35 senses, 13 subentries, 13 labels, and
+     5 cross-references.
+
+B. LARGE HOMOGRAPH CLUSTERS
+---------------------------
+
+019. PR — 15 homographs; verify that all Roman-numeral sections remain distinct.
+020. karang — 9 homographs, 31 senses, 11 subentries, and 2 inline subentries.
+021. pas — 9 homographs with labels, variants, and senses.
+022. pompong — 8 homographs and one inline subentry.
+023. pari — 7 homographs and 3 cross-references.
+024. P — 7 homographs; inspect abbreviation labels and the cross-reference.
+025. dam — 7 homographs, labels, senses, and 3 cross-references.
+026. pér — 7 homographs, a variant, and 8 labels.
+027. cap — 6 homographs, 19 senses, 5 subentries, and 4 variants.
+028. suku — 6 homographs, 13 senses, and 10 subentries.
+029. anggar — 6 homographs, 9 subentries, one inline subentry, and templates.
+030. si — 6 homographs, a variant, labels, and 3 cross-references.
+031. laras — 6 homographs, 12 senses, 6 subentries, and 5 cross-references.
+032. badar — 6 homographs with senses, labels, and a cross-reference.
+033. yu — 6 homographs and 5 cross-references.
+034. sambang — 6 homographs and 4 subentries.
+035. suak — 6 homographs, senses, subentries, a label, and a template.
+
+C. INLINE SUBENTRIES AND MIXED HIERARCHY
+----------------------------------------
+
+036. lantar — 3 homographs, 3 inline subentries, 4 ordinary subentries,
+     and 19 senses.
+037. salin — 3 homographs, 3 inline subentries, 12 ordinary subentries,
+     4 variants, and 5 cross-references.
+038. pentol — 4 homographs and 3 inline subentries.
+039. robok — 3 homographs and 3 inline subentries.
+040. aku — 4 homographs, 2 inline subentries, 16 ordinary subentries,
+     21 senses, variants, and labels.
+041. galang — 5 homographs, 2 inline subentries, 11 ordinary subentries,
+     and 20 senses.
+042. hambur — 2 homographs, 2 inline subentries, 11 ordinary subentries,
+     and 14 senses.
+043. raba — 3 homographs, 2 inline subentries, 9 ordinary subentries,
+     and 14 senses.
+044. tampung — 5 homographs, 2 inline subentries, and 9 ordinary subentries.
+045. rakit — 5 homographs, 2 inline subentries, 8 ordinary subentries,
+     and 3 cross-references.
+046. petang — 3 homographs, 2 inline subentries, 8 ordinary subentries,
+     and 7 labels.
+047. sasar — 4 homographs, 2 inline subentries, 4 ordinary subentries,
+     3 variants, and many templates.
+048. awang — 5 homographs, 2 inline subentries, and 5 ordinary subentries.
+049. arak — 3 homographs, 2 inline subentries, 7 ordinary subentries,
+     10 senses, and 6 labels.
+050. sarap — 5 homographs, 2 inline subentries, and 5 ordinary subentries.
+051. simbur — 2 homographs, 2 inline subentries, and 9 ordinary subentries.
+052. peram — 2 homographs, 2 inline subentries, and 6 ordinary subentries.
+
+D. RELATED-FORM LISTS, LABELS, AND TEMPLATES
+--------------------------------------------
+
+053. bangun — 4 homographs, 20 subentries, 22 senses, and 4 variants.
+054. dua — 19 subentries, 24 senses, and 4 variants.
+055. ingat — 18 subentries and 31 senses; inspect the large related-form panel.
+056. baik — 2 homographs, 18 subentries, and 35 senses.
+057. kecil — 18 subentries, 22 senses, 13 labels, and 3 cross-references.
+058. turut — 18 subentries, 31 senses, variants, and many templates.
+059. kata — 19 senses, 11 subentries, and 76 emitted usage/register labels.
+060. usaha — 20 senses and a very large set of template-expanded phrases.
+061. ambil — many template phrases plus 13 labels and 8 cross-references.
+062. bawa — 35 senses, 3 variants, and many template phrases.
+063. pakai — 25 senses, 16 labels, and many template phrases.
+064. kerja — 28 senses, 11 subentries, 15 labels, variants, and templates.
+065. manis — inspect the end of "(manis-)manisan". Known audit finding:
+     "kemanisan" currently appears as "k emanisan" and has no lookup row.
+
+E. CROSS-REFERENCE NAVIGATION
+-----------------------------
+
+066. ilmu — 28 cross-references; click a varied sample across the entry.
+067. kacang — 27 cross-references, 4 homographs, and one inline subentry.
+068. uang — 18 cross-references and 16 labels.
+069. anak — 16 cross-references, 2 homographs, 25 senses, and 37 labels.
+070. emas — 16 cross-references across 4 homographs.
+071. hari — 15 cross-references; inspect punctuation and template boundaries.
+072. ahli — 15 cross-references in a long specialist/profession list.
+073. rumah — 14 cross-references and 30 labels.
+074. induk — 12 cross-references.
+075. kayu — 11 cross-references across 2 homographs.
+076. depati — click the optional-form source reference "(A)DIPATI".
+077. layang — in subentry "pelayangan", test the slash reference "BAJU/KAIN".
+078. wésé — click the punctuated reference "W.C.".
+079. adakah — click "APAKAH"; it resolves through a uniquely owned bold form.
+080. anggota — verify valid links and confirm unresolved "RPKAD" is honest
+     non-clickable text rather than a broken or fuzzy link.
+
+F. RC3 LOOKUP/VISIBLE-DEFINITION REGRESSIONS
+--------------------------------------------
+
+081. badani — also search "badaniah"; both must show visible "badani(ah)".
+082. batil — test batel/batél/batela/batéla and inspect homograph III.
+083. terambung — also search "terambung-ambung"; visible optional form must remain.
+084. mengasin — also search "mengasini" and "mengasinkan"; all spellings must
+     remain visibly printed in the shared definition.
+085. berbahas — also search "berbahas-bahasan"; inspect optional-form display.
+086. bloknot — also search "bloknotes"; inspect visible "bloknot(es)".
+087. indehoj — test "in de hooi", "in de hooy", "in de hoy", and "indehoy".
+088. jrang — also search "jreng", "jréng", and "jrung"; inspect visible list.
+089. jumrah — also search "jumrat" and "jumroh"; test the JAMRAH link.
+090. keopenan — also search keopénan/kopen/kopén/kopenan/kopénan.
+091. old and new — inspect child "berold-and-new" and both relationship links.
+092. v — verify v/V share the correct I and II sections without a bogus "v and".
+093. x — verify x/X share the entry and that no stray "Y" remains.
+094. pl- — confirm the final hyphen is present in both lookup and heading.
+095. limpap — inspect child lookups "berlimpap" and "berlimpap-limpap".
+096. napza — test case variants napza/Napza/NAPZA and visible spelling list.
+097. mengutik — also test mengutik-ngutik/mengkutik/mengkutik-kutik and inspect
+     the fully printed optional spellings.
+098. terlenggek — test accented and repeated forms, including
+     terlénggék-lénggék.
+099. merekonstruksi — test accented form and the -kan variants; visible
+     "merékonstruksi(kan)" must remain.
+100. séman — also search seman/kesemanan/kesémanan; no lookup may retain a
+     trailing parenthesis.

@@ -1,0 +1,792 @@
+RC3 AUDIT REPORT — A COMPREHENSIVE INDONESIAN-ENGLISH DICTIONARY
+================================================================
+
+Audit date: 2026-07-06
+Audited repository:
+  C:\Users\admin\Documents\Codex\AComprehensiveIndonesianEnglishDictionary
+
+VERDICT
+-------
+
+One new, high-confidence extraction defect was found:
+
+  PDF page 635, "manis" family: "kemanisan" is split into "k emanisan",
+  is attached to "(manis-)manisan", and has no independent lookup row.
+
+Recommendation: correct this defect and rebuild/re-run the full checks before
+release. No correction was made because this audit was explicitly read-only.
+
+Apart from that finding, the requested page/column-boundary audit and the
+rc2/initial-rc3 lookup/content regression audit passed within the scope
+described below.
+
+REPOSITORY AND ARTIFACT AUDITED
+-------------------------------
+
+The handoff's working-tree note is stale. The audited repository was clean at:
+
+  f7c3049 rc3: fix additional spacing and lookup issues
+
+The formerly uncommitted final fixes therefore appear to have been committed.
+No source, intermediate, generated archive, or unpacked bank was changed.
+
+Current archive:
+  yomitan\AComprehensive-rc3.zip
+  SHA-256:
+  152FE44B51490738E11D7C17870051A39CB474FDEB733A0FDD63AAD2B4DD94F6
+
+Read-only archive validation:
+  - 14 members; 14 unique member names.
+  - ZIP CRC check passed.
+  - All timestamps are reproducibly fixed at 1980-01-01 00:00:00.
+  - Largest component is term_bank_6.json at 7,999,927 uncompressed bytes.
+  - Every archive member is byte-identical to its unpacked yomitan counterpart.
+  - Current output contains 94,344 rows, 73,717 lexical row groups,
+    91,205 unique terms, and 91,696 unique expression/reading pairs.
+
+AUDIT 1 — PDF COLUMN/PAGE BOUNDARIES
+------------------------------------
+
+Method:
+  - Read the 425 MB extraction debug evidence as a stream; no file was
+    extracted or rewritten.
+  - Classified every physical boundary in source pages 21–1123.
+  - Selected 120 deterministic, corpus-stratified boundary sites:
+      30 entries crossing a column boundary
+      30 entry-to-entry column boundaries
+      30 entries crossing a page boundary
+      30 entry-to-entry page boundaries
+  - The 120 sites span pages 21–1123 and involve 180 distinct debug entries.
+  - Compared source lines and typographic runs around each sampled boundary
+    with the canonical human-readable intermediate.
+  - Confirmed that all 180 sampled entries emit a Yomitan lookup row.
+  - Audited all 28 words ending in a source hyphen exactly at a column/page
+    boundary; every case appears in the intermediate as either the correct
+    joined word or the correct preserved compound.
+  - Scanned all internal boundaries for the specific style-run pattern that
+    exposed the defect below.
+
+Corpus-wide boundary accounting:
+  - 1,103/1,103 column transitions accounted for:
+      720 inside an entry
+      383 between entries
+  - 1,102/1,102 page transitions accounted for:
+      686 inside an entry
+      416 between entries
+  - No unexplained column/page jump was found.
+  - No debug entry carried a warning.
+
+Expected source fragments at ordinary line wraps were reviewed using adjacent
+lines, so fragments such as "atti-" + "tude" were judged after recombination.
+All sampled cases other than the finding below matched the intermediate.
+
+Finding RC3-AUD-001: lost derived-form boundary at "kemanisan"
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Source evidence:
+  - PDF page 635.
+  - Transition from column 0 line p0635-l0072 to column 1 line p0635-l0073.
+  - The source line is visibly/textually:
+      kemanisan 1 sweetness. 2 beauty. 3 (coq) overly sweet.
+  - The PDF typographic runs mark the initial "k" as Indrev-Roman and
+    "emanisan" as Indrev-Bold. This one-character style anomaly occurs at the
+    column start.
+
+Current intermediate:
+  - The preceding definition ends as:
+      [Roman] honey. k
+  - It is followed by:
+      [Bold] emanisan
+      [Sense] 1
+      [Roman] sweetness.
+      [Sense] 2
+      [Roman] beauty.
+      [Sense] 3
+      ...
+  - There is no [Subentry] kemanisan marker.
+
+Current Yomitan consequence:
+  - No "kemanisan" lookup row exists.
+  - Its definition is attached to the "(manis-)manisan" row.
+  - Flattened visible output contains "k emanisan1.sweetness..." rather than
+    the contiguous form "kemanisan".
+  - The parent "manis" related-form list omits "kemanisan".
+
+This is a source-run/column-boundary extraction defect, not a Yomitan UI issue.
+A narrow repair should recognize the page-635 split form without applying a
+broad rule to all mixed Roman/Bold starts.
+
+No other instance of the same boundary pattern was found: across internal
+column/page continuations, page 635 was the only case where a 1–3 letter Roman
+prefix was immediately followed by an unspaced Bold remainder.
+
+AUDIT 2 — BASELINE AND CONTENT-DIFF REGRESSION
+----------------------------------------------
+
+Baselines:
+  - Initial rc3 commit:
+      08fbf5c:yomitan/AComprehensive-rc3.zip
+      SHA-256:
+      FB365D147C8C79BCA1860A23E66CE8A80D771CD9FC19275489E67DC76235B6FF
+  - rc2 commit:
+      bb46eaa:yomitan/AComprehensive-rc2.zip
+      SHA-256:
+      B3394B97EDE5C54041B86FB02EE4FA34CDF2E0A83382823B4B803C4E34D00C0C
+
+Both baselines contain 94,321 rows, 73,719 lexical row groups, 91,187 unique
+terms, and 91,678 unique expression/reading pairs. Their lookup differences
+against current rc3 are identical.
+
+Lookup diff results:
+  - 47 old malformed/composite lookup terms removed.
+  - 65 corrected lookup terms added.
+  - The exact removed/added sets reproduce the handoff result.
+  - All 65 added terms pass a visibility check: after case/accent/punctuation
+    normalization, each corrected lookup spelling occurs in its own rendered
+    definition. No corrected lookup became search-only/invisible.
+
+Examples confirmed:
+  - badani/badaniah remain visibly represented by "badani(ah)".
+  - mengasin/mengasini/mengasinkan remain visibly printed together.
+  - jrang/jreng/jréng/jrung remain visibly printed.
+  - indehoj/in de hooi/in de hooy/in de hoy/indehoy remain visibly printed.
+  - optional repeated forms such as terambung-ambung, berbahas-bahasan,
+    terlenggek-lenggek, and merekonstruksikan remain visible through their
+    source optional-form notation.
+
+Definition diff results:
+  - Lookup-group sequence alignment produced 34 changed lookup blocks.
+  - All 34 were reviewed. They correspond to the intended composite/optional
+    lookup repairs or deliberate restructuring of batil, i, limpap,
+    old and new, v, and x.
+  - Among groups whose lookup spellings did not change, 193 flattened
+    definitions changed.
+  - Removing case, accents, whitespace, and punctuation reduced those to
+    22 substantive alphanumeric changes:
+      * 11 are intended removal of aliases from sibling-related lists after
+        those aliases became variants of the same row (mengasini, mengkutik,
+        and kopen families).
+      * 11 are intended insertion of the owning headword into repaired
+        template phrases whose dash had previously been swallowed by a
+        cross-reference.
+  - No definition prose deletion remained unexplained.
+
+Additional loss check:
+  - A group-level word inventory found only 12 tokens present in the baseline
+    but absent from current rc3:
+      dakan, daklah, dasarbatil, dasari, dasarv, girim, ii2, kakitang,
+      membe, mengu, turunani, warnabhumi
+  - Every one is a known split-reference fragment or a removed malformed
+    relationship artifact, not dictionary prose.
+  - The complete human-readable diff from 08fbf5c to f7c3049 was also reviewed
+    hunk by hunk; all changes match the documented rc3 repairs.
+
+Conclusion for this audit:
+  The latest lookup corrections did not introduce a new alternative-spelling
+  visibility regression. The page-635 "kemanisan" defect is unchanged corpus
+  content outside those correction diffs, and was found by the independent
+  boundary audit.
+
+MANUAL YOMITAN FOLLOW-UP
+------------------------
+
+yomitan_audit_manual.txt contains exactly 100 verified, emitted lookup terms.
+It covers:
+  - very large sense inventories and derivational families
+  - large homograph clusters
+  - inline and ordinary subentry mixtures
+  - related-form panels, variants, labels, and templates
+  - exact, optional, slash, punctuated, embedded-bold, and unresolved
+    cross-reference behavior
+  - rc3 lookup/visible-definition regression cases
+  - the newly found "manis"/"kemanisan" defect
+
+LIMITATIONS
+-----------
+
+  - No Yomitan/browser UI import was performed; the requested output for that
+    activity is the 100-entry manual checklist.
+  - This was not a native-speaker linguistic or factual proofread.
+  - The boundary audit used complete boundary accounting, targeted corpus-wide
+    pattern checks, all 28 boundary-terminal hyphen cases, and a 120-site
+    detailed sample; it was not a visual page-by-page proofread of all entries.
+  - No build was run because the task was read-only and the build rewrites
+    generated artifacts. All reported checks read the existing current
+    archive, intermediate, debug evidence, PDF metadata, and Git objects.
+
+FILES WRITTEN
+-------------
+
+Only these two authorized repository-root files were written:
+  yomitan_audit_manual.txt
+  rc3_audit_report.txt
+
+
+FOLLOW-UP CAUSAL AUDIT ADDENDUM — 2026-07-06
+=============================================
+
+QUESTION
+--------
+
+Does the typographic-run condition that broke "kemanisan" affect other
+entries?
+
+Answer: yes. "kemanisan" is one of 16 lexical lines missed by the same
+line-start classification assumption. Four additional headwords are damaged
+by the inverse version of the same one-character font-run problem.
+
+No dictionary correction was made. This addendum records a read-only audit of
+the existing PDF/debug evidence, human-readable intermediate, current rc3
+archive, and initial rc3 Git artifact.
+
+ROOT CAUSE
+----------
+
+extract_agent1.py classifies a line as a root or subentry start only when:
+
+  1. its first meaningful PDF span is Bold or BoldItalic; and
+  2. that span begins at a root or derivative horizontal anchor.
+
+At page 635, the source line begins exactly at the derivative anchor, but its
+first letter "k" is Indrev-Roman and only "emanisan" is Indrev-Bold. The line
+therefore becomes a continuation of "(manis-)manisan". Layer 1 later preserves
+the observed run split as Roman "k" plus Bold "emanisan", and Layer 2 emits the
+broken visible text and no "kemanisan" lookup.
+
+This is not limited to page or column boundaries. The same assumption fails
+wherever a lexical start has an initial non-Bold span, regardless of its
+position on the page.
+
+FULL-CORPUS SCAN
+----------------
+
+The follow-up scan examined 157,313 unique source body lines in
+intermediate\debug_full.json.
+
+Exactly 17 lines classified as continuation begin at a configured root or
+derivative anchor:
+
+  - 16 are high-confidence lexical starts that were misclassified.
+  - 1 is legitimate continuation prose in the "NW" entry:
+      "For verbs beginning with ny-..."
+
+The 16 lexical cases divide into:
+
+  - 8 exact first-letter Roman + Bold-remainder splits, including "kemanisan".
+  - 1 Roman punctuation + Bold-remainder split.
+  - 7 lexical starts whose complete headword text is Roman.
+
+An adjacent scan of successfully classified entry/subentry starts found four
+more high-confidence one-character run errors in the opposite direction:
+the line begins Bold, but its final headword letter is Roman. The parser emits
+the Bold fragment as the lookup and moves the last letter into the definition.
+
+No other high-confidence case of either geometry/style pattern was found.
+Apparent mixed-style transitions with normal positive word spacing were
+examples, labels, scientific names, or other legitimate definition content.
+
+AFFECTED LINE-START CASES
+-------------------------
+
+Exact first-letter Roman + Bold remainder:
+
+  1. p0272-l0110, "kedudukan"
+     Attached to "dudukan" and printed as "k edudukan".
+     Templates incorrectly expand to "dudukan hukum", etc.
+
+  2. p0420-l0143, "menjadwalkan"
+     Attached to "menjadwal" and printed as "m enjadwalkan".
+     "~ kembali" incorrectly expands to "menjadwal kembali".
+
+  3. p0446-l0071, "menjotoskan"
+     Attached to "menjotos" and printed as "m enjotoskan".
+     Its example template incorrectly expands from "menjotos".
+
+  4. p0447-l0064, "menjuang"
+     Attached to "berjuang" and printed as "m enjuang".
+
+  5. p0447-l0067, "kejuangan"
+     Attached to "memperjuangkan" and printed as "k ejuangan".
+     "berkejuangan" is visible Bold text but also lacks a lookup row.
+     A following template incorrectly expands to "memperjuangkan".
+
+  6. p0447-l0096, "pejuaraan"
+     Attached to "kejuaraan" and printed as "p ejuaraan".
+
+  7. p0635-l0073, "kemanisan"
+     Attached to "(manis-)manisan" and printed as "k emanisan".
+
+  8. p1036-l0033, "témpong III"
+     Attached to "témpong II" and printed as "t émpong III".
+     The existing "témpong" result does not structurally contain homograph III,
+     and source-bold "némpong" has no lookup row.
+
+Roman punctuation + Bold remainder:
+
+  9. p0229-l0003, "(pe)combéran"
+     The initial "(" is Roman and "pe)combéran" is Bold. The form is attached
+     to "combér"; neither "combéran" nor "pecombéran" has a lookup row.
+
+Complete lexical start in Roman:
+
+  10. p0584-l0141, "layak I"
+      The root entry is attached to subentry "melayahkan" under "layah IV".
+      The current "layak" lookup contains only homograph II.
+      The misplaced homograph-I definition expands templates with "layah"
+      instead of "layak", and its derived forms are parented to "layah IV".
+
+  11. p0762-l0070, "mempermak"
+      Attached as ordinary definition prose to root "permak"; no lookup row.
+
+  12. p0839-l0135, "rélevir merélevir"
+      Attached as ordinary definition prose to "rélévansi"; neither source
+      form has a lookup row.
+
+  13. p0945-l0091, "berseru"
+      Attached to root "seru I"; no lookup row. Templates expand with "seru",
+      producing text such as "Dia seru agar..." instead of "Dia berseru agar..."
+
+  14. p0968-l0007, "berskala"
+      Attached to root "skala"; no lookup row. Templates incorrectly expand
+      with "skala" instead of "berskala".
+
+  15. p0973-l0073, "kesoréan"
+      Attached to "soré-soré"; no lookup row.
+
+  16. p1049-l0134, "bertimbalan"
+      Attached to "bertimbal"; no lookup row. Templates incorrectly expand
+      with "bertimbal".
+
+INVERSE ONE-LETTER CASES
+------------------------
+
+These lines are successfully classified because their first span is Bold, but
+the final letter of the headword is a separate Roman span with overlapping
+glyph geometry:
+
+  17. p0048-l0077, "pengamanat"
+      Current lookup: "pengamana"; definition begins with stray "t".
+
+  18. p0057-l0128, "ngangetin"
+      Current lookup: "ngangeti"; definition begins with stray "n".
+
+  19. p0081-l0137, "berasyo(o)i"
+      Current lookup: "b"; definition begins with "erasyo(o)i".
+      This creates an unrelated bogus "b" lexical result alongside the
+      legitimate letter/abbreviation results.
+
+  20. p1041-l0009, "bertepekur"
+      Current lookup: "bertepeku"; definition begins with stray "r".
+
+YOMITAN IMPACT CHECK
+--------------------
+
+Current rc3 lacks all 16 of these primary source lookup spellings:
+
+  combéran
+  pecombéran
+  kedudukan
+  menjadwalkan
+  menjotoskan
+  menjuang
+  kejuangan
+  pejuaraan
+  kemanisan
+  mempermak
+  rélevir
+  merélevir
+  berseru
+  berskala
+  kesoréan
+  bertimbalan
+
+The existing "layak" lookup contains only homograph II. The existing "témpong"
+lookup contains homographs I and II plus malformed visible homograph-III prose,
+not a correctly structured third homograph.
+
+At least these six additional source-bold forms inside the affected regions
+also lack lookup rows:
+
+  sekedudukan
+  bersekedudukan
+  berkedudukan
+  berkejuangan
+  berkelayakan
+  némpong
+
+The four correct inverse-case spellings are absent:
+
+  pengamanat
+  ngangetin
+  berasyo(o)i
+  bertepekur
+
+Their four truncated forms are emitted:
+
+  pengamana
+  ngangeti
+  b
+  bertepeku
+
+The 16 missing primary spellings and four truncated emissions are also present
+in the same broken state in the committed initial rc3 artifact at 08fbf5c.
+They are pre-existing extraction defects, not regressions introduced by the
+final rc3 lookup corrections.
+
+REVISED CONCLUSION AND RECOMMENDATION
+-------------------------------------
+
+RC3-AUD-001 should be broadened from one page-boundary defect to a systemic,
+finite set of typographic-run classification defects:
+
+  - 16 missed lexical starts caused by a non-Bold first meaningful span.
+  - 4 truncated headwords caused by a final letter switching from Bold to
+    Roman inside an otherwise valid start.
+
+A repair should not special-case only "kemanisan". It should cover the 20
+audited source lines and add regressions for every case. A blanket rule that
+turns all Roman text at an anchor into an entry is unsafe because the "NW"
+continuation line is a real counterexample. Geometry, lexical shape, adjacent
+run continuity, alphabetical context, and exact reviewed exceptions should be
+used together.
+
+After correction:
+
+  1. rebuild the full profile;
+  2. run all pipeline tests;
+  3. repeat the lookup and flattened-definition baseline diffs;
+  4. confirm all corrected and accent-folded spellings are searchable;
+  5. confirm the spellings remain visibly printed;
+  6. inspect parent/child/related-form links for the affected families; and
+  7. manually inspect the affected Yomitan entries, especially template
+     expansion under duduk, jadwal, jotos, juang, layak, seru, skala, and
+     timbal.
+
+ADDITIONAL PARSING AUDIT ADDENDUM — 2026-07-06
+===============================================
+
+SCOPE
+-----
+
+This pass looked for parser failures outside the 20 lexical-start/run-style
+cases already listed above. It compared:
+
+  - source text, font runs, and run bounding boxes on PDF pages 21–1123;
+  - intermediate\human_readable_full.txt; and
+  - flattened structured content in the current rc3 term banks.
+
+No dictionary source or generated artifact was corrected. The findings below
+are additional and do not replace or duplicate the earlier 20-case inventory.
+
+
+Finding RC3-AUD-002: source-contiguous runs acquire false spaces
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Root cause:
+
+Layer 1 preserves font changes as separate marker records but does not
+preserve whether two records were physically adjacent inside a source line.
+Layer 2's _needs_space() then inserts a space between almost every pair of
+rendered records. That is correct at ordinary semantic run boundaries, but
+wrong when a word or number is split only because its PDF font changes.
+
+Corpus method:
+
+  - Scanned every source body line on pages 21–1123.
+  - Selected adjacent, differently styled runs whose source text contains no
+    boundary whitespace and whose bounding boxes touch or overlap (gap no
+    greater than 0.8 point).
+  - Excluded legitimate sense-number/definition and example/translation
+    boundaries.
+  - Confirmed the retained cases in the human intermediate and current
+    flattened Yomitan definitions.
+
+High-confidence impact:
+
+  - 52 suffix boundaries are split: 51 English plural "-s" joins and the
+    single derivational join "penghulu" + "ship".
+  - 63 numeric joins on 59 source lines are split: 59 joins after a source
+    decimal/thousands point and four digit-to-digit font changes.
+  - Four other ordinary word joins are split.
+  - Five mixed SmallCaps/Italic reference spellings are split.
+
+Suffix inventory
+~~~~~~~~~~~~~~~~
+
+The plus sign below denotes a source-contiguous font boundary, not a printed
+plus sign:
+
+  p0032-l0082  radén+s
+  p0049-l0103  marga+s
+  p0062-l0057  hélicak+s
+  p0062-l0058  bémo+s, minicar+s, bajaj+s
+  p0062-l0066  bémo+s
+  p0075-l0015  arisan+s
+  p0096-l0137  kraton+s
+  p0097-l0002  pawang+s
+  p0099-l0098  bajang+s
+  p0115-l0139  siaga+s
+  p0263-l0082  Pantun+s
+  p0449-l0062  ulama+s
+  p0457-l0014  kain+s
+  p0498-l0020  kampung+s
+  p0500-l0081  colt+s
+  p0500-l0082  bajaj+s
+  p0500-l0083  cak+s
+  p0516-l0090  primbon+s
+  p0520-l0023  dukun+s
+  p0537-l0141  kafilah+s
+  p0539-l0102  dokar+s
+  p0544-l0027  pikul+s
+  p0552-l0013  pantun+s
+  p0555-l0118  gantang+s
+  p0562-l0137  gamelan+s
+  p0623-l0063  Pandawa+s, Kurawa+s
+  p0625-l0128  santri+s
+  p0643-l0130  kraton+s
+  p0647-l0133  haji+s
+  p0648-l0028  durian+s
+  p0683-l0001  ketupat+s
+  p0752-l0021  penghulu+ship
+  p0758-l0056  désa+s
+  p0767-l0112  mikrolét+s, bémo+s, opelét+s
+  p0769-l0071  piat+s
+  p0772-l0099  pikul+s
+  p0827-l0077  rantang+s
+  p0865-l0131  bécak+s
+  p0885-l0032  sambal+s
+  p0892-l0013  penegak+s
+  p0926-l0029  priayi+s
+  p0984-l0089  gantang+s
+  p0984-l0090  gantang+s
+  p1062-l0132  windu+s
+  p1109-l0089  wali+s
+  p1112-l0021  kati+s
+  p1119-l0014  pantu’n+s
+
+Current visible examples include:
+
+  radén s
+  marga s
+  hélicak s, bémo s, minicar s and bajaj s
+  penghulu ship
+  Pandawa s and Kurawa s
+  pantu’n s
+
+Numeric inventory
+~~~~~~~~~~~~~~~~~
+
+There are 63 false numeric joins on these 59 unique source lines:
+
+  p0021-l0010, p0037-l0043, p0054-l0052, p0060-l0010,
+  p0125-l0046, p0135-l0132, p0144-l0132, p0158-l0001,
+  p0161-l0061, p0161-l0062, p0166-l0039, p0194-l0026,
+  p0205-l0074, p0205-l0075, p0221-l0017, p0246-l0127,
+  p0265-l0078, p0280-l0034, p0280-l0035, p0351-l0110,
+  p0370-l0016, p0371-l0035, p0392-l0120, p0405-l0047,
+  p0458-l0122, p0525-l0123, p0536-l0043, p0584-l0044,
+  p0630-l0008, p0665-l0106, p0683-l0032, p0698-l0054,
+  p0714-l0099, p0717-l0035, p0734-l0108, p0734-l0132,
+  p0767-l0048, p0767-l0051, p0769-l0087, p0770-l0098,
+  p0786-l0029, p0786-l0116, p0787-l0053, p0809-l0064,
+  p0810-l0143, p0811-l0012, p0830-l0029, p0832-l0068,
+  p0838-l0133, p0862-l0111, p0889-l0113, p0889-l0114,
+  p0904-l0054, p0940-l0042, p0968-l0002, p0989-l0052,
+  p1030-l0092, p1101-l0094, p1121-l0025
+
+Representative source/current pairs:
+
+  source "Rp 1.000,-"       -> current "Rp 1. 000,-"
+  source "11.00 pagi"       -> current "11. 00 pagi"
+  source "40.000"           -> current "4 0. 000"
+  source "5000"             -> current "5 000"
+  source "20 suara"         -> current "2 0 suara"
+  source "300 pangkalan"    -> current "3 00 pangkalan"
+  source "1:20.000"         -> current "1:20. 000"
+  source "12.500"           -> current "12. 500"
+
+The four digit-to-digit cases are:
+
+  p0371-l0035  4+0 in "40.000"
+  p0458-l0122  5+000 in "5000"
+  p0584-l0044  2+0 in "20 suara"
+  p0940-l0042  3+00 in "300 pangkalan"
+
+Other ordinary word joins
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  p0380-l0066:
+    Source "héteroséksual"; current visible "hétero séksual".
+
+  p0583-l0108:
+    Source example prefix "se–"; current visible "s e–".
+
+  p0876-l0003:
+    Source "Saya"; current visible "S aya".
+
+  p0961-l0106:
+    Source "Vasnya"; current visible "V asnya".
+
+Mixed SmallCaps/Italic joins
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  p0396-l0101  source "IDul adha"; current "ID ul adha"
+  p0670-l0090  source "SIRATul-mustakim"; current "SIRAT ul-mustakim"
+  p0701-l0103  source "KATAnya"; current "KATA nya"
+  p0808-l0138  source "UDELnya"; current "UDEL nya"
+  p0874-l0035  source "BELANGnya"; current "BELANG nya"
+
+All of the displayed current forms above were confirmed in the current rc3
+term banks. These are presentation/content corruptions even where lookup
+membership itself is unaffected.
+
+
+Finding RC3-AUD-003: personal initials are converted into source-label badges
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Root cause:
+
+Layer 1 calls tag_codes() for every complete Italic/BoldItalic span. A
+one-letter initial or name fragment can therefore collide with a language
+code in the tag table. _merge_punctuated_abbreviation_spans() handles only
+the narrower case where every initial is already an isolated italic span; it
+does not handle a first initial attached to the preceding example phrase.
+
+Nine false tag conversions occur in eight source examples:
+
+  PDF p135, pembélot:
+    source "Kolonél F.D."
+    current "Kolonél F. Dutch"
+
+  PDF p151, besutan:
+    source "sutradara N.A."
+    current "sutradara N. Arabic"
+
+  PDF p280, éks:
+    source "K.M. Neptune"
+    current "K. Minangkabau. Neptune"
+
+  PDF p304, G II:
+    source "Mt. G. Slamet"
+    current "Mt. German. Slamet"
+
+  PDF p404, incaran:
+    source "U.S."
+    current "U. Sundanese"
+
+  PDF p452, mengabari:
+    source "Pilot Lim C.L."
+    current "Pilot Lim C. Latin"
+
+  PDF p718, berpamit(an):
+    source example variable "A."
+    current "Arabic."
+
+  PDF p901, bersaudara:
+    source "P.S. Sumlang"
+    current "P. Sundanese. Sumatra lang"
+    ("S" and "Sum" are both converted to badges.)
+
+The English translations beside these examples preserve the correct names or
+initials and independently confirm that the badge readings are impossible.
+
+
+Finding RC3-AUD-004: at least 107 mixed-style arrows lose cross-reference structure
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The human intermediate contains 122 literal "[Symbol] →" markers. A bounded
+scan of each arrow's following target run found 107 cases with a SmallCaps
+target before the next form/sense boundary or sentence end.
+
+These are source cross-references, but _arrow_cross_references() recognizes an
+arrow only when its first meaningful following event is SmallCaps. If an
+italic phrase, parenthesis, label, or the word "under" comes first, the arrow
+is left as a plain symbol. Layer 2 therefore emits no link and the 107 targets
+do not enter cross_reference_report.json at all.
+
+Representative lost links:
+
+  abséntia:
+    → dengan tidak DIHADIRI
+
+  api:
+    → ada UDANG di balik batu
+
+  baju:
+    → pakaian IHRAM
+
+  iduladha/idulfitri/idulkorban:
+    → under ID
+
+  puser:
+    → dengan seénak UDEL
+
+  sadur:
+    → menunjukkan BELANGnya
+
+The current cross-reference report's 128 unresolved target segments concern
+already parsed [See] records. They do not account for these 107 arrows, which
+never become [See] records. A repair should preserve the complete displayed
+phrase while linking either its resolvable full source phrase or its
+SmallCaps lexical core.
+
+
+Finding RC3-AUD-005: pronunciation slashes leak into two lookup expressions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Case 1 — wrapped pronunciation:
+
+  Source p0216-l0018 begins:
+    Central Committee Partai Komunis Indonesia /Séntral Komité
+
+  The closing pronunciation slash is on p0216-l0019. The parser only tests
+  following text on the first physical line, fails to recognize the wrapped
+  pronunciation, and emits:
+
+    [Entry] Central Committee Partai Komunis Indonesia /
+    [Roman] Séntral Komité …/ [CC-PKI]
+
+  Current Yomitan consequence:
+    - malformed lookup "Central Committee Partai Komunis Indonesia /" exists;
+    - correct lookup "Central Committee Partai Komunis Indonesia" is absent;
+    - the opening pronunciation slash is attached to the lookup instead of
+      surrounding the pronunciation.
+
+Case 2 — header alias pronunciation:
+
+  Source p1106-l0001:
+    w and W /wé/ the 23rd letter ...
+
+  _observed_header_aliases() parses the isolated Bold "W /" without passing
+  the following Roman "wé/" context. It emits:
+
+    [Entry] w
+    [Variant] W /
+
+  Current Yomitan consequence:
+    - malformed lookup "W /" exists;
+    - correct uppercase source variant "W" is absent;
+    - visible text is split as "W / wé/".
+
+These are the only form/variant marker values ending in "/" in the current
+human intermediate.
+
+
+REVISED ADDITIONAL REPAIR REQUIREMENTS
+--------------------------------------
+
+In addition to the 20 lexical-start/run-style corrections above, the repair
+pass should:
+
+  1. preserve source no-space adjacency across audited font-run boundaries;
+  2. add regressions for all 52 suffix joins, 59 point-to-digit joins, nine
+     other lexical/reference joins, and four digit-fragment joins;
+  3. distinguish dotted initials and name fragments from source-label codes;
+  4. convert mixed-style arrow targets into structured cross-references and
+     include them in the cross-reference report;
+  5. parse pronunciations across physical line boundaries and when attached
+     to a later bold alias;
+  6. remove the two malformed slash-ending lookups and emit their correct
+     spellings; and
+  7. rebuild, then repeat flattened-definition, lookup, and cross-reference
+     audits against every concrete case recorded in this addendum.

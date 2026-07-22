@@ -1,0 +1,301 @@
+RC4 SOL EXTRA HIGH REPORT — A COMPREHENSIVE INDONESIAN-ENGLISH DICTIONARY
+============================================================================
+
+Date: 2026-07-22
+Repository:
+  C:\Users\admin\Documents\Codex\AComprehensiveIndonesianEnglishDictionary
+
+OUTCOME
+-------
+
+RC4 was repaired, fully rebuilt, audited against rc3, and committed.
+
+Release archive:
+  yomitan\AComprehensive-rc4.zip
+
+Archive size:
+  6,471,566 bytes
+
+SHA-256:
+  158B682077CEBDFA2CB34B17573782AC1D4227B162731795EFE76F632CD40454
+
+Git commit:
+  9c2faa1 rc4: repair audited extraction defects
+
+The old tracked rc3 archive was replaced by the tracked rc4 archive. The two
+pre-existing audit text files and this report remain untracked, as requested.
+
+
+STARTING STATE AND AUDIT INPUT
+------------------------------
+
+The repository started at:
+  f7c3049 rc3: fix additional spacing and lookup issues
+
+The implementation tree was clean. These two prior audit artifacts were
+already untracked:
+  rc3_audit_report.txt
+  yomitan_audit_manual.txt
+
+I read both files in full and verified their concrete findings directly
+against the PDF span text/geometry, the canonical human intermediate, and the
+rc3 Yomitan archive before implementing repairs.
+
+
+DEFECTS FIXED
+-------------
+
+1. Twenty reviewed lexical-start/font-run defects
+
+The low-level extractor now performs exact, evidence-checked style repairs on
+the 20 audited PDF line IDs. It validates the expected headword text before
+changing a run, retains the original raw text and geometry evidence, and does
+not broadly classify all Roman text at an entry anchor.
+
+This restores the missed/truncated forms and their structure, including:
+  (pe)combéran (with combéran and pecombéran lookup expansions)
+  kedudukan
+  menjadwalkan
+  menjotoskan
+  menjuang
+  kejuangan
+  pejuaraan
+  kemanisan
+  layak I
+  mempermak
+  rélevir / merélevir
+  berseru
+  berskala
+  kesoréan
+  témpong III
+  bertimbalan
+  pengamanat
+  ngangetin
+  berasyo(o)i
+  bertepekur
+
+The malformed/truncated rc3 lookups removed by rc4 are exactly:
+  pengamana
+  ngangeti
+  bertepeku
+  Central Committee Partai Komunis Indonesia /
+  W /
+
+2. Six source-bold forms nested in the repaired regions
+
+The following forms are promoted to independent inline subentries and now
+have lookup rows and correct relationships:
+  sekedudukan
+  bersekedudukan
+  berkedudukan
+  berkejuangan
+  berkelayakan
+  némpong
+
+3. Roman sense numerals on anomalous lexical starts
+
+Reviewed sense sequences are recovered for layak I, mempermak, berseru,
+kesoréan, and bertimbalan. This prevents their numbered meanings from being
+flattened into the preceding definition text and restores template expansion
+under the correct form.
+
+4. False spaces at source-contiguous font boundaries
+
+Layer 1 now emits an explicit [NoSpace] boundary and Layer 2 honors it without
+discarding either run's typography. The repair is limited to the 115 audited
+source line IDs and still requires touching geometry, no source whitespace,
+and a lexical/numeric character boundary.
+
+Exactly 124 audited joins are represented:
+  52 suffix/derivational joins
+  63 numeric joins
+  4 other word joins
+  5 mixed SmallCaps/Italic joins
+
+Examples now render as radéns, penghulus, Rp 1.000,-, 11.00, 40.000,
+héteroséksual, Saya, Vasnya, IDul, SIRATul-mustakim, KATAnya, UDELnya,
+and BELANGnya rather than their falsely spaced rc3 forms.
+
+5. Personal initials and name fragments misread as label badges
+
+Dotted initials/name fragments are protected contextually from source-label
+classification. All nine audited false badge conversions in eight examples
+are corrected, including Kolonél F. D., sutradara N. A., K. M. Neptune,
+Mt. G. Slamet, U. S., Pilot Lim C. L., A., and P. S. Sumlang.
+
+6. Mixed-style arrow cross-references
+
+Layer 1 now preserves the displayed prefix/suffix typography while marking the
+SmallCaps lexical target as [SeeBare]. Layer 2 links that target without
+printing a second arrow. Adjacent target fragments and reviewed punctuation,
+sense, slash-list, and derived-form cases are normalized conservatively.
+
+Results:
+  107 previously lost arrows are now structured.
+  99 unique new target strings are represented.
+  All 107 resolve to valid generated destinations.
+  These references are included in cross_reference_report.json.
+
+Representative restored references include:
+  → dengan tidak DIHADIRI
+  → ada UDANG di balik batu
+  → pakaian IHRAM
+  → under ID
+  → dengan seénak UDEL
+  → menunjukkan BELANGnya
+
+7. Pronunciation slashes leaking into lookup forms
+
+The expression parser now checks following physical lines for a closing
+pronunciation slash, and observed header aliases receive their following span
+context. RC4 therefore emits:
+  Central Committee Partai Komunis Indonesia
+  W
+
+and no longer emits their slash-ending rc3 forms.
+
+
+ADDITIONAL DEFECTS FOUND DURING RC4 VALIDATION
+----------------------------------------------
+
+The post-build lookup/visibility audit found that the corrected optional form
+berasyo(o)i initially emitted only berasyoi and berasyooi. RC4 now also emits
+the literal reviewed source spelling berasyo(o)i, so all three are searchable
+and visibly represented.
+
+The cross-reference audit also exposed target-fragment cases inside the 107
+mixed arrows (for example HITUNGAN, (B)INGAR-BINGAR, ANGKA I 8,
+PARANG-PARANG, and slash-listed avocado spellings). These were repaired before
+the final build. No newly structured mixed arrow remains unresolved.
+
+A broader final scan found no additional high-confidence malformed lookups:
+  no leading/trailing lookup whitespace
+  no control characters
+  no trailing slash lookups
+  no unbalanced lookup parentheses
+  no doubled lookup spaces
+  no lookup-space-before-terminal-punctuation cases
+  no empty definitions
+
+The pre-existing duplicate expression/reading pairs were also enumerated;
+they are dominated by legitimate homographs/shared derived forms and were not
+changed merely to force uniqueness.
+
+
+RC3 TO RC4 LOOKUP DELTA
+-----------------------
+
+Removed unique lookup expressions: 5 (all malformed rc3 forms listed above)
+Added unique lookup expressions: 36 (reviewed forms plus concrete/accent-folded
+aliases)
+Net unique-expression increase: 31
+
+Every required corrected lookup is present. Every required lookup is visibly
+represented in its rendered definition. All reviewed accented forms have a
+corresponding accent-folded lookup. No unexpected lookup removal was found.
+
+
+FINAL BUILD METRICS
+-------------------
+
+                              rc3          rc4
+  Yomitan rows              94,344       94,374
+  Lexical row groups        73,717       73,737
+  Unique expressions        91,205       91,236
+  Unique expression/readings 91,696       91,727
+  Internal hyperlinks      253,948      254,337
+
+RC4 archive structure:
+  14 members, all member names unique
+  index.json + 13 term banks
+  largest uncompressed component: 7,999,945 bytes
+  strict component limit: 8,000,000 bytes
+  ZIP CRC: passed
+  timestamps: reproducibly fixed at 1980-01-01 00:00:00
+  empty definitions: 0
+  generated internal hyperlinks without a destination: 0
+
+Cross-reference report:
+  resolved target segments: 16,118
+  unresolved target segments: 128
+  unresolved unique targets: 120
+
+The 120 unresolved targets are honest pre-existing source targets; none is one
+of the 107 newly recovered mixed-style arrows.
+
+
+VALIDATION PERFORMED
+--------------------
+
+1. Full clean pipeline:
+     .venv\Scripts\python.exe _main.py all --profile full
+
+   Layer 1 processed PDF pages 21-1123. All 2,704 line-wrap candidates were
+   accounted for, with 0 ambiguous cases, 0 conflicts, and 0 unmatched full-
+   profile CSV rows.
+
+2. Regression suite:
+     .venv\Scripts\python.exe -m unittest -v test_pipeline.py
+
+   Result: 43 tests passed.
+
+3. Builder validation passed:
+   JSON component validation, strict size bounds, structured-content checks,
+   ZIP CRC, and all 254,337 internal hyperlink destinations.
+
+4. Independent rc3/rc4 archive audit passed:
+   lookup diff, visibility, accent folding, malformed-pattern scan, archive
+   member uniqueness, empty-definition scan, template/relationship samples,
+   false-spacing samples, false-label examples, and mixed-arrow resolution.
+
+5. Reproducibility check passed:
+   A second Layer 2 build produced the same SHA-256 byte for byte:
+   158B682077CEBDFA2CB34B17573782AC1D4227B162731795EFE76F632CD40454
+
+6. Git checks passed:
+   git diff --check
+   focused staging of only the implementation/intermediate/release files
+
+
+TRACKED FILES CHANGED IN COMMIT 9c2faa1
+---------------------------------------
+
+  README.md
+  _main.py
+  extract_agent1.py
+  intermediate\human_readable_full.txt
+  layer1_pdf_extractor.py
+  layer2_yomitan_dictionary_writer.py
+  test_pipeline.py
+  yomitan\AComprehensive-rc3.zip       (removed)
+  yomitan\AComprehensive-rc4.zip       (added)
+
+Version identifiers after the repair:
+  low-level parser: 1.3.0
+  Layer 1: 3.6.0
+  Layer 2: 3.2.1
+  dictionary revision: acomprehensive-rc4
+
+
+GIT REVERSIBILITY / UNDO
+------------------------
+
+The complete rc4 implementation and archive replacement are isolated in one
+Git commit:
+  9c2faa1 rc4: repair audited extraction defects
+
+The safe history-preserving undo is:
+  git revert 9c2faa1
+
+That revert restores the tracked rc3 source/intermediate/archive state and
+removes the tracked rc4 archive. It does not remove the untracked audit text
+files.
+
+
+LIMITATIONS
+-----------
+
+No native Yomitan browser import/UI walkthrough was performed. The archive,
+schema, content, links, and lookup behavior were validated programmatically.
+This work is an extraction/presentation integrity repair, not a native-speaker
+linguistic or factual proofread of the dictionary.
