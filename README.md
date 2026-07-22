@@ -120,7 +120,7 @@ python _main.py all --profile full
 
 Generated debug data, manifests, audits, and unpacked term-bank JSON files are
 ignored because the tracked inputs reproduce them. The distributable
-`yomitan/AComprehensive-rc3.zip` is the release archive.
+`yomitan/AComprehensive-rc4.zip` is the release archive.
 
 Earlier prototypes and design history remain on the
 [`archive/pre-cleanup-2026-07-02`](https://github.com/YuuseiKurobane/acomprehensivedict/tree/archive/pre-cleanup-2026-07-02)

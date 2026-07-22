@@ -13,7 +13,7 @@ from typing import Any, Iterable, Iterator
 from urllib.parse import parse_qs, quote, urlparse
 
 
-LAYER2_VERSION = "3.1.2"
+LAYER2_VERSION = "3.2.1"
 MARKER_RE = re.compile(r"^\[([^\]]+)\](?:\s(.*))?$")
 OPTIONAL_GROUP_RE = re.compile(r"\(([^()]*)\)")
 AFFIXED_ACRONYM_RE = re.compile(r"^(.+?)-([A-Z][A-Z0-9]+)-(.+)$")
@@ -65,6 +65,14 @@ RUN_MARKERS = {
     "Symbol": "symbol",
 }
 RUN_KINDS = set(RUN_MARKERS.values())
+LITERAL_OPTIONAL_LOOKUPS = {"berasyo(o)i"}
+REVIEWED_XREF_QUERY_OVERRIDES = {
+    "dihadiri": "hadir",
+    "mahamurah": "murah",
+    "(b)ingar-bingar": "ingar",
+    "udelnya": "udel",
+    "cabut nyawa/nyowo": "cabut",
+}
 
 
 def json_dump(value: Any, *, indent: int | None = None) -> str:
@@ -194,6 +202,14 @@ def iter_human_intermediate(path: Path) -> Iterator[dict[str, Any]]:
                 current_form["content"].append(
                     {"type": "see", "value": value}
                 )
+            elif marker == "SeeBare":
+                current_form["content"].append(
+                    {"type": "see_bare", "value": value}
+                )
+            elif marker == "NoSpace":
+                current_form["content"].append(
+                    {"type": "no_space", "value": ""}
+                )
             elif marker in RUN_MARKERS:
                 current_form["content"].append(
                     {"type": RUN_MARKERS[marker], "value": value}
@@ -281,7 +297,9 @@ def expand_optional_form(expression: str, limit: int = 32) -> list[str]:
 
 
 def lookup_spellings(expression: str) -> list[str]:
-    spellings: list[str] = []
+    spellings: list[str] = (
+        [expression] if expression in LITERAL_OPTIONAL_LOOKUPS else []
+    )
     for concrete in expand_optional_form(expression):
         spellings.append(concrete)
         match = AFFIXED_ACRONYM_RE.fullmatch(concrete)
@@ -457,6 +475,20 @@ class CrossReferenceResolver:
                 "target": visible,
             }
 
+        override_target = REVIEWED_XREF_QUERY_OVERRIDES.get(
+            normalize_lookup(visible).casefold()
+        )
+        if override_target is not None:
+            override = self._unique_query(
+                self.lookup_queries.get(override_target.casefold())
+            )
+            if override is not None:
+                return {
+                    "query": override,
+                    "method": "reviewed-source-target",
+                    "target": visible,
+                }
+
         base = _xref_base_text(text)
         if not base:
             return None
@@ -555,6 +587,7 @@ class CrossReferenceResolver:
         value: str,
         *,
         context: tuple[str, str] | None,
+        include_arrow: bool = True,
     ) -> list[Any]:
         """Render each resolvable target as a link and leave the rest black."""
         nodes: list[Any] = []
@@ -582,7 +615,7 @@ class CrossReferenceResolver:
             if re.fullmatch(r"[,;/]\s*", part):
                 nodes.append(part)
                 continue
-            visible = f"{'→ ' if not arrow_written else ''}{part}"
+            visible = f"{'→ ' if include_arrow and not arrow_written else ''}{part}"
             arrow_written = True
             if re.fullmatch(
                 r"\s*(?:[IVXLCDM]+(?:\s+\d+)?|\d+)\.?\s*",
@@ -906,23 +939,29 @@ def _item_tokens(
             (label_badge(code, tag_map), code, "label")
             for code in split_label_codes(value, tag_map)
         ]
-    if kind == "see":
+    if kind in {"see", "see_bare"}:
+        include_arrow = kind == "see"
         if resolver is not None:
-            visible = f"→ {value}"
+            visible = f"{'→ ' if include_arrow else ''}{value}"
             node = {
                 "tag": "span",
-                "content": resolver.render(value, context=context),
+                "content": resolver.render(
+                    value,
+                    context=context,
+                    include_arrow=include_arrow,
+                ),
             }
-            return [(node, visible, "see")]
+            return [(node, visible, kind)]
         node = {
             "tag": "a",
             "href": (
                 f"?query={quote(xref_lookup_target(value))}"
                 "&wildcards=off"
             ),
-            "content": f"→ {value}",
+            "content": f"{'→ ' if include_arrow else ''}{value}",
         }
-        return [(node, f"→ {value}", "see")]
+        visible = f"{'→ ' if include_arrow else ''}{value}"
+        return [(node, visible, kind)]
     if kind == "pronunciation":
         return [(_run_node("roman", value), value, kind)]
     if kind == "expansion":
@@ -971,14 +1010,18 @@ def inline_content_nodes(
     nodes: list[Any] = []
     previous_surface = initial_surface
     previous_kind = initial_kind
+    suppress_space = False
     for item in items:
+        if item["type"] == "no_space":
+            suppress_space = True
+            continue
         for node, surface, kind in _item_tokens(
             item,
             tag_map,
             resolver=resolver,
             context=context,
         ):
-            if _needs_space(
+            if not suppress_space and _needs_space(
                 previous_surface,
                 surface,
                 previous_kind,
@@ -988,6 +1031,7 @@ def inline_content_nodes(
             nodes.append(node)
             previous_surface = surface
             previous_kind = kind
+            suppress_space = False
     return nodes
 
 
@@ -1523,7 +1567,7 @@ def build_yomitan(
 
     index = {
         "title": "A Comprehensive Indonesian-English Dictionary",
-        "revision": "acomprehensive-rc3",
+        "revision": "acomprehensive-rc4",
         "format": 3,
         "url": "https://discord.com/invite/9mN2RajgeF",
         "sequenced": True,

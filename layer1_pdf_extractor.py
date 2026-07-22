@@ -21,7 +21,7 @@ WORK_DIR = Path(__file__).resolve().parent
 REPO_DIR = WORK_DIR
 GROUND_TRUTH_PATH = REPO_DIR / "extract_agent1.py"
 EXPECTED_GROUND_TRUTH_SHA256 = (
-    "fa37367c55b7d5e5c57b99b77b4a331933fcf1b59e929fcb82545a2cbb18634f"
+    "5465fb91ffcdf150ce57ca72c3393f6772f3522e82b657c66ac50c3858be6409"
 )
 if str(REPO_DIR) not in sys.path:
     sys.path.insert(0, str(REPO_DIR))
@@ -29,7 +29,7 @@ if str(REPO_DIR) not in sys.path:
 import extract_agent1 as source_parser  # noqa: E402
 
 
-LAYER1_VERSION = "3.5.2"
+LAYER1_VERSION = "3.6.0"
 LINE_WRAP_RESOLUTIONS_PATH = WORK_DIR / "audit1_line_wrap_resolutions.csv"
 SMALL_PAGE_SPEC = source_parser.DEFAULT_PAGES
 FULL_PAGE_SPEC = "21-1123"
@@ -80,6 +80,53 @@ RUN_MARKERS = {
     "Symbol",
 }
 FALSE_LOOKUP_VARIANTS = {"/", "-", ".", ")", "!", "+", "–.", "1"}
+
+# Audited source-contiguous font boundaries which rc3 rendered with a false
+# space.  The predicate below still requires touching geometry, no source
+# whitespace, and a lexical/numeric join; the line IDs prevent this narrow
+# correction from changing ordinary semantic font transitions elsewhere.
+REVIEWED_NO_SPACE_LINE_IDS = set(
+    """
+    p0021-l0010 p0032-l0082 p0037-l0043 p0049-l0103 p0054-l0052
+    p0060-l0010 p0062-l0057 p0062-l0058 p0062-l0066 p0075-l0015
+    p0096-l0137 p0097-l0002 p0099-l0098 p0115-l0139 p0125-l0046
+    p0135-l0132 p0144-l0132 p0158-l0001 p0161-l0061 p0161-l0062
+    p0166-l0039 p0194-l0026 p0205-l0074 p0205-l0075 p0221-l0017
+    p0246-l0127 p0263-l0082 p0265-l0078 p0280-l0034 p0280-l0035
+    p0351-l0110 p0370-l0016 p0371-l0035 p0380-l0066 p0392-l0120
+    p0396-l0101 p0405-l0047 p0449-l0062 p0457-l0014 p0458-l0122
+    p0498-l0020 p0500-l0081 p0500-l0082 p0500-l0083 p0516-l0090
+    p0520-l0023 p0525-l0123 p0536-l0043 p0537-l0141 p0539-l0102
+    p0544-l0027 p0552-l0013 p0555-l0118 p0562-l0137 p0583-l0108
+    p0584-l0044 p0623-l0063 p0625-l0128 p0630-l0008 p0643-l0130
+    p0647-l0133 p0648-l0028 p0665-l0106 p0670-l0090 p0683-l0001
+    p0683-l0032 p0698-l0054 p0701-l0103 p0714-l0099 p0717-l0035
+    p0734-l0108 p0734-l0132 p0752-l0021 p0758-l0056 p0767-l0048
+    p0767-l0051 p0767-l0112 p0769-l0071 p0769-l0087 p0770-l0098
+    p0772-l0099 p0786-l0029 p0786-l0116 p0787-l0053 p0808-l0138
+    p0809-l0064 p0810-l0143 p0811-l0012 p0827-l0077 p0830-l0029
+    p0832-l0068 p0838-l0133 p0862-l0111 p0865-l0131 p0874-l0035
+    p0876-l0003 p0885-l0032 p0889-l0113 p0889-l0114 p0892-l0013
+    p0904-l0054 p0926-l0029 p0940-l0042 p0961-l0106 p0968-l0002
+    p0984-l0089 p0984-l0090 p0989-l0052 p1030-l0092 p1062-l0132
+    p1101-l0094 p1109-l0089 p1112-l0021 p1119-l0014 p1121-l0025
+    """.split()
+)
+
+REVIEWED_INLINE_SUBENTRIES = {
+    "duduk": {"sekedudukan", "bersekedudukan", "berkedudukan"},
+    "juang": {"berkejuangan"},
+    "layak": {"berkelayakan"},
+    "témpong": {"némpong"},
+}
+
+REVIEWED_ROMAN_SENSES = {
+    ("layak", "I"): (1, 2, 3, 4),
+    ("mempermak", None): (1, 2, 3, 4),
+    ("berseru", None): (1, 2),
+    ("kesoréan", None): (1, 2),
+    ("bertimbalan", None): (1, 2),
+}
 
 # These are the high-confidence, manually reviewed source repairs from the
 # RC1 corpus audit. They are deliberately exact instead of global hyphen
@@ -156,6 +203,7 @@ REVIEWED_REFERENCE_REPAIRS = {
     "S(EM) ERBAK": "S(EM)ERBAK",
     "MENGG(ER) APAI": "MENGG(ER)APAI",
     "HAUL II2": "HAUL II 2",
+    "ANGKA I8": "ANGKA I 8",
 }
 REVIEWED_VARIANT_REPAIRS = {
     "apriori": ({"a", "priori"}, ["a priori"]),
@@ -1159,6 +1207,74 @@ def _merge_punctuated_abbreviation_spans(
     return output
 
 
+def _punctuated_name_span_indices(
+    spans: list[dict[str, Any]],
+    tag_map: dict[str, dict[str, str]],
+) -> set[int]:
+    """Protect dotted initials/name fragments from source-tag detection."""
+    meaningful = [
+        index
+        for index, span in enumerate(spans)
+        if str(span.get("clean_text", "")).strip()
+    ]
+    protected: set[int] = set()
+    for position, index in enumerate(meaningful):
+        span = spans[index]
+        if span.get("style") not in {"italic", "bold_italic"}:
+            continue
+        value = str(span.get("clean_text", "")).strip()
+        if not source_parser.tag_codes(value, tag_map):
+            continue
+        previous = (
+            spans[meaningful[position - 1]] if position else None
+        )
+        following = (
+            spans[meaningful[position + 1]]
+            if position + 1 < len(meaningful)
+            else None
+        )
+        preceded_by_period = bool(
+            previous is not None
+            and previous.get("style") == "roman"
+            and re.search(r"\.\s*$", str(previous.get("clean_text", "")))
+        )
+        followed_by_period = bool(
+            following is not None
+            and following.get("style") == "roman"
+            and re.match(r"^\s*\.", str(following.get("clean_text", "")))
+        )
+        if preceded_by_period or followed_by_period:
+            protected.add(index)
+    return protected
+
+
+def _mark_reviewed_no_space_spans(
+    line_id: str,
+    spans: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Mark the 124 audited source-contiguous lexical/numeric joins."""
+    output = [dict(span) for span in spans]
+    if line_id not in REVIEWED_NO_SPACE_LINE_IDS:
+        return output
+    for index in range(1, len(output)):
+        previous = output[index - 1]
+        current = output[index]
+        left = str(previous.get("clean_text", ""))
+        right = str(current.get("clean_text", ""))
+        if not left or not right or left[-1].isspace() or right[0].isspace():
+            continue
+        gap = float(current["bbox"][0]) - float(previous["bbox"][2])
+        if gap > 0.8 or not right[0].isalnum():
+            continue
+        if left[-1] == ".":
+            lexical_join = right[0].isdigit()
+        else:
+            lexical_join = left[-1].isalnum() or left[-1] in {"'", "’"}
+        if lexical_join:
+            current["join_previous"] = True
+    return output
+
+
 def _template_operand_span_indices(
     spans: list[dict[str, Any]],
     tag_map: dict[str, dict[str, str]],
@@ -1282,17 +1398,27 @@ def _raw_content_events(
         effective_spans = _merge_punctuated_abbreviation_spans(
             effective_spans
         )
+        effective_spans = _mark_reviewed_no_space_spans(
+            str(line["line_id"]),
+            effective_spans,
+        )
         protected_label_spans = _template_operand_span_indices(
             effective_spans,
             tag_map,
             previous_effective_span,
         )
+        protected_label_spans.update(
+            _punctuated_name_span_indices(effective_spans, tag_map)
+        )
         for span_index, span in enumerate(effective_spans):
-            for event in _span_events(
+            span_events = _span_events(
                 span,
                 tag_map,
                 protect_label=span_index in protected_label_spans,
-            ):
+            )
+            if span.get("join_previous") and span_events:
+                span_events[0]["join_previous"] = True
+            for event in span_events:
                 if first_event_on_line:
                     event["boundary"] = line_boundary
                     first_event_on_line = False
@@ -1464,6 +1590,45 @@ def _arrow_cross_references(events: list[dict[str, Any]]) -> list[dict[str, Any]
                 output.append(trailing_operator)
             index = last_target_end
         else:
+            # Mixed-style references often place an italic phrase,
+            # parenthesis, source label, or the word "under" before their
+            # SmallCaps lexical core. Preserve those source runs and link the
+            # core without printing a second arrow.
+            mixed_target = None
+            scan = cursor
+            while scan < len(events):
+                candidate = events[scan]
+                if candidate["kind"] in {"arrow", "sense"}:
+                    break
+                if (
+                    candidate["kind"] == "run"
+                    and candidate.get("style") == "small_caps"
+                    and str(candidate.get("value", "")).strip()
+                ):
+                    mixed_target = scan
+                    break
+                if (
+                    candidate["kind"] == "run"
+                    and re.search(
+                        r"[.!?](?:\s|$)",
+                        str(candidate.get("value", "")),
+                    )
+                ):
+                    break
+                scan += 1
+
+            if mixed_target is None:
+                output.append(
+                    {
+                        "kind": "run",
+                        "style": "symbol",
+                        "value": "→",
+                        "boundary": str(event.get("boundary", "")),
+                    }
+                )
+                index += 1
+                continue
+
             output.append(
                 {
                     "kind": "run",
@@ -1472,7 +1637,85 @@ def _arrow_cross_references(events: list[dict[str, Any]]) -> list[dict[str, Any]
                     "boundary": str(event.get("boundary", "")),
                 }
             )
-            index += 1
+            prefix_events = list(events[index + 1 : mixed_target])
+            leading_target = ""
+            if (
+                prefix_events
+                and prefix_events[-1]["kind"] == "run"
+                and prefix_events[-1].get("style") == "roman"
+                and source_parser.clean_text(
+                    str(prefix_events[-1].get("value", ""))
+                )
+                in {"(", "["}
+            ):
+                leading_target = source_parser.clean_text(
+                    str(prefix_events.pop().get("value", ""))
+                )
+            output.extend(prefix_events)
+
+            target_event = events[mixed_target]
+            target = leading_target
+            target_end = mixed_target
+            previous_raw = ""
+            target_cursor = mixed_target
+            while target_cursor < len(events):
+                candidate = events[target_cursor]
+                if not (
+                    candidate["kind"] == "run"
+                    and candidate.get("style") == "small_caps"
+                ):
+                    break
+                raw_value = str(candidate.get("value", ""))
+                value = source_parser.clean_text(raw_value)
+                if value:
+                    separator = str(candidate.get("boundary", ""))
+                    if (
+                        target
+                        and not separator
+                        and not target.endswith(("(", "[", "-", "/", "'", "’"))
+                        and (
+                            previous_raw[-1:].isspace()
+                            or raw_value[:1].isspace()
+                        )
+                    ):
+                        separator = " "
+                    target = source_parser.join_piece(
+                        target,
+                        value,
+                        separator,
+                    )
+                    previous_raw = raw_value
+                target_end = target_cursor + 1
+                lookahead = target_end
+                while (
+                    lookahead < len(events)
+                    and events[lookahead]["kind"] == "run"
+                    and not str(events[lookahead].get("value", "")).strip()
+                ):
+                    if str(events[lookahead].get("value", "")):
+                        previous_raw += str(events[lookahead]["value"])
+                    lookahead += 1
+                if (
+                    lookahead < len(events)
+                    and events[lookahead]["kind"] == "run"
+                    and events[lookahead].get("style") == "small_caps"
+                ):
+                    target_cursor = lookahead
+                    continue
+                break
+            output.append(
+                {
+                    "kind": "see_bare",
+                    "value": target,
+                    "boundary": str(target_event.get("boundary", "")),
+                    **(
+                        {"join_previous": True}
+                        if target_event.get("join_previous")
+                        else {}
+                    ),
+                }
+            )
+            index = target_end
     return output
 
 
@@ -1853,7 +2096,8 @@ def _observed_header_aliases(
     """
     aliases: list[str] = []
     definition_started = False
-    for span in line["spans"][int(zone["end"]) :]:
+    header_spans = line["spans"][int(zone["end"]) :]
+    for position, span in enumerate(header_spans):
         text = str(span["clean_text"])
         stripped = text.strip()
         if not stripped:
@@ -1870,7 +2114,11 @@ def _observed_header_aliases(
                     "text": source_parser.clean_text(text),
                     "bold_chunks": [source_parser.clean_text(text)],
                     "warnings": [],
-                }
+                },
+                "".join(
+                    str(following["clean_text"])
+                    for following in header_spans[position + 1 :]
+                ),
             )
             alias = source_parser.clean_text(
                 str(alias_parse.get("expression", ""))
@@ -1909,7 +2157,14 @@ def parse_debug_form(
     first_line = form["lines"][0]
     zone = _primary_expression_zone(first_line)
     following_text = "".join(
-        span["clean_text"] for span in zone["remaining_spans"]
+        [
+            *(str(span["clean_text"]) for span in zone["remaining_spans"]),
+            *(
+                str(span["clean_text"])
+                for line in form["lines"][1:]
+                for span in line["spans"]
+            ),
+        ]
     )
     expression = source_parser.parse_expression_zone(zone, following_text)
     expression["variants"] = list(
@@ -1922,9 +2177,17 @@ def parse_debug_form(
                     tag_map,
                     str(expression["expression"]),
                 ),
+                *first_line.get("reviewed_variants", []),
             ]
         )
     )
+    effective_root = root_expression or str(expression["expression"])
+    expression["variants"] = [
+        value
+        for value in expression["variants"]
+        if value
+        not in REVIEWED_INLINE_SUBENTRIES.get(effective_root, set())
+    ]
     structural_prefix = ""
     inline_subentry = str(expression.get("inline_subentry") or "")
     if inline_subentry and not any(
@@ -1980,6 +2243,8 @@ def marker_line(marker: str, value: Any) -> str:
 def _content_marker_lines(content: list[dict[str, Any]]) -> list[str]:
     lines: list[str] = []
     for item in content:
+        if item.get("join_previous"):
+            lines.append("[NoSpace]")
         kind = item["kind"]
         if kind == "run":
             marker = RUN_STYLE_MARKERS.get(str(item["style"]))
@@ -1992,6 +2257,8 @@ def _content_marker_lines(content: list[dict[str, Any]]) -> list[str]:
             lines.append(marker_line("Label", item["value"]))
         elif kind == "see":
             lines.append(marker_line("See", item["value"]))
+        elif kind == "see_bare":
+            lines.append(marker_line("SeeBare", item["value"]))
         else:
             raise ValueError(f"Unknown faithful content event: {kind}")
     return lines
@@ -2022,7 +2289,7 @@ def _reviewed_marker_value(marker: str, value: str) -> str:
         value = value.replace("asked.. to", "asked... to")
         value = re.sub(r"(?<!\.)\.\.(?!\.)", ".", value)
         value = re.sub(r"\s+\)", ")", value)
-    elif marker == "See":
+    elif marker in {"See", "SeeBare"}:
         for source, replacement in REVIEWED_REFERENCE_REPAIRS.items():
             value = value.replace(source, replacement)
     return value
@@ -2317,6 +2584,85 @@ def _normalize_sense_boundaries(lines: list[str]) -> list[str]:
     return output
 
 
+def _promote_reviewed_inline_subentries(lines: list[str]) -> list[str]:
+    """Promote the six audited bold forms nested in repaired regions."""
+    output: list[str] = []
+    root_expression: str | None = None
+    for line in lines:
+        marker, value = _marker_parts(line)
+        if marker == "Entry":
+            root_expression = value
+        inline_values = REVIEWED_INLINE_SUBENTRIES.get(
+            root_expression or "",
+            set(),
+        )
+        numbered = (
+            re.fullmatch(r"(.+?)\s+(\d{1,2})", value)
+            if marker in {"Bold", "BoldItalic"}
+            else None
+        )
+        candidate = numbered.group(1) if numbered is not None else value
+        if marker in {"Bold", "BoldItalic"} and candidate in inline_values:
+            output.append(marker_line("InlineSubentry", candidate))
+            if numbered is not None:
+                output.append(marker_line("Sense", numbered.group(2)))
+            continue
+        output.append(line)
+    return output
+
+
+def _promote_reviewed_roman_senses(lines: list[str]) -> list[str]:
+    """Recover sense numerals printed Roman on seven anomalous starts."""
+    _marker, expression = _marker_parts(lines[0])
+    homograph = next(
+        (
+            value
+            for line in lines[1:]
+            for marker, value in [_marker_parts(line)]
+            if marker == "Homograph"
+        ),
+        None,
+    )
+    expected = REVIEWED_ROMAN_SENSES.get((expression, homograph))
+    if expected is None:
+        return lines
+
+    output = list(lines)
+    search_start = 1
+    for number in expected:
+        existing_sense = next(
+            (
+                index
+                for index in range(search_start, len(output))
+                if _marker_parts(output[index]) == ("Sense", str(number))
+            ),
+            None,
+        )
+        if existing_sense is not None:
+            search_start = existing_sense + 1
+            continue
+        pattern = re.compile(rf"(?<!\d){number}(?:\s+|$)")
+        for index in range(search_start, len(output)):
+            marker, value = _marker_parts(output[index])
+            if marker != "Roman":
+                continue
+            match = pattern.search(value)
+            if match is None:
+                continue
+            replacement: list[str] = []
+            prefix = value[: match.start()].rstrip()
+            suffix = value[match.end() :].lstrip()
+            if prefix:
+                replacement.append(marker_line(marker, prefix))
+            replacement.append(marker_line("Sense", number))
+            if suffix:
+                replacement.append(marker_line(marker, suffix))
+            output[index : index + 1] = replacement
+            search_start = index + len(replacement) - bool(suffix)
+            break
+    return output
+
+
 def normalize_human_intermediate_text(text: str) -> str:
     """Apply reviewed release repairs to generated marker text."""
     source_lines = [
@@ -2325,6 +2671,7 @@ def normalize_human_intermediate_text(text: str) -> str:
         if raw_line
     ]
     source_lines = _apply_reviewed_marker_sequence_repairs(source_lines)
+    source_lines = _promote_reviewed_inline_subentries(source_lines)
 
     forms: list[list[str]] = []
     current: list[str] = []
@@ -2421,7 +2768,7 @@ def normalize_human_intermediate_text(text: str) -> str:
                     lines[index : index + 2] = replacement
                     break
 
-        repaired_forms.append(lines)
+        repaired_forms.append(_promote_reviewed_roman_senses(lines))
 
     repaired_forms = [
         _normalize_sense_boundaries(lines)

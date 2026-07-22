@@ -32,7 +32,7 @@ except ImportError:  # Human intermediate -> Yomitan does not require PyMuPDF.
 
 DEBUG_SCHEMA_VERSION = "acomprehensive-debug-1"
 HUMAN_SCHEMA_VERSION = "acomprehensive-markers-1"
-SCRIPT_VERSION = "1.2.0"
+SCRIPT_VERSION = "1.3.0"
 DEFAULT_PAGES = "21-30,70,236,500"
 
 # Verified visually by Agent 0. U+00AD is handled specially at line boundaries.
@@ -53,6 +53,38 @@ ROOT_X = (42.0, 258.0)
 DERIVATIVE_X = (48.0, 264.0)
 BODY_Y_MIN = 50.0
 BODY_Y_MAX = 690.0
+
+# The source PDF contains a finite set of reviewed font-run mistakes at
+# lexical starts.  Most lose the first letter's bold style; four lose the
+# final letter instead, and seven complete headwords are Roman.  Repairing the
+# style here lets the ordinary geometry/classification grammar handle them
+# without turning every Roman line at an anchor into a form (there is a known
+# legitimate counterexample in the NW entry).
+REVIEWED_HEADWORD_RUN_REPAIRS: dict[str, dict[str, Any]] = {
+    "p0048-l0077": {"headword": "pengamanat"},
+    "p0057-l0128": {"headword": "ngangetin"},
+    "p0081-l0137": {"headword": "berasyo(o)i"},
+    "p0229-l0003": {"headword": "(pe)combéran"},
+    "p0272-l0110": {"headword": "kedudukan"},
+    "p0420-l0143": {"headword": "menjadwalkan"},
+    "p0446-l0071": {"headword": "menjotoskan"},
+    "p0447-l0064": {"headword": "menjuang"},
+    "p0447-l0067": {"headword": "kejuangan"},
+    "p0447-l0096": {"headword": "pejuaraan"},
+    "p0584-l0141": {"headword": "layak I"},
+    "p0635-l0073": {"headword": "kemanisan"},
+    "p0762-l0070": {"headword": "mempermak"},
+    "p0839-l0135": {
+        "headword": "rélevir",
+        "variants": ["merélevir"],
+    },
+    "p0945-l0091": {"headword": "berseru"},
+    "p0968-l0007": {"headword": "berskala"},
+    "p0973-l0073": {"headword": "kesoréan"},
+    "p1036-l0033": {"headword": "témpong III"},
+    "p1041-l0009": {"headword": "bertepekur"},
+    "p1049-l0134": {"headword": "bertimbalan"},
+}
 
 ROMAN_TOKEN_RE = re.compile(r"(?<!\S)([IVXLCDM]+)(?!\S)")
 SENSE_RE = re.compile(r"^\s*(\d+)\s*$")
@@ -239,9 +271,64 @@ def extract_page_lines(page: Any, page_number: int) -> list[dict[str, Any]]:
                 "join_next_without_space": raw_text.rstrip().endswith("\u00ad"),
                 "spans": spans,
             }
+            _apply_reviewed_headword_run_repair(line)
             lines.append(line)
     lines.sort(key=lambda line: (line["column"], round(line["bbox"][1], 1), line["bbox"][0]))
     return lines
+
+
+def _apply_reviewed_headword_run_repair(line: dict[str, Any]) -> None:
+    """Restore reviewed headword boldness while retaining source evidence."""
+    repair = REVIEWED_HEADWORD_RUN_REPAIRS.get(str(line["line_id"]))
+    if repair is None:
+        return
+
+    headword = str(repair["headword"])
+    full_text = "".join(str(span["clean_text"]) for span in line["spans"])
+    start = len(full_text) - len(full_text.lstrip())
+    if full_text[start : start + len(headword)] != headword:
+        raise ValueError(
+            f"Reviewed headword evidence changed for {line['line_id']}: "
+            f"expected {headword!r}, got {full_text[start:start + len(headword)]!r}"
+        )
+    end = start + len(headword)
+
+    repaired_spans: list[dict[str, Any]] = []
+    offset = 0
+    for span in line["spans"]:
+        text = str(span["clean_text"])
+        span_start = offset
+        span_end = offset + len(text)
+        offset = span_end
+        cuts = sorted({span_start, span_end, max(span_start, start), min(span_end, end)})
+        cuts = [value for value in cuts if span_start <= value <= span_end]
+        for piece_start, piece_end in zip(cuts, cuts[1:]):
+            if piece_start == piece_end:
+                continue
+            local_start = piece_start - span_start
+            local_end = piece_end - span_start
+            piece = {**span, "clean_text": text[local_start:local_end]}
+            raw_text = str(span.get("raw_text", ""))
+            if len(raw_text) == len(text):
+                piece["raw_text"] = raw_text[local_start:local_end]
+            if span_end > span_start:
+                x0, y0, x1, y1 = (float(value) for value in span["bbox"])
+                width = x1 - x0
+                piece["bbox"] = [
+                    round(x0 + width * local_start / len(text), 4),
+                    y0,
+                    round(x0 + width * local_end / len(text), 4),
+                    y1,
+                ]
+            if piece_start < end and piece_end > start:
+                piece["style"] = "bold"
+                piece["reviewed_style_repair"] = True
+            repaired_spans.append(piece)
+
+    line["spans"] = repaired_spans
+    line["reviewed_headword"] = headword
+    if repair.get("variants"):
+        line["reviewed_variants"] = list(repair["variants"])
 
 
 def meaningful_spans(line: dict[str, Any]) -> list[dict[str, Any]]:

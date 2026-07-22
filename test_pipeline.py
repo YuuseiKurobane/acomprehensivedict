@@ -656,6 +656,51 @@ class Layer1SurfaceTests(unittest.TestCase):
             ],
         )
 
+        self.assertEqual(
+            layer1._punctuated_name_span_indices(
+                [
+                    span("italic", "Pilot Lim C"),
+                    span("roman", "."),
+                    span("italic", " L"),
+                    span("roman", "."),
+                ],
+                {"L": {}},
+            ),
+            {2},
+        )
+
+    def test_reviewed_headword_font_repair_restores_structure(self) -> None:
+        line = {
+            "line_id": "p0272-l0110",
+            "bbox": [258.0, 100.0, 400.0, 109.0],
+            "join_next_without_space": False,
+            "spans": [
+                span("roman", "\t ", [258.0, 100.0, 264.0, 109.0]),
+                span("roman", "k", [264.0, 100.0, 268.0, 109.0]),
+                span("bold", "edudukan 1", [268.0, 100.0, 310.0, 109.0]),
+                span("roman", " home.", [310.0, 100.0, 350.0, 109.0]),
+            ],
+        }
+        layer1.source_parser._apply_reviewed_headword_run_repair(line)
+        self.assertEqual(
+            layer1.source_parser.classify_line(line),
+            "subentry_start",
+        )
+        parsed = layer1.parse_debug_form({"lines": [line]}, {})
+        self.assertEqual(parsed["expression"], "kedudukan")
+        self.assertEqual(parsed["content"][0]["kind"], "sense")
+        self.assertEqual(parsed["content"][0]["value"], 1)
+
+    def test_reviewed_source_contiguous_join_is_explicit(self) -> None:
+        repaired = layer1._mark_reviewed_no_space_spans(
+            "p0032-l0082",
+            [
+                span("italic", "radén", [1.0, 1.0, 20.0, 10.0]),
+                span("roman", "s married", [19.9, 1.0, 50.0, 10.0]),
+            ],
+        )
+        self.assertTrue(repaired[1]["join_previous"])
+
     def test_rc2_marker_normalization_repairs_audited_structure(self) -> None:
         source = """\
 [Entry] apriori
@@ -765,6 +810,68 @@ class Layer1SurfaceTests(unittest.TestCase):
         self.assertEqual(
             layer1._arrow_cross_references(events),
             [{"kind": "see", "value": "DAYA-UPAYA", "boundary": ""}],
+        )
+
+    def test_mixed_style_arrow_links_lexical_core_without_second_arrow(
+        self,
+    ) -> None:
+        events = [
+            {"kind": "arrow", "value": "→", "boundary": ""},
+            {
+                "kind": "run",
+                "style": "italic",
+                "value": "dengan tidak",
+                "boundary": " ",
+            },
+            {
+                "kind": "run",
+                "style": "small_caps",
+                "value": "DIHADIRI",
+                "boundary": " ",
+            },
+        ]
+        self.assertEqual(
+            layer1._arrow_cross_references(events),
+            [
+                {
+                    "kind": "run",
+                    "style": "symbol",
+                    "value": "→",
+                    "boundary": "",
+                },
+                events[1],
+                {
+                    "kind": "see_bare",
+                    "value": "DIHADIRI",
+                    "boundary": " ",
+                },
+            ],
+        )
+
+        fragmented = [
+            {"kind": "arrow", "value": "→", "boundary": ""},
+            {
+                "kind": "run",
+                "style": "italic",
+                "value": "tidak masuk",
+                "boundary": " ",
+            },
+            {
+                "kind": "run",
+                "style": "small_caps",
+                "value": "HI",
+                "boundary": " ",
+            },
+            {
+                "kind": "run",
+                "style": "small_caps",
+                "value": "TUNGAN",
+                "boundary": "",
+            },
+        ]
+        self.assertEqual(
+            layer1._arrow_cross_references(fragmented)[-1]["value"],
+            "HITUNGAN",
         )
 
     def test_reference_does_not_consume_following_template_operator(
@@ -1009,6 +1116,70 @@ class Layer1SurfaceTests(unittest.TestCase):
             any(
                 line.startswith("[See]") and "–" in line
                 for line in text.splitlines()
+            )
+        )
+
+    def test_rc4_release_intermediate_contains_audited_repairs(self) -> None:
+        human_path = (
+            Path(__file__).resolve().parent
+            / "intermediate"
+            / "human_readable_full.txt"
+        )
+        text = human_path.read_text(encoding="utf-8")
+        lines = text.splitlines()
+        for expected in (
+            "[Subentry] (pe)combéran",
+            "[Subentry] kedudukan",
+            "[Subentry] menjadwalkan",
+            "[Subentry] menjotoskan",
+            "[Subentry] menjuang",
+            "[Subentry] kejuangan",
+            "[Subentry] pejuaraan",
+            "[Subentry] kemanisan",
+            "[Subentry] mempermak",
+            "[Entry] rélevir",
+            "[Variant] merélevir",
+            "[Subentry] berseru",
+            "[Subentry] berskala",
+            "[Subentry] kesoréan",
+            "[Subentry] bertimbalan",
+            "[Subentry] pengamanat",
+            "[Subentry] ngangetin",
+            "[Subentry] berasyo(o)i",
+            "[Subentry] bertepekur",
+            "[InlineSubentry] sekedudukan",
+            "[InlineSubentry] bersekedudukan",
+            "[InlineSubentry] berkedudukan",
+            "[InlineSubentry] berkejuangan",
+            "[InlineSubentry] berkelayakan",
+            "[InlineSubentry] némpong",
+            "[Entry] Central Committee Partai Komunis Indonesia",
+            "[Variant] W",
+        ):
+            with self.subTest(expected=expected):
+                self.assertIn(expected, lines)
+        for malformed in (
+            "[Subentry] pengamana",
+            "[Subentry] ngangeti",
+            "[Subentry] bertepeku",
+            "[Entry] Central Committee Partai Komunis Indonesia /",
+            "[Variant] W /",
+        ):
+            self.assertNotIn(malformed, lines)
+        self.assertEqual(lines.count("[NoSpace]"), 124)
+        self.assertEqual(
+            sum(line.startswith("[SeeBare] ") for line in lines),
+            107,
+        )
+        self.assertIn("[SeeBare] ANGKA I 8", lines)
+        self.assertNotIn("[SeeBare] ANGKA I8", lines)
+        self.assertFalse(
+            any(
+                line.startswith(
+                    ("[Entry] ", "[Subentry] ", "[InlineSubentry] ", "[Variant] ")
+                )
+                and line.endswith("/")
+                for line in lines
             )
         )
 
@@ -1325,6 +1496,39 @@ class Layer2PresentationTests(unittest.TestCase):
         )
         self.assertEqual(flatten(nodes), "anak laki-laki")
 
+    def test_explicit_no_space_boundary_preserves_run_styles(self) -> None:
+        nodes = layer2.inline_content_nodes(
+            [
+                {"type": "bold", "value": "hétero"},
+                {"type": "no_space", "value": ""},
+                {"type": "italic", "value": "séksual"},
+            ],
+            self.tag_map,
+        )
+        self.assertEqual(flatten(nodes), "héteroséksual")
+
+    def test_reviewed_optional_source_notation_remains_searchable(self) -> None:
+        self.assertEqual(
+            layer2.lookup_spellings("berasyo(o)i"),
+            ["berasyo(o)i", "berasyoi", "berasyooi"],
+        )
+
+    def test_bare_reference_links_core_without_printing_another_arrow(
+        self,
+    ) -> None:
+        nodes = layer2.inline_content_nodes(
+            [
+                {"type": "symbol", "value": "→"},
+                {"type": "italic", "value": "under"},
+                {"type": "see_bare", "value": "APA"},
+            ],
+            self.tag_map,
+            resolver=self.resolver,
+            context=("test", "test"),
+        )
+        self.assertEqual(flatten(nodes), "→ under APA")
+        self.assertEqual(len(anchors(nodes)), 1)
+
     def test_trailing_template_resolution_also_resolves_earlier_operator(
         self,
     ) -> None:
@@ -1383,6 +1587,20 @@ class Layer2PresentationTests(unittest.TestCase):
             "→ BAJU/KAIN",
         )
         self.assertEqual(resolver.unresolved, {})
+
+    def test_reviewed_source_reference_override_uses_existing_root(self) -> None:
+        path = Path(self.temp.name) / "reviewed-reference.txt"
+        path.write_text(
+            "[Entry] hadir\n[Roman] present.\n",
+            encoding="utf-8",
+        )
+        resolver = layer2.CrossReferenceResolver(
+            layer2.build_row_groups(path)
+        )
+        resolution = resolver.resolve_segment("DIHADIRI")
+        self.assertIsNotNone(resolution)
+        self.assertEqual(resolution["query"], "hadir")
+        self.assertEqual(resolution["method"], "reviewed-source-target")
 
     def test_unique_bold_form_resolves_to_owning_entry(self) -> None:
         resolution = self.resolver.resolve_segment("APAKAH")
